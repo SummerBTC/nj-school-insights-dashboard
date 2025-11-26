@@ -2763,3 +2763,166 @@ html {
     transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));
   }
 }
+
+/* ============================================
+   SCHOOBERRY DESIGN SYSTEM v1.0
+   Mobile-First | Duolingo-inspired | Pastel Berry
+   ============================================ */
+
+:root {
+  /* ===== COLOR TOKENS ===== */
+  /* Brand Colors */
+  --color-primary-berry: #FF5B85;
+  --color-secondary-mint: #64D7A5;
+  --color-accent-lavender: #C9B6FF;
+  
+  /* Neutral Colors */
+  --color-bg-default: #FFFDFC;
+  --color-bg-soft: #F7F4F6;
+  --color-bg-card: #FFFFFF;
+  
+  --color-text-main: #2E2E2E;
+  --color-text-secondary: #555555;
+  --color-text-muted: #888888;
+  
+  /* State Colors */
+  --color-success: #4CCB71;
+  --color-warning: #FFBD2F;
+  --color-error: #FF6A6A;
+  
+  /* ===== RADIUS TOKENS ===== */
+  --radius-xs: 8px;
+  --radius-s: 12px;
+  --radius-m: 16px;
+  --radius-l: 20px;
+  --radius-xl: 24px;
+  --radius-xxl: 32px;
+  
+  /* ===== SPACING TOKENS ===== */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-s: 12px;
+  --space-m: 16px;
+  --space-l: 20px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+  
+  /* ===== SHADOW TOKENS ===== */
+  --shadow-soft: 0px 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0px 4px 18px rgba(0, 0, 0, 0.07);
+  
+  /* ===== TYPOGRAPHY TOKENS ===== */
+  --font-family: "Inter", "Nunito", sans-serif;
+  
+  /* Font Sizes */
+  --font-size-h1: 22px;
+  --font-size-h2: 18px;
+  --font-size-body: 16px;
+  --font-size-caption: 13px;
+  
+  /* Line Heights */
+  --line-height-h1: 130%;
+  --line-height-h2: 140%;
+  --line-height-body: 150%;
+  --line-height-caption: 150%;
+  
+  /* Font Weights */
+  --font-weight-h1: 700;
+  --font-weight-h2: 600;
+  --font-weight-body: 500;
+  --font-weight-caption: 400;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+  --color-bg-default: #1A1A1A;
+  --color-bg-soft: #2F2F2F;
+  --color-bg-card: #3A3A3A;
+  
+  --color-text-main: #F5F5F5;
+  --color-text-secondary: #CCCCCC;
+  --color-text-muted: #999999;
+}
+
+/* ===== COMPONENT STYLES ===== */
+
+/* Primary Button */
+.btn-primary {
+  height: 48px;
+  padding: 14px 20px;
+  border-radius: var(--radius-l);
+  background-color: var(--color-primary-berry);
+  color: white;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-h2);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  height: 48px;
+  padding: 14px 20px;
+  border-radius: var(--radius-l);
+  background-color: white;
+  color: var(--color-secondary-mint);
+  border: 2px solid var(--color-secondary-mint);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-h2);
+}
+
+/* Card Styles */
+.card {
+  padding: var(--space-l);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-bg-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* Input Styles */
+.input-search {
+  height: 52px;
+  padding: 12px 16px;
+  border-radius: var(--radius-l);
+  border: 1.5px solid var(--color-secondary-mint);
+  background-color: white;
+  font-size: var(--font-size-body);
+}
+
+/* Typography Classes */
+.text-h1 {
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  font-weight: var(--font-weight-h1);
+  color: var(--color-text-main);
+}
+
+.text-h2 {
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--font-weight-h2);
+  color: var(--color-text-main);
+}
+
+.text-body {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
+  color: var(--color-text-main);
+}
+
+.text-caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+  color: var(--color-text-secondary);
+}

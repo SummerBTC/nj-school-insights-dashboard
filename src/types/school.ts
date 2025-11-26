@@ -3,11 +3,12 @@ export interface School {
   name: string;
   type: "Public" | "Charter" | "Private";
   grades: string;
+  gradeSpan?: string; // Optional grade span field
   county: string;
   district: string;
   address: string;
   zipCode: string;
-  
+
   // Performance Metrics
   mathProficiency: number;
   elaProficiency: number;

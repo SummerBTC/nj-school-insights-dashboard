@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Switch } from "./ui/switch";
 import { Radar, RadarChart as RechartsRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from "recharts";
 import { ArrowRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { School } from "../types/school";
+import { areSameLevel, getSchoolLevelLabel } from "../utils/schoolLevel";
 
 interface CompareSchoolsProps {
   schools: School[];
@@ -12,6 +14,29 @@ interface CompareSchoolsProps {
 export function CompareSchools({ schools, defaultSchool }: CompareSchoolsProps) {
   const [school1, setSchool1] = useState<School>(defaultSchool);
   const [school2, setSchool2] = useState<School>(schools.find(s => s.id !== defaultSchool.id) || schools[1]);
+  const [onlySimilarSchools, setOnlySimilarSchools] = useState<boolean>(true);
+
+  // Filter schools for School 2 dropdown based on toggle
+  const availableSchools = useMemo(() => {
+    if (!onlySimilarSchools) {
+      return schools;
+    }
+
+    // Filter to only show schools at the same level as School 1
+    return schools.filter(school =>
+      areSameLevel(school1.gradeSpan || school1.grades, school.gradeSpan || school.grades)
+    );
+  }, [schools, school1, onlySimilarSchools]);
+
+  // Auto-update school2 if current selection is filtered out
+  useMemo(() => {
+    if (onlySimilarSchools && !availableSchools.find(s => s.id === school2.id)) {
+      const newSchool2 = availableSchools.find(s => s.id !== school1.id);
+      if (newSchool2) {
+        setSchool2(newSchool2);
+      }
+    }
+  }, [availableSchools, onlySimilarSchools, school1.id, school2.id]);
 
   const normalizeStudentTeacherRatio = (ratio: number) => {
     return Math.max(0, Math.min(100, ((25 - ratio) / 15) * 100));
@@ -85,6 +110,23 @@ export function CompareSchools({ schools, defaultSchool }: CompareSchoolsProps) 
 
   return (
     <div className="space-y-6">
+      {/* Filter Toggle */}
+      <div className="bg-white rounded-lg p-4 border border-[#E5E7EB] flex items-center justify-between">
+        <div>
+          <div className="text-sm font-medium text-[#374151]">Only show similar schools</div>
+          <div className="text-xs text-[#6B7280] mt-1">
+            {onlySimilarSchools
+              ? `Comparing ${getSchoolLevelLabel(school1.gradeSpan || school1.grades)} only (${availableSchools.length} schools)`
+              : `Showing all schools (${schools.length} schools)`
+            }
+          </div>
+        </div>
+        <Switch
+          checked={onlySimilarSchools}
+          onCheckedChange={setOnlySimilarSchools}
+        />
+      </div>
+
       {/* School Selectors */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
         <div className="bg-white rounded-lg p-4 border-2 border-[#3B82F6]">
@@ -109,12 +151,12 @@ export function CompareSchools({ schools, defaultSchool }: CompareSchoolsProps) 
 
         <div className="bg-white rounded-lg p-4 border-2 border-[#22C55E]">
           <label className="text-sm text-[#6B7280] mb-2 block">School 2</label>
-          <Select value={school2.id} onValueChange={(id) => setSchool2(schools.find(s => s.id === id)!)}>
+          <Select value={school2.id} onValueChange={(id) => setSchool2(availableSchools.find(s => s.id === id)!)}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {schools.map((school) => (
+              {availableSchools.map((school) => (
                 <SelectItem key={school.id} value={school.id} disabled={school.id === school1.id}>
                   {school.name}
                 </SelectItem>

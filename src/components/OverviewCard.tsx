@@ -42,7 +42,7 @@ export function OverviewCard({ school }: OverviewCardProps) {
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
           <div className="bg-gradient-to-br from-[#DBEAFE] to-[#EFF6FF] p-4 rounded-xl border border-[#3B82F6]/20">
-            <div className="text-sm text-[#1E40AF] mb-1">📐 Math Proficiency</div>
+            <div className="text-sm text-[#1E40AF] mb-1">Math Proficiency</div>
             <div className="text-2xl text-[#1E40AF]">{school.mathProficiency}%</div>
             {school.trends.mathChange !== 0 && (
               <div className={`text-sm ${school.trends.mathChange > 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
@@ -52,7 +52,7 @@ export function OverviewCard({ school }: OverviewCardProps) {
           </div>
 
           <div className="bg-gradient-to-br from-[#D1FAE5] to-[#DCFCE7] p-4 rounded-xl border border-[#22C55E]/20">
-            <div className="text-sm text-[#15803D] mb-1">📚 ELA Proficiency</div>
+            <div className="text-sm text-[#15803D] mb-1">ELA Proficiency</div>
             <div className="text-2xl text-[#15803D]">{school.elaProficiency}%</div>
             {school.trends.elaChange !== 0 && (
               <div className={`text-sm ${school.trends.elaChange > 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
@@ -62,13 +62,13 @@ export function OverviewCard({ school }: OverviewCardProps) {
           </div>
 
           <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FEF9C3] p-4 rounded-xl border border-[#FBBF24]/20">
-            <div className="text-sm text-[#92400E] mb-1">✅ Attendance</div>
+            <div className="text-sm text-[#92400E] mb-1">Attendance</div>
             <div className="text-2xl text-[#92400E]">{100 - school.chronicAbsenteeism}%</div>
             <div className="text-sm text-[#92400E]/70">{school.chronicAbsenteeism}% absent</div>
           </div>
 
           <div className="bg-gradient-to-br from-[#E9D5FF] to-[#F3E8FF] p-4 rounded-xl border border-[#A855F7]/20">
-            <div className="text-sm text-[#6B21A8] mb-1">👥 Student-Teacher</div>
+            <div className="text-sm text-[#6B21A8] mb-1">Student-Teacher</div>
             <div className="text-2xl text-[#6B21A8]">1:{school.studentTeacherRatio}</div>
             <div className="flex items-center gap-1 text-sm text-[#6B21A8]/70">
               <Users className="size-3" />
@@ -77,7 +77,7 @@ export function OverviewCard({ school }: OverviewCardProps) {
           </div>
 
           <div className="bg-gradient-to-br from-[#FBCFE8] to-[#FCE7F3] p-4 rounded-xl border border-[#EC4899]/20">
-            <div className="text-sm text-[#9F1239] mb-1">🎓 Gifted Program</div>
+            <div className="text-sm text-[#9F1239] mb-1">Gifted Program</div>
             <div className="text-2xl text-[#9F1239]">{school.giftedProgram ? "Yes" : "No"}</div>
             {school.giftedProgram && (
               <div className="flex items-center gap-1 text-sm text-[#22C55E]">
