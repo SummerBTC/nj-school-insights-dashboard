@@ -37,14 +37,9 @@ export function DemographicsBarChart({ school }: DemographicsBarChartProps) {
 
   return (
     <div className="bg-white rounded-xl p-6 border border-[#E5E7EB] shadow-sm">
-      <div className="flex items-center gap-2 mb-6">
-        <div className="bg-gradient-to-r from-[#3B82F6] to-[#2563EB] p-2 rounded-lg">
-          <Users className="size-5 text-white" />
-        </div>
-        <div>
-          <h3 className="text-[#374151] font-semibold">Student Demographics</h3>
-          <p className="text-sm text-[#6B7280]">Breakdown by Ethnicity</p>
-        </div>
+      <div className="mb-6">
+        <h3 className="text-[#374151] font-semibold">Student Demographics</h3>
+        <p className="text-sm text-[#6B7280]">Breakdown by Ethnicity</p>
       </div>
 
       <div className="space-y-4">
@@ -54,7 +49,7 @@ export function DemographicsBarChart({ school }: DemographicsBarChartProps) {
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-sm font-medium text-[#374151]">{demo.label}</span>
               <span className="text-sm font-semibold" style={{ color: demo.color }}>
-                {demo.value}%
+                {demo.value.toFixed(2)}%
               </span>
             </div>
 

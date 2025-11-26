@@ -27,14 +27,9 @@ export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) 
       <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-white/20 backdrop-blur-sm p-2.5 rounded-lg">
-              <Users className="size-6 text-white" />
-            </div>
-            <div>
-              <h3 className="text-white">Asian Families Spotlight</h3>
-              <p className="text-white/80 text-sm">Targeted performance insights</p>
-            </div>
+          <div>
+            <h3 className="text-white">Asian Families Spotlight</h3>
+            <p className="text-white/80 text-sm">Targeted performance insights</p>
           </div>
           
           {/* Population Badge */}

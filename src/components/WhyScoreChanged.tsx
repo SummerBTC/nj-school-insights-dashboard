@@ -149,19 +149,16 @@ export function WhyScoreChanged({ school }: WhyScoreChangedProps) {
       
       <div className="relative z-10">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-2">
-          <div className="bg-gradient-to-r from-[#EF4444] to-[#DC2626] p-2.5 rounded-lg shadow-lg">
-            <AlertCircle className="size-6 text-white" />
-          </div>
+        <div className="flex items-start justify-between mb-4">
           <div>
             <h3 className="text-[#111827]">Why the Score Changed</h3>
             <p className="text-sm text-[#6B7280]">Key factors impacting performance</p>
           </div>
-        </div>
 
-        {/* Badge highlighting this is a key feature */}
-        <div className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 bg-gradient-to-r from-[#EF4444] to-[#F59E0B] rounded-full">
-          <span className="text-white text-xs">⭐ Exclusive Insight</span>
+          {/* Badge highlighting this is a key feature */}
+          <div className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-[#EF4444] to-[#F59E0B] rounded-full">
+            <span className="text-white text-xs font-semibold">Exclusive Insight</span>
+          </div>
         </div>
 
         {/* Changes List */}
@@ -171,28 +168,25 @@ export function WhyScoreChanged({ school }: WhyScoreChangedProps) {
             const Icon = change.icon;
             
             return (
-              <div 
+              <div
                 key={index}
                 className={`${style.bg} ${style.border} border-l-4 rounded-lg p-4 flex items-start gap-3 transition-all hover:shadow-md`}
               >
-                {/* Indicator Dot */}
-                <div className={`${style.dot} size-3 rounded-full mt-1.5 flex-shrink-0 animate-pulse`} />
-                
-                {/* Icon */}
-                <Icon className={`size-5 mt-0.5 flex-shrink-0 ${style.icon}`} />
-                
+                {/* Arrow indicator */}
+                {change.type === "negative" && (
+                  <TrendingDown className="size-5 text-[#EF4444] flex-shrink-0 mt-0.5" />
+                )}
+                {change.type === "positive" && (
+                  <TrendingUp className="size-5 text-[#22C55E] flex-shrink-0 mt-0.5" />
+                )}
+                {change.type === "warning" && (
+                  <AlertCircle className="size-5 text-[#FBBF24] flex-shrink-0 mt-0.5" />
+                )}
+
                 {/* Text */}
                 <p className={`${style.text} flex-1`}>
                   {change.text}
                 </p>
-
-                {/* Arrow indicator */}
-                {change.type === "negative" && (
-                  <TrendingDown className="size-5 text-[#EF4444] flex-shrink-0" />
-                )}
-                {change.type === "positive" && (
-                  <TrendingUp className="size-5 text-[#22C55E] flex-shrink-0" />
-                )}
               </div>
             );
           })}

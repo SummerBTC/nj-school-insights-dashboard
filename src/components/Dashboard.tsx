@@ -87,7 +87,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
     primaryBerry: '#FF5B85',
     secondaryMint: '#64D7A5',
     accentLavender: '#C9B6FF',
-    heroBg: darkMode ? '#2F2F2F' : '#FF5B85',
+    heroBg: darkMode ? '#2F2F2F' : '#FFE7EE',
     cardBg: darkMode ? '#3A3A3A' : '#FFFFFF',
     bgDefault: darkMode ? '#1A1A1A' : '#FFFDFC',
     bgSoft: darkMode ? '#2F2F2F' : '#F7F4F6',
@@ -112,11 +112,11 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
         <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full" style={{ backgroundColor: darkMode ? 'rgba(78,208,168,0.2)' : 'var(--color-secondary-mint)' }} />
 
         <div className="relative z-10">
-          <div className="mb-6 flex items-baseline gap-4 flex-wrap">
-            <h2 className="text-5xl font-black text-white">
+          <div className="mb-8">
+            <h2 className="text-3xl font-black mb-2" style={{ color: darkMode ? '#FFFFFF' : colors.text }}>
               {countyStats.countyName} County
             </h2>
-            <p className="text-white/80 text-lg font-semibold">
+            <p className="font-semibold text-lg" style={{ color: darkMode ? 'rgba(255,255,255,0.8)' : colors.textMuted }}>
               Education quality at a glance
             </p>
           </div>
@@ -183,16 +183,17 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
       {/* Top Schools Section */}
       <div className="space-y-8 mt-16">
         {/* Filter Tabs */}
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex gap-4 flex-wrap">
           {(["All", "Elementary", "Middle", "High"] as const).map((level) => (
             <button
               key={level}
               onClick={() => setLevelFilter(level)}
-              className="px-5 py-2 rounded-full font-bold text-sm transition-all"
+              className="px-6 py-3 rounded-full font-bold text-sm transition-all whitespace-nowrap"
               style={{
                 backgroundColor: levelFilter === level ? colors.primaryBerry : colors.cardBg,
                 color: levelFilter === level ? '#FFFFFF' : colors.text,
                 boxShadow: levelFilter === level ? '0px 4px 12px rgba(255, 91, 133, 0.3)' : '0px 2px 8px rgba(0, 0, 0, 0.06)',
+                minWidth: 'fit-content',
               }}
             >
               {level === "All" ? "All Schools" : `${level} School`}
@@ -200,182 +201,215 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
           ))}
         </div>
 
-        {/* Math Schools */}
-        <div className="rounded-[32px] p-10 shadow-xl" style={{ backgroundColor: colors.sectionBg.pink }}>
-          <div className="mb-6">
-            <h3 className="text-2xl font-black mb-2" style={{ color: colors.text }}>Top Math Schools</h3>
-            <p className="font-semibold" style={{ color: colors.textMuted }}>
-              {levelFilter === "All" ? "Stars in mathematics" : `Best ${levelFilter.toLowerCase()} schools in math`}
-            </p>
-          </div>
+        {/* Math & ELA Schools - Side by Side on Desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Math Schools */}
+          <div className="rounded-[24px] p-6 shadow-xl" style={{ backgroundColor: colors.cardBg }}>
+            <div className="mb-4">
+              <h3 className="text-xl font-black mb-1" style={{ color: colors.text }}>Top Math Schools</h3>
+              <p className="text-sm font-semibold" style={{ color: colors.textMuted }}>
+                {levelFilter === "All" ? "Stars in mathematics" : `Best ${levelFilter.toLowerCase()} schools in math`}
+              </p>
+            </div>
 
-          {/* Horizontal Bar Chart Layout */}
-          <div className="space-y-4">
-            {topSchoolsByMath.map((school, idx) => (
-              <button
-                key={school.id}
-                onClick={() => onSelectSchool(school)}
-                className="w-full rounded-[20px] p-5 hover:shadow-xl hover:scale-[1.02] transition-all duration-200 text-left group"
-                style={{ backgroundColor: colors.cardBg, boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.07)' }}
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  {/* Rank Badge */}
-                  <div
-                    className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-black text-white"
-                    style={{ backgroundColor: idx === 0 ? colors.primaryBerry : colors.secondaryMint }}
-                  >
-                    #{idx + 1}
-                  </div>
-
-                  {/* School Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline gap-3 mb-1">
-                      <h4 className="font-black text-base truncate" style={{ color: colors.text }}>
-                        {school.name}
-                      </h4>
-                      <span className="text-xs font-semibold px-2 py-1 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE', color: colors.textMuted }}>
-                        {school.grades}
+            {/* Compact Bar Chart */}
+            <div className="space-y-2">
+              {topSchoolsByMath.map((school, idx) => (
+                <button
+                  key={school.id}
+                  onClick={() => onSelectSchool(school)}
+                  className="w-full text-left hover:opacity-80 transition-all rounded-xl p-3"
+                  style={{ backgroundColor: darkMode ? '#3A2A3B10' : '#FFE7EE20' }}
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    {/* Rank Number */}
+                    <div className="w-5 flex-shrink-0">
+                      <span className="text-lg font-black" style={{ color: colors.textMuted }}>
+                        {idx + 1}
                       </span>
                     </div>
 
-                    {/* Progress Bar */}
-                    <div className="relative h-8 rounded-full overflow-hidden" style={{ backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE' }}>
+                    {/* School Name */}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-sm truncate" style={{ color: colors.text }}>
+                        {school.name}
+                      </h4>
+                    </div>
+
+                    {/* Score - Compact */}
+                    <div className="flex-shrink-0">
+                      <span className="text-lg font-black" style={{ color: colors.primaryBerry }}>
+                        {school.mathProficiency}%
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Bar Visualization */}
+                  <div className="ml-7">
+                    <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE' }}>
                       <div
-                        className="absolute left-0 top-0 h-full rounded-full transition-all duration-1000 flex items-center justify-end pr-3"
+                        className="absolute left-0 top-0 h-full rounded-full"
                         style={{
                           width: `${school.mathProficiency}%`,
-                          background: `linear-gradient(90deg, ${colors.primaryBerry} 0%, ${colors.accentLavender} 100%)`,
+                          backgroundColor: colors.primaryBerry,
+                          minWidth: '8px',
                         }}
-                      >
-                        <span className="text-white font-black text-sm">{school.mathProficiency}%</span>
-                      </div>
+                      />
                     </div>
                   </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
+                </button>
+              ))}
+            </div>
 
-        {/* ELA Schools */}
-        <div className="rounded-[32px] p-10 shadow-xl" style={{ backgroundColor: colors.sectionBg.mint }}>
-          <div className="mb-6">
-            <h3 className="text-2xl font-black mb-2" style={{ color: colors.text }}>Top ELA Schools</h3>
-            <p className="font-semibold" style={{ color: colors.textMuted }}>
-              {levelFilter === "All" ? "Reading & writing champions" : `Best ${levelFilter.toLowerCase()} schools in ELA`}
-            </p>
+            {/* Legend */}
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: darkMode ? '#3A3A3A' : '#F7F4F6' }}>
+              <p className="text-xs" style={{ color: colors.textMuted }}>
+                📊 排名基于数学成绩 — 分数越高，排名越靠前
+              </p>
+            </div>
           </div>
 
-          {/* Horizontal Bar Chart Layout */}
-          <div className="space-y-4">
-            {topSchoolsByELA.map((school, idx) => (
-              <button
-                key={school.id}
-                onClick={() => onSelectSchool(school)}
-                className="w-full rounded-[20px] p-5 hover:shadow-xl hover:scale-[1.02] transition-all duration-200 text-left group"
-                style={{ backgroundColor: colors.cardBg, boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.07)' }}
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  {/* Rank Badge */}
-                  <div
-                    className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-black text-white"
-                    style={{ backgroundColor: idx === 0 ? colors.secondaryMint : colors.accentLavender }}
-                  >
-                    #{idx + 1}
-                  </div>
+          {/* ELA Schools */}
+          <div className="rounded-[24px] p-6 shadow-xl" style={{ backgroundColor: colors.cardBg }}>
+            <div className="mb-4">
+              <h3 className="text-xl font-black mb-1" style={{ color: colors.text }}>Top ELA Schools</h3>
+              <p className="text-sm font-semibold" style={{ color: colors.textMuted }}>
+                {levelFilter === "All" ? "Reading & writing champions" : `Best ${levelFilter.toLowerCase()} schools in ELA`}
+              </p>
+            </div>
 
-                  {/* School Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline gap-3 mb-1">
-                      <h4 className="font-black text-base truncate" style={{ color: colors.text }}>
-                        {school.name}
-                      </h4>
-                      <span className="text-xs font-semibold px-2 py-1 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: darkMode ? '#2A3A35' : '#E8F7F0', color: colors.textMuted }}>
-                        {school.grades}
+            {/* Compact Bar Chart */}
+            <div className="space-y-2">
+              {topSchoolsByELA.map((school, idx) => (
+                <button
+                  key={school.id}
+                  onClick={() => onSelectSchool(school)}
+                  className="w-full text-left hover:opacity-80 transition-all rounded-xl p-3"
+                  style={{ backgroundColor: darkMode ? '#2A3A3510' : '#E8F7F020' }}
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    {/* Rank Number */}
+                    <div className="w-5 flex-shrink-0">
+                      <span className="text-lg font-black" style={{ color: colors.textMuted }}>
+                        {idx + 1}
                       </span>
                     </div>
 
-                    {/* Progress Bar */}
-                    <div className="relative h-8 rounded-full overflow-hidden" style={{ backgroundColor: darkMode ? '#2A3A35' : '#E8F7F0' }}>
-                      <div
-                        className="absolute left-0 top-0 h-full rounded-full transition-all duration-1000 flex items-center justify-end pr-3"
-                        style={{
-                          width: `${school.elaProficiency}%`,
-                          background: `linear-gradient(90deg, ${colors.secondaryMint} 0%, ${colors.accentLavender} 100%)`,
-                        }}
-                      >
-                        <span className="text-white font-black text-sm">{school.elaProficiency}%</span>
-                      </div>
+                    {/* School Name */}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-sm truncate" style={{ color: colors.text }}>
+                        {school.name}
+                      </h4>
+                    </div>
+
+                    {/* Score - Compact */}
+                    <div className="flex-shrink-0">
+                      <span className="text-lg font-black" style={{ color: colors.secondaryMint }}>
+                        {school.elaProficiency}%
+                      </span>
                     </div>
                   </div>
-                </div>
-              </button>
-            ))}
+
+                  {/* Bar Visualization */}
+                  <div className="ml-7">
+                    <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#2A3A35' : '#E8F7F0' }}>
+                      <div
+                        className="absolute left-0 top-0 h-full rounded-full"
+                        style={{
+                          width: `${school.elaProficiency}%`,
+                          backgroundColor: colors.secondaryMint,
+                          minWidth: '8px',
+                        }}
+                      />
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Legend */}
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: darkMode ? '#3A3A3A' : '#F7F4F6' }}>
+              <p className="text-xs" style={{ color: colors.textMuted }}>
+                📊 排名基于英语成绩 — 分数越高，排名越靠前
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Growing Schools */}
-        <div className="rounded-[32px] p-10 shadow-xl" style={{ backgroundColor: colors.sectionBg.lavender }}>
-          <div className="mb-6">
-            <h3 className="text-2xl font-black mb-2" style={{ color: colors.text }}>Fastest Growing</h3>
-            <p className="font-semibold" style={{ color: colors.textMuted }}>
+        <div className="rounded-[24px] p-6 shadow-xl" style={{ backgroundColor: colors.cardBg }}>
+          <div className="mb-4">
+            <h3 className="text-xl font-black mb-1" style={{ color: colors.text }}>Fastest Growing</h3>
+            <p className="text-sm font-semibold" style={{ color: colors.textMuted }}>
               {levelFilter === "All" ? "Rising stars on the move" : `Fastest improving ${levelFilter.toLowerCase()} schools`}
             </p>
           </div>
 
-          {/* Horizontal Bar Chart Layout */}
-          <div className="space-y-4">
+          {/* Compact Bar Chart */}
+          <div className="space-y-2">
             {topSchoolsByGrowth.map((school, idx) => (
               <button
                 key={school.id}
                 onClick={() => onSelectSchool(school)}
-                className="w-full rounded-[20px] p-5 hover:shadow-xl hover:scale-[1.02] transition-all duration-200 text-left group"
-                style={{ backgroundColor: colors.cardBg, boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.07)' }}
+                className="w-full text-left hover:opacity-80 transition-all rounded-xl p-3"
+                style={{ backgroundColor: darkMode ? '#342A3A10' : '#F0EBFF20' }}
               >
-                <div className="flex items-center gap-4 mb-3">
-                  {/* Rank Badge */}
-                  <div
-                    className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-black text-white"
-                    style={{ backgroundColor: idx === 0 ? colors.primaryBerry : colors.accentLavender }}
-                  >
-                    #{idx + 1}
+                <div className="flex items-center gap-2 mb-1.5">
+                  {/* Rank Number */}
+                  <div className="w-5 flex-shrink-0">
+                    <span className="text-lg font-black" style={{ color: colors.textMuted }}>
+                      {idx + 1}
+                    </span>
                   </div>
 
-                  {/* School Info */}
+                  {/* School Name */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline gap-3 mb-1">
-                      <h4 className="font-black text-base truncate" style={{ color: colors.text }}>
-                        {school.name}
-                      </h4>
-                      <span className="text-xs font-semibold px-2 py-1 rounded-full flex-shrink-0 flex items-center gap-1"
+                    <h4 className="font-bold text-sm truncate" style={{ color: colors.text }}>
+                      {school.name}
+                    </h4>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1"
                         style={{ backgroundColor: darkMode ? '#342A3A' : '#F0EBFF', color: colors.textMuted }}>
                         <TrendingUp className="w-3 h-3" />
                         +{school.trends.mathChange} pts
                       </span>
-                      <span className="text-xs font-semibold px-2 py-1 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: darkMode ? '#342A3A' : '#F0EBFF', color: colors.textMuted }}>
+                      <span className="text-xs font-semibold"
+                        style={{ color: colors.textMuted }}>
                         {school.grades}
                       </span>
                     </div>
+                  </div>
 
-                    {/* Progress Bar - showing current score */}
-                    <div className="relative h-8 rounded-full overflow-hidden" style={{ backgroundColor: darkMode ? '#342A3A' : '#F0EBFF' }}>
-                      <div
-                        className="absolute left-0 top-0 h-full rounded-full transition-all duration-1000 flex items-center justify-end pr-3"
-                        style={{
-                          width: `${school.mathProficiency}%`,
-                          background: `linear-gradient(90deg, ${colors.accentLavender} 0%, ${colors.primaryBerry} 100%)`,
-                        }}
-                      >
-                        <span className="text-white font-black text-sm">{school.mathProficiency}%</span>
-                      </div>
-                    </div>
+                  {/* Score - Compact */}
+                  <div className="flex-shrink-0">
+                    <span className="text-lg font-black" style={{ color: colors.accentLavender }}>
+                      {school.mathProficiency}%
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bar Visualization */}
+                <div className="ml-7">
+                  <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#342A3A' : '#F0EBFF' }}>
+                    <div
+                      className="absolute left-0 top-0 h-full rounded-full"
+                      style={{
+                        width: `${school.mathProficiency}%`,
+                        backgroundColor: colors.accentLavender,
+                        minWidth: '8px',
+                      }}
+                    />
                   </div>
                 </div>
               </button>
             ))}
+          </div>
+
+          {/* Legend */}
+          <div className="mt-4 pt-4 border-t" style={{ borderColor: darkMode ? '#3A3A3A' : '#F7F4F6' }}>
+            <p className="text-xs" style={{ color: colors.textMuted }}>
+              📊 排名基于成绩增长 — 进步越大，排名越靠前
+            </p>
           </div>
         </div>
       </div>
@@ -388,64 +422,105 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
           <div className="relative z-10">
             <div className="mb-8">
               <h3 className="text-3xl font-black mb-2" style={{ color: colors.text }}>
-                Popular with Asian Families
+                Top 3 Schools - Popular with Asian Families
               </h3>
               <p className="font-semibold text-lg" style={{ color: colors.textMuted }}>
-                High Asian enrollment + Strong academics
+                按亚裔入学率排名 · 多维度对比
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            {/* Schools Comparison with Multi-dimensional Bars */}
+            <div className="space-y-6">
               {asianFriendlySchools.map((school, idx) => (
                 <button
                   key={school.id}
                   onClick={() => onSelectSchool(school)}
-                  className="relative rounded-[24px] p-7 hover:shadow-2xl hover:-translate-y-3 transition-all duration-200 text-left group"
-                  style={{ backgroundColor: colors.cardBg }}
+                  className="w-full text-left hover:opacity-90 transition-all rounded-[24px] p-6"
+                  style={{ backgroundColor: colors.cardBg, boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.07)' }}
                 >
-                  {idx === 0 && (
-                    <div className="absolute -top-3 -left-3 text-white text-xs font-black px-4 py-2 rounded-full flex items-center gap-1" style={{ backgroundColor: 'var(--color-primary-berry)' }}>
-                      <Star className="size-3 fill-current" /> Top Pick
+                  {/* School Header */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-white text-sm"
+                      style={{ backgroundColor: idx === 0 ? colors.primaryBerry : colors.secondaryMint }}>
+                      {idx + 1}
                     </div>
-                  )}
-                  <div className="mb-4">
-                    <div className="text-lg font-black mb-2" style={{ color: colors.text }}>
-                      {school.name}
-                    </div>
-                    <div className="text-xs font-semibold px-3 py-1 rounded-full inline-block" style={{ color: colors.textMuted, backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE' }}>
-                      {school.grades}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 rounded-xl" style={{ backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE' }}>
-                      <span className="text-sm font-bold" style={{ color: colors.text }}>Asian Families</span>
-                      <span className="font-black" style={{ color: 'var(--color-primary-berry)' }}>
-                        {school.demographics.asian.toFixed(1)}%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-xl" style={{ backgroundColor: darkMode ? '#2A3A35' : '#DFF9E9' }}>
-                      <span className="text-sm font-bold" style={{ color: colors.text }}>Math Score</span>
-                      <span className="font-black" style={{ color: 'var(--color-secondary-mint)' }}>
-                        {school.mathProficiency}%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 rounded-xl" style={{ backgroundColor: darkMode ? '#342A3A' : '#EBD9FF' }}>
-                      <span className="text-sm font-bold" style={{ color: colors.text }}>Overall</span>
-                      <span className="font-black" style={{ color: 'var(--color-primary-berry)' }}>
-                        {school.overallScore}/100
-                      </span>
-                    </div>
-                  </div>
-
-                  {school.giftedProgram && (
-                    <div className="mt-4 pt-4" style={{ borderTop: darkMode ? '2px solid rgba(245,245,245,0.1)' : '2px solid #FFE7EE' }}>
-                      <div className="text-xs font-black flex items-center gap-2" style={{ color: 'var(--color-secondary-mint)' }}>
-                        <GraduationCap className="size-4" />
-                        Gifted Program Available ✓
+                    <div className="flex-1">
+                      <h4 className="font-black text-lg" style={{ color: colors.text }}>
+                        {school.name}
+                      </h4>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs font-semibold" style={{ color: colors.textMuted }}>
+                          {school.grades}
+                        </span>
+                        {school.giftedProgram && (
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1"
+                            style={{ backgroundColor: darkMode ? '#2A3A35' : '#E8F7F0', color: colors.secondaryMint }}>
+                            <GraduationCap className="w-3 h-3" />
+                            Gifted
+                          </span>
+                        )}
                       </div>
                     </div>
-                  )}
+                  </div>
+
+                  {/* Multi-dimensional Comparison Bars */}
+                  <div className="space-y-3">
+                    {/* Asian Enrollment */}
+                    <div>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-bold" style={{ color: colors.textMuted }}>亚裔入学率</span>
+                        <span className="text-sm font-black" style={{ color: colors.primaryBerry }}>
+                          {school.demographics.asian.toFixed(1)}%
+                        </span>
+                      </div>
+                      <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE' }}>
+                        <div className="absolute left-0 top-0 h-full rounded-full"
+                          style={{ width: `${Math.min(school.demographics.asian, 100)}%`, backgroundColor: colors.primaryBerry, minWidth: '8px' }} />
+                      </div>
+                    </div>
+
+                    {/* Math */}
+                    <div>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-bold" style={{ color: colors.textMuted }}>数学成绩</span>
+                        <span className="text-sm font-black" style={{ color: colors.secondaryMint }}>
+                          {school.mathProficiency}%
+                        </span>
+                      </div>
+                      <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#2A3A35' : '#E8F7F0' }}>
+                        <div className="absolute left-0 top-0 h-full rounded-full"
+                          style={{ width: `${school.mathProficiency}%`, backgroundColor: colors.secondaryMint, minWidth: '8px' }} />
+                      </div>
+                    </div>
+
+                    {/* ELA */}
+                    <div>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-bold" style={{ color: colors.textMuted }}>英语成绩</span>
+                        <span className="text-sm font-black" style={{ color: colors.accentLavender }}>
+                          {school.elaProficiency}%
+                        </span>
+                      </div>
+                      <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#342A3A' : '#F0EBFF' }}>
+                        <div className="absolute left-0 top-0 h-full rounded-full"
+                          style={{ width: `${school.elaProficiency}%`, backgroundColor: colors.accentLavender, minWidth: '8px' }} />
+                      </div>
+                    </div>
+
+                    {/* Overall Score */}
+                    <div>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-xs font-bold" style={{ color: colors.textMuted }}>综合评分</span>
+                        <span className="text-sm font-black" style={{ color: colors.text }}>
+                          {school.overallScore}/100
+                        </span>
+                      </div>
+                      <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#3A3A3A' : '#F7F4F6' }}>
+                        <div className="absolute left-0 top-0 h-full rounded-full"
+                          style={{ width: `${school.overallScore}%`, backgroundColor: colors.text, minWidth: '8px' }} />
+                      </div>
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>
@@ -454,27 +529,27 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
       )}
 
       {/* Why SchoolBerry */}
-      <div className="rounded-[32px] p-10 shadow-xl" style={{ backgroundColor: 'var(--color-primary-berry)' }}>
+      <div className="rounded-[32px] shadow-xl" style={{ backgroundColor: colors.cardBg, marginTop: '48px', padding: '48px' }}>
         <div className="mb-8">
-          <h4 className="text-3xl font-black text-white mb-2">
+          <h4 className="text-3xl font-black mb-2" style={{ color: colors.text }}>
             Why SchoolBerry is Better
           </h4>
-          <p className="text-white/80 font-semibold">Data-driven insights for better decisions</p>
+          <p className="font-semibold" style={{ color: colors.textMuted }}>Data-driven insights for better decisions</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: colors.cardBg }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8" style={{ gap: '32px' }}>
+          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: darkMode ? colors.bgSoft : '#F7F4F6' }}>
             <div className="font-black mb-2 text-lg" style={{ color: colors.text }}>Trend Analysis</div>
             <div className="text-sm font-semibold" style={{ color: colors.textMuted }}>
               See which schools are improving over time
             </div>
           </div>
-          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: colors.cardBg }}>
+          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: darkMode ? colors.bgSoft : '#F7F4F6' }}>
             <div className="font-black mb-2 text-lg" style={{ color: colors.text }}>Family Insights</div>
             <div className="text-sm font-semibold" style={{ color: colors.textMuted }}>
               Understand enrollment patterns & performance
             </div>
           </div>
-          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: colors.cardBg }}>
+          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: darkMode ? colors.bgSoft : '#F7F4F6' }}>
             <div className="font-black mb-2 text-lg" style={{ color: colors.text }}>Equity Scores</div>
             <div className="text-sm font-semibold" style={{ color: colors.textMuted }}>
               Compare performance across all demographics

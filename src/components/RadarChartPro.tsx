@@ -86,16 +86,11 @@ export function RadarChartPro({ school }: RadarChartProProps) {
 
   return (
     <div className="bg-white rounded-xl p-6 border-2 border-[#3C6EFF]/10 shadow-lg hover:shadow-xl transition-shadow">
-      <div className="flex items-center gap-2 mb-2">
-        <div className="bg-gradient-to-r from-[#3C6EFF] to-[#2952CC] p-2.5 rounded-lg shadow-md">
-          <BarChart3 className="size-5 text-white" />
-        </div>
-        <div>
-          <h3 className="text-[#1F2937] font-semibold text-lg">Performance Radar</h3>
-          <p className="text-sm text-[#6B7280]">
-            Five-dimension analysis • 0-100 scale
-          </p>
-        </div>
+      <div className="mb-2">
+        <h3 className="text-[#1F2937] font-semibold text-lg">Performance Radar</h3>
+        <p className="text-sm text-[#6B7280]">
+          Five-dimension analysis • 0-100 scale
+        </p>
       </div>
 
       <ResponsiveContainer width="100%" height={380}>
@@ -176,15 +171,15 @@ export function RadarChartPro({ school }: RadarChartProProps) {
       </ResponsiveContainer>
 
       {/* Metric values grid */}
-      <div className="mt-6 pt-5 border-t-2 border-[#E5E7EB]">
-        <div className="grid grid-cols-3 gap-3">
+      <div className="mt-4 pt-4 border-t-2 border-[#E5E7EB]">
+        <div className="flex flex-wrap justify-center gap-2">
           {metrics.map((m, idx) => (
             <div
               key={m.metric}
-              className="flex flex-col items-center p-3 rounded-lg border border-[#E5E7EB] hover:border-[#3C6EFF] hover:bg-[#F0F5FF] transition-all cursor-default"
+              className="flex items-center gap-1 px-3 py-2 rounded-lg border border-[#E5E7EB] hover:border-[#3C6EFF] hover:bg-[#F0F5FF] transition-all cursor-default"
             >
-              <div className="text-xs text-[#6B7280] mb-1">{m.metric}</div>
-              <div className="text-xl font-bold text-[#3C6EFF]">
+              <div className="text-xs text-[#6B7280]">{m.metric}</div>
+              <div className="text-lg font-bold text-[#3C6EFF]">
                 {m.displayValue.toFixed(0)}
               </div>
               <div className="text-[10px] text-[#9CA3AF]">/ 100</div>

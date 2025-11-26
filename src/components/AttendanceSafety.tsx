@@ -39,72 +39,59 @@ export function AttendanceSafety({ school }: AttendanceSafetyProps) {
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#FBBF24]/10 to-transparent rounded-full blur-2xl" />
       
       <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="bg-gradient-to-r from-[#FBBF24] to-[#F59E0B] p-2 rounded-lg">
-            <Shield className="size-5 text-white" />
-          </div>
+        <div className="mb-4">
           <h3 className="text-[#374151]">Attendance & Safety</h3>
         </div>
 
-        {/* Chronic Absenteeism */}
-        <div className="mb-6 p-4 bg-[#F9FAFB] rounded-lg">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Calendar className="size-5 text-[#3B82F6]" />
-              <span className="text-[#374151]">Chronic Absenteeism</span>
+        {/* Three metrics in horizontal layout */}
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          {/* Chronic Absenteeism */}
+          <div className="p-4 bg-[#F9FAFB] rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <Calendar className="size-4 text-[#3B82F6]" />
+              <span className="text-sm text-[#374151] font-medium">Chronic Absenteeism</span>
             </div>
-            <div className={`text-2xl ${school.chronicAbsenteeism < 5 ? 'text-[#22C55E]' : school.chronicAbsenteeism < 10 ? 'text-[#FBBF24]' : 'text-[#EF4444]'}`}>
+            <div className={`text-3xl font-bold mb-2 ${school.chronicAbsenteeism < 5 ? 'text-[#22C55E]' : school.chronicAbsenteeism < 10 ? 'text-[#FBBF24]' : 'text-[#EF4444]'}`}>
               {school.chronicAbsenteeism}%
             </div>
-          </div>
-          
-          {/* Progress bar */}
-          <div className="relative h-2 bg-[#E5E7EB] rounded-full overflow-hidden mb-2">
-            <div 
-              className={`absolute top-0 left-0 h-full transition-all ${
-                school.chronicAbsenteeism < 5 
-                  ? 'bg-[#22C55E]' 
-                  : school.chronicAbsenteeism < 10 
-                  ? 'bg-[#FBBF24]' 
-                  : 'bg-[#EF4444]'
-              }`}
-              style={{ width: `${Math.min(school.chronicAbsenteeism * 2, 100)}%` }}
-            />
-          </div>
 
-          <div className="flex items-center justify-between text-xs text-[#6B7280]">
-            <span>Attendance Rate: {100 - school.chronicAbsenteeism}%</span>
-            {school.trends.absenteeismChange !== 0 && (
-              <span className={`flex items-center gap-1 ${school.trends.absenteeismChange < 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
-                {school.trends.absenteeismChange < 0 ? (
-                  <TrendingDown className="size-3" />
-                ) : (
-                  <TrendingUp className="size-3" />
-                )}
-                {school.trends.absenteeismChange > 0 ? '+' : ''}{school.trends.absenteeismChange}% vs last year
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* School Climate */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-[#F9FAFB] rounded-lg">
-            <div className="flex items-center gap-2">
-              <Shield className="size-5 text-[#3B82F6]" />
-              <span className="text-[#374151]">School Climate</span>
+            {/* Progress bar */}
+            <div className="relative h-1.5 bg-[#E5E7EB] rounded-full overflow-hidden mb-2">
+              <div
+                className={`absolute top-0 left-0 h-full transition-all ${
+                  school.chronicAbsenteeism < 5
+                    ? 'bg-[#22C55E]'
+                    : school.chronicAbsenteeism < 10
+                    ? 'bg-[#FBBF24]'
+                    : 'bg-[#EF4444]'
+                }`}
+                style={{ width: `${Math.min(school.chronicAbsenteeism * 2, 100)}%` }}
+              />
             </div>
-            <Badge className={getClimateColor(school.schoolClimate)}>
+
+            <div className="text-xs text-[#6B7280]">
+              Attendance: {100 - school.chronicAbsenteeism}%
+            </div>
+          </div>
+
+          {/* School Climate */}
+          <div className="p-4 bg-[#F9FAFB] rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <Shield className="size-4 text-[#3B82F6]" />
+              <span className="text-sm text-[#374151] font-medium">School Climate</span>
+            </div>
+            <Badge className={`${getClimateColor(school.schoolClimate)} text-lg px-3 py-1`}>
               {school.schoolClimate}
             </Badge>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-[#F9FAFB] rounded-lg">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="size-5 text-[#3B82F6]" />
-              <span className="text-[#374151]">Bullying Reports</span>
+          {/* Bullying Reports */}
+          <div className="p-4 bg-[#F9FAFB] rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle className="size-4 text-[#3B82F6]" />
+              <span className="text-sm text-[#374151] font-medium">Bullying Reports</span>
             </div>
-            <Badge className={getBullyingColor(school.bullyingReports)}>
+            <Badge className={`${getBullyingColor(school.bullyingReports)} text-lg px-3 py-1`}>
               {school.bullyingReports}
             </Badge>
           </div>

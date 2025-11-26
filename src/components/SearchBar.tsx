@@ -48,9 +48,9 @@ export function SearchBar({ schools, onSelectSchool, selectedSchool }: SearchBar
   };
 
   return (
-    <div ref={wrapperRef} className="relative w-full max-w-2xl">
+    <div ref={wrapperRef} className="relative w-full">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-white/60" />
+        <Search className="absolute top-1/2 -translate-y-1/2 size-5" style={{ color: '#FF5B85', left: '20px' }} />
         <Input
           type="text"
           placeholder="Search by school name, district, or zip code..."
@@ -60,7 +60,14 @@ export function SearchBar({ schools, onSelectSchool, selectedSchool }: SearchBar
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          className="pl-10 pr-4 py-6 text-base border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder:text-white/60 focus:bg-white/20 focus:border-white/40 transition-all"
+          className="pr-4 py-3 text-base border-2 transition-all"
+          style={{
+            backgroundColor: '#FFFFFF',
+            borderColor: '#FF5B85',
+            color: '#2E2E2E',
+            borderRadius: '12px',
+            paddingLeft: '48px',
+          }}
         />
       </div>
 
