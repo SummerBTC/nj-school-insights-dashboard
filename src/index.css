@@ -2926,3 +2926,14 @@ html {
   font-weight: var(--font-weight-caption);
   color: var(--color-text-secondary);
 }
+
+/* ===== SCHOOBERRY TAB STYLES ===== */
+[data-slot="tabs-trigger"][data-state="active"] {
+  color: var(--color-primary-berry) !important;
+  background-color: rgba(255, 91, 133, 0.1);
+}
+
+[data-theme="dark"] [data-slot="tabs-trigger"][data-state="active"] {
+  color: var(--color-primary-berry) !important;
+  background-color: rgba(255, 91, 133, 0.15);
+}

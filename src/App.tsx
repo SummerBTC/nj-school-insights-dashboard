@@ -71,22 +71,14 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              {/* SchoolBerry Logo */}
-              <div className="p-2 rounded-2xl" style={{ backgroundColor: darkMode ? '#3A3A3A' : '#FFFFFF' }}>
-                <img
-                  src="/assets/schooberrylogo.png"
-                  alt="SchoolBerry Logo"
-                  className="w-14 h-14 object-contain"
-                />
-              </div>
               <div>
-                <h1 className="text-4xl font-black tracking-tight flex items-center gap-3" style={{ color: darkMode ? '#FF4F75' : '#FFFFFF' }}>
+                <h1 className="text-4xl font-black tracking-tight flex items-center gap-3" style={{ color: darkMode ? '#FF5B85' : '#FFFFFF' }}>
                   SchoolBerry
-                  <span className="px-3 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: darkMode ? '#3A3A3A' : 'rgba(255,255,255,0.2)', color: darkMode ? '#4ED0A8' : '#FFFFFF' }}>
+                  <span className="px-3 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: darkMode ? '#3A3A3A' : 'rgba(255,255,255,0.2)', color: darkMode ? '#64D7A5' : '#FFFFFF' }}>
                     BETA
                   </span>
                 </h1>
-                <p className="font-bold" style={{ color: darkMode ? '#4ED0A8' : '#FFFFFF' }}>
+                <p className="font-bold" style={{ color: darkMode ? '#64D7A5' : '#FFFFFF' }}>
                   Find your perfect school
                 </p>
               </div>
@@ -101,11 +93,6 @@ export default function App() {
               >
                 {darkMode ? 'Light' : 'Dark'}
               </button>
-              <div className="px-6 py-3 rounded-2xl hover:scale-105 transition-transform" style={{ backgroundColor: '#64D7A5', boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}>
-                <span className="text-white font-black">
-                  Better than GreatSchools
-                </span>
-              </div>
             </div>
           </div>
 
@@ -139,20 +126,20 @@ export default function App() {
 
         {!loading && !error && schools.length > 0 && (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-8 p-2 rounded-2xl" style={{ backgroundColor: darkMode ? '#2F2F2F' : '#FFFFFF' }}>
-              <TabsTrigger value="dashboard" className="rounded-xl font-black transition-all" style={{ color: darkMode ? '#F5F5F5' : '#000000' }}>
+            <TabsList className="mb-8 p-2 rounded-2xl" style={{ backgroundColor: darkMode ? '#2F2F2F' : '#FFFFFF', boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}>
+              <TabsTrigger value="dashboard" className="rounded-xl font-black transition-all">
                 Home
               </TabsTrigger>
-              <TabsTrigger value="school-detail" className="rounded-xl font-black transition-all" style={{ color: darkMode ? '#F5F5F5' : '#000000' }}>
+              <TabsTrigger value="school-detail" className="rounded-xl font-black transition-all">
                 School Detail
               </TabsTrigger>
-              <TabsTrigger value="compare" className="rounded-xl font-black transition-all" style={{ color: darkMode ? '#F5F5F5' : '#000000' }}>
+              <TabsTrigger value="compare" className="rounded-xl font-black transition-all">
                 Compare
               </TabsTrigger>
-              <TabsTrigger value="rankings" className="rounded-xl font-black transition-all" style={{ color: darkMode ? '#F5F5F5' : '#000000' }}>
+              <TabsTrigger value="rankings" className="rounded-xl font-black transition-all">
                 Rankings
               </TabsTrigger>
-              <TabsTrigger value="trends" className="rounded-xl font-black transition-all" style={{ color: darkMode ? '#F5F5F5' : '#000000' }}>
+              <TabsTrigger value="trends" className="rounded-xl font-black transition-all">
                 Trends
               </TabsTrigger>
             </TabsList>
