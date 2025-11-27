@@ -2937,3 +2937,44 @@ html {
   color: var(--color-primary-berry) !important;
   background-color: rgba(255, 91, 133, 0.15);
 }
+
+/* Custom Responsive Classes for Menu/Tab Control */
+.mobile-menu-btn {
+  display: block;
+}
+
+.desktop-tabs {
+  display: none;
+}
+
+.mobile-only-hidden {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .mobile-menu-btn {
+    display: none !important;
+  }
+  
+  .desktop-tabs {
+    display: block !important;
+  }
+  
+  .mobile-only-hidden {
+    display: block !important;
+  }
+}
+
+/* Menu Drawer Slide Animation */
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.menu-drawer-slide {
+  animation: slideInFromLeft 0.3s ease-out;
+}

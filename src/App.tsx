@@ -27,11 +27,6 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("school-detail");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    // Load dark mode preference from localStorage
-    const saved = localStorage.getItem('schoolberry-dark-mode');
-    return saved ? JSON.parse(saved) : false;
-  });
   const [language, setLanguage] = useState<'en' | 'zh'>(() => {
     // Load language preference from localStorage
     const saved = localStorage.getItem('schoolberry-language');
@@ -61,15 +56,6 @@ export default function App() {
     setActiveTab("school-detail");
   };
 
-  // Toggle dark mode and save to localStorage
-  const toggleDarkMode = () => {
-    setDarkMode(prev => {
-      const newValue = !prev;
-      localStorage.setItem('schoolberry-dark-mode', JSON.stringify(newValue));
-      return newValue;
-    });
-  };
-
   // Toggle language and save to localStorage
   const toggleLanguage = () => {
     setLanguage(prev => {
@@ -80,28 +66,28 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: darkMode ? '#1A1A1A' : '#FFFDFC' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#FFFDFC' }}>
       {/* Header - SchoolBerry Design System */}
-      <header className="sticky top-0 z-50" style={{ backgroundColor: darkMode ? '#2F2F2F' : '#FF5B85', boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}>
+      <header className="sticky top-0 z-50" style={{ backgroundColor: '#FF5B85', boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}>
         <div className="max-w-7xl mx-auto px-6 py-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 lg:gap-6">
-              {/* Mobile Menu Toggle - Only on mobile, to the left of logo */}
+              {/* Mobile Menu Toggle - Only on mobile and tablet, to the left of logo */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2"
-                style={{ color: darkMode ? '#FF5B85' : '#FFFFFF' }}
+                className="mobile-menu-btn p-2"
+                style={{ color: '#FFFFFF' }}
               >
-                {mobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+                <Menu className="size-6" />
               </button>
 
-              <h1 className="text-2xl font-black tracking-tight flex items-center gap-2" style={{ color: darkMode ? '#FF5B85' : '#FFFFFF' }}>
+              <h1 className="text-2xl font-black tracking-tight flex items-center gap-2" style={{ color: '#FFFFFF' }}>
                 SchoolBerry
-                <span className="px-2 py-0.5 rounded-full text-xs font-bold" style={{ backgroundColor: darkMode ? '#3A3A3A' : 'rgba(255,255,255,0.2)', color: darkMode ? '#64D7A5' : '#FFFFFF' }}>
+                <span className="px-2 py-0.5 rounded-full text-xs font-bold" style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: '#FFFFFF' }}>
                   BETA
                 </span>
               </h1>
-              <p className="hidden lg:block font-semibold text-sm" style={{ color: darkMode ? '#64D7A5' : 'rgba(255,255,255,0.9)' }}>
+              <p className="mobile-only-hidden font-semibold text-sm" style={{ color: 'rgba(255,255,255,0.9)' }}>
                 {language === 'en' ? 'School search that actually makes sense.' : '真正有意义的学校搜索工具'}
               </p>
             </div>
@@ -110,81 +96,102 @@ export default function App() {
               <button
                 onClick={toggleLanguage}
                 className="px-4 py-2 rounded-2xl hover:scale-110 transition-transform font-bold text-sm"
-                style={{ backgroundColor: darkMode ? '#3A3A3A' : 'rgba(255,255,255,0.2)', color: darkMode ? '#64D7A5' : '#FFFFFF' }}
+                style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: '#FFFFFF' }}
                 title={language === 'en' ? 'Switch to Chinese' : 'Switch to English'}
               >
                 {language === 'en' ? '中文' : 'EN'}
-              </button>
-
-              {/* Dark Mode Toggle */}
-              <button
-                onClick={toggleDarkMode}
-                className="px-4 py-2 rounded-2xl hover:scale-110 transition-transform font-bold text-sm"
-                style={{ backgroundColor: darkMode ? '#3A3A3A' : 'rgba(255,255,255,0.2)', color: darkMode ? '#64D7A5' : '#FFFFFF' }}
-                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              >
-                {darkMode ? 'Light' : 'Dark'}
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Full-Screen Mobile Menu */}
+      {/* Mobile Menu Drawer - Full Screen Slide from Left */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden" style={{ backgroundColor: darkMode ? '#1A1A1A' : '#FFFDFC', top: '52px' }}>
-          <div className="h-full flex flex-col p-6 space-y-2">
+        <div
+          className="mobile-menu-btn fixed inset-0 z-50 menu-drawer-slide"
+          style={{
+            backgroundColor: '#FFFDFC'
+          }}
+        >
+          {/* Close Button in Top Right */}
+          <div className="flex justify-end p-6">
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-3 rounded-xl hover:bg-gray-100 transition-colors"
+            >
+              <X className="size-7" style={{ color: '#FF5B85' }} />
+            </button>
+          </div>
+
+          {/* Menu Items - Centered */}
+          <div className="flex flex-col px-8 space-y-4 max-w-md mx-auto" style={{ marginTop: '15%' }}>
             <button
               onClick={() => { setActiveTab("dashboard"); setMobileMenuOpen(false); }}
-              className="w-full px-6 py-5 text-left font-black rounded-xl transition-all text-lg"
-              style={{ backgroundColor: activeTab === "dashboard" ? (darkMode ? '#3A2A3B' : '#FFE7EE') : (darkMode ? '#2F2F2F' : '#FFFFFF'), color: activeTab === "dashboard" ? '#FF5B85' : (darkMode ? '#999999' : '#6B7280'), boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}
+              className="w-full px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+              style={{
+                backgroundColor: activeTab === "dashboard" ? '#FFE7EE' : 'transparent',
+                color: activeTab === "dashboard" ? '#FF5B85' : '#6B7280'
+              }}
             >
-              Home
+              🏠 Home
             </button>
             <button
               onClick={() => { setActiveTab("school-detail"); setMobileMenuOpen(false); }}
-              className="w-full px-6 py-5 text-left font-black rounded-xl transition-all text-lg"
-              style={{ backgroundColor: activeTab === "school-detail" ? (darkMode ? '#3A2A3B' : '#FFE7EE') : (darkMode ? '#2F2F2F' : '#FFFFFF'), color: activeTab === "school-detail" ? '#FF5B85' : (darkMode ? '#999999' : '#6B7280'), boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}
+              className="w-full px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+              style={{
+                backgroundColor: activeTab === "school-detail" ? '#FFE7EE' : 'transparent',
+                color: activeTab === "school-detail" ? '#FF5B85' : '#6B7280'
+              }}
             >
-              Search School
+              🔍 Search School
             </button>
             <button
               onClick={() => { setActiveTab("compare"); setMobileMenuOpen(false); }}
-              className="w-full px-6 py-5 text-left font-black rounded-xl transition-all text-lg"
-              style={{ backgroundColor: activeTab === "compare" ? (darkMode ? '#3A2A3B' : '#FFE7EE') : (darkMode ? '#2F2F2F' : '#FFFFFF'), color: activeTab === "compare" ? '#FF5B85' : (darkMode ? '#999999' : '#6B7280'), boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}
+              className="w-full px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+              style={{
+                backgroundColor: activeTab === "compare" ? '#FFE7EE' : 'transparent',
+                color: activeTab === "compare" ? '#FF5B85' : '#6B7280'
+              }}
             >
-              Compare
+              ⚖️ Compare
             </button>
             <button
               onClick={() => { setActiveTab("rankings"); setMobileMenuOpen(false); }}
-              className="w-full px-6 py-5 text-left font-black rounded-xl transition-all text-lg"
-              style={{ backgroundColor: activeTab === "rankings" ? (darkMode ? '#3A2A3B' : '#FFE7EE') : (darkMode ? '#2F2F2F' : '#FFFFFF'), color: activeTab === "rankings" ? '#FF5B85' : (darkMode ? '#999999' : '#6B7280'), boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}
+              className="w-full px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+              style={{
+                backgroundColor: activeTab === "rankings" ? '#FFE7EE' : 'transparent',
+                color: activeTab === "rankings" ? '#FF5B85' : '#6B7280'
+              }}
             >
-              Rankings
+              🏆 Rankings
             </button>
             <button
               onClick={() => { setActiveTab("trends"); setMobileMenuOpen(false); }}
-              className="w-full px-6 py-5 text-left font-black rounded-xl transition-all text-lg"
-              style={{ backgroundColor: activeTab === "trends" ? (darkMode ? '#3A2A3B' : '#FFE7EE') : (darkMode ? '#2F2F2F' : '#FFFFFF'), color: activeTab === "trends" ? '#FF5B85' : (darkMode ? '#999999' : '#6B7280'), boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}
+              className="w-full px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+              style={{
+                backgroundColor: activeTab === "trends" ? '#FFE7EE' : 'transparent',
+                color: activeTab === "trends" ? '#FF5B85' : '#6B7280'
+              }}
             >
-              Trends
+              📈 Trends
             </button>
           </div>
         </div>
       )}
 
-      {/* Tabs Bar - Desktop Only */}
+      {/* Tabs Bar - Desktop Only (hidden on mobile and tablet) */}
       {!loading && !error && schools.length > 0 && (
-        <div className="hidden lg:block sticky z-40" style={{ top: '51px', backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE', boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)', marginTop: '-1px' }}>
+        <div className="desktop-tabs sticky z-40" style={{ top: '51px', backgroundColor: '#FFE7EE', boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)', marginTop: '-1px' }}>
           <div className="max-w-7xl mx-auto px-6">
             {/* Desktop Tabs - React Style with Underline */}
-            <div className="border-b-2 pb-0" style={{ borderColor: darkMode ? '#3A3A3A' : 'rgba(0,0,0,0.1)' }}>
+            <div className="border-b-2 pb-0" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
               <div className="flex gap-2">
                 <button
                   onClick={() => setActiveTab("dashboard")}
                   className="px-6 py-3 font-black text-base transition-all relative"
                   style={{
-                    color: activeTab === "dashboard" ? '#FF5B85' : (darkMode ? '#CCCCCC' : '#6B7280'),
+                    color: activeTab === "dashboard" ? '#FF5B85' : ('#6B7280'),
                     borderBottom: activeTab === "dashboard" ? '3px solid #FF5B85' : '3px solid transparent',
                     marginBottom: '-2px',
                   }}
@@ -195,7 +202,7 @@ export default function App() {
                   onClick={() => setActiveTab("school-detail")}
                   className="px-6 py-3 font-black text-base transition-all relative"
                   style={{
-                    color: activeTab === "school-detail" ? '#FF5B85' : (darkMode ? '#CCCCCC' : '#6B7280'),
+                    color: activeTab === "school-detail" ? '#FF5B85' : ('#6B7280'),
                     borderBottom: activeTab === "school-detail" ? '3px solid #FF5B85' : '3px solid transparent',
                     marginBottom: '-2px',
                   }}
@@ -206,7 +213,7 @@ export default function App() {
                   onClick={() => setActiveTab("compare")}
                   className="px-6 py-3 font-black text-base transition-all relative"
                   style={{
-                    color: activeTab === "compare" ? '#FF5B85' : (darkMode ? '#CCCCCC' : '#6B7280'),
+                    color: activeTab === "compare" ? '#FF5B85' : ('#6B7280'),
                     borderBottom: activeTab === "compare" ? '3px solid #FF5B85' : '3px solid transparent',
                     marginBottom: '-2px',
                   }}
@@ -217,7 +224,7 @@ export default function App() {
                   onClick={() => setActiveTab("rankings")}
                   className="px-6 py-3 font-black text-base transition-all relative"
                   style={{
-                    color: activeTab === "rankings" ? '#FF5B85' : (darkMode ? '#CCCCCC' : '#6B7280'),
+                    color: activeTab === "rankings" ? '#FF5B85' : ('#6B7280'),
                     borderBottom: activeTab === "rankings" ? '3px solid #FF5B85' : '3px solid transparent',
                     marginBottom: '-2px',
                   }}
@@ -228,7 +235,7 @@ export default function App() {
                   onClick={() => setActiveTab("trends")}
                   className="px-6 py-3 font-black text-base transition-all relative"
                   style={{
-                    color: activeTab === "trends" ? '#FF5B85' : (darkMode ? '#CCCCCC' : '#6B7280'),
+                    color: activeTab === "trends" ? '#FF5B85' : ('#6B7280'),
                     borderBottom: activeTab === "trends" ? '3px solid #FF5B85' : '3px solid transparent',
                     marginBottom: '-2px',
                   }}
@@ -243,7 +250,7 @@ export default function App() {
 
       {/* Search Bar - Below tabs, only in Search School tab */}
       {schools.length > 0 && selectedSchool && activeTab === "school-detail" && (
-        <div className="relative z-10" style={{ backgroundColor: darkMode ? '#1A1A1A' : '#FFFDFC', paddingTop: '16px', paddingBottom: '16px' }}>
+        <div className="relative z-10" style={{ backgroundColor: '#FFFDFC', paddingTop: '16px', paddingBottom: '16px' }}>
           <div className="max-w-7xl mx-auto px-6">
             <SearchBar
               schools={schools}
@@ -276,7 +283,6 @@ export default function App() {
               <Dashboard
                 schools={schools}
                 onSelectSchool={handleSelectSchoolFromDashboard}
-                darkMode={darkMode}
               />
             </TabsContent>
 

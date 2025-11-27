@@ -6,10 +6,9 @@ import { getSchoolLevel, type SchoolLevel } from "../utils/schoolLevel";
 interface DashboardProps {
   schools: School[];
   onSelectSchool: (school: School) => void;
-  darkMode?: boolean;
 }
 
-export function Dashboard({ schools, onSelectSchool, darkMode = false }: DashboardProps) {
+export function Dashboard({ schools, onSelectSchool }: DashboardProps) {
   // School level filter state
   const [levelFilter, setLevelFilter] = useState<SchoolLevel | "All">("All");
 
@@ -87,19 +86,19 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
     primaryBerry: '#FF5B85',
     secondaryMint: '#64D7A5',
     accentLavender: '#C9B6FF',
-    heroBg: darkMode ? '#2F2F2F' : '#FFE7EE',
-    cardBg: darkMode ? '#3A3A3A' : '#FFFFFF',
-    bgDefault: darkMode ? '#1A1A1A' : '#FFFDFC',
-    bgSoft: darkMode ? '#2F2F2F' : '#F7F4F6',
-    text: darkMode ? '#F5F5F5' : '#2E2E2E',
-    textSecondary: darkMode ? '#CCCCCC' : '#555555',
-    textMuted: darkMode ? '#999999' : '#888888',
+    heroBg: '#FFE7EE',
+    cardBg: '#FFFFFF',
+    bgDefault: '#FFFDFC',
+    bgSoft: '#F7F4F6',
+    text: '#2E2E2E',
+    textSecondary: '#555555',
+    textMuted: '#888888',
     success: '#4CCB71',
     warning: '#FFBD2F',
     sectionBg: {
-      pink: darkMode ? '#3A2A3B' : '#FFE7EE',
-      mint: darkMode ? '#2A3A35' : '#E8F7F0',
-      lavender: darkMode ? '#342A3A' : '#F0EBFF',
+      pink: '#FFE7EE',
+      mint: '#E8F7F0',
+      lavender: '#F0EBFF',
     }
   };
 
@@ -108,15 +107,15 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
       {/* Hero Section - SchoolBerry Flat Style */}
       <div className="relative rounded-[32px] p-12 overflow-hidden shadow-xl mb-12" style={{ backgroundColor: colors.heroBg }}>
         {/* Simple decorative circles */}
-        <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full" style={{ backgroundColor: darkMode ? 'rgba(255,79,117,0.1)' : 'rgba(255,255,255,0.1)' }} />
-        <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full" style={{ backgroundColor: darkMode ? 'rgba(78,208,168,0.2)' : 'var(--color-secondary-mint)' }} />
+        <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }} />
+        <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full" style={{ backgroundColor: 'var(--color-secondary-mint)' }} />
 
         <div className="relative z-10">
           <div className="mb-8">
-            <h2 className="text-3xl font-black mb-2" style={{ color: darkMode ? '#FFFFFF' : colors.text }}>
+            <h2 className="text-3xl font-black mb-2" style={{ color: colors.text }}>
               {countyStats.countyName} County
             </h2>
-            <p className="font-semibold text-lg" style={{ color: darkMode ? 'rgba(255,255,255,0.8)' : colors.textMuted }}>
+            <p className="font-semibold text-lg" style={{ color: colors.textMuted }}>
               Education quality at a glance
             </p>
           </div>
@@ -135,7 +134,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                 <div className="text-2xl mb-2 font-bold" style={{ color: colors.textMuted }}>/100</div>
               </div>
               {/* Mini Progress Bar */}
-              <div className="mt-4 relative h-2 rounded-full overflow-hidden" style={{ backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE' }}>
+              <div className="mt-4 relative h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#FFE7EE' }}>
                 <div
                   className="absolute left-0 top-0 h-full transition-all duration-1000 ease-out rounded-full"
                   style={{ width: `${countyStats.averageScore}%`, backgroundColor: colors.secondaryMint }}
@@ -144,7 +143,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
             </div>
 
             {/* NJ Ranking */}
-            <div className="rounded-[24px] p-6 hover:scale-105 transition-transform duration-200" style={{ backgroundColor: darkMode ? '#2A3A35' : '#E8F7F0', boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.07)' }}>
+            <div className="rounded-[24px] p-6 hover:scale-105 transition-transform duration-200" style={{ backgroundColor: '#E8F7F0', boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.07)' }}>
               <div className="text-xs font-bold mb-2 uppercase" style={{ color: colors.textMuted }}>
                 NJ Ranking
               </div>
@@ -219,7 +218,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                   key={school.id}
                   onClick={() => onSelectSchool(school)}
                   className="w-full text-left hover:opacity-80 transition-all rounded-xl p-3"
-                  style={{ backgroundColor: darkMode ? '#3A2A3B10' : '#FFE7EE20' }}
+                  style={{ backgroundColor: '#FFE7EE20' }}
                 >
                   <div className="flex items-center gap-2 mb-1.5">
                     {/* Rank Number */}
@@ -246,7 +245,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
 
                   {/* Bar Visualization */}
                   <div className="ml-7">
-                    <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE' }}>
+                    <div className="relative h-2 rounded-full" style={{ backgroundColor: '#FFE7EE' }}>
                       <div
                         className="absolute left-0 top-0 h-full rounded-full"
                         style={{
@@ -262,7 +261,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
             </div>
 
             {/* Legend */}
-            <div className="mt-4 pt-4 border-t" style={{ borderColor: darkMode ? '#3A3A3A' : '#F7F4F6' }}>
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: '#F7F4F6' }}>
               <p className="text-xs" style={{ color: colors.textMuted }}>
                 📊 排名基于数学成绩 — 分数越高，排名越靠前
               </p>
@@ -285,7 +284,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                   key={school.id}
                   onClick={() => onSelectSchool(school)}
                   className="w-full text-left hover:opacity-80 transition-all rounded-xl p-3"
-                  style={{ backgroundColor: darkMode ? '#2A3A3510' : '#E8F7F020' }}
+                  style={{ backgroundColor: '#E8F7F020' }}
                 >
                   <div className="flex items-center gap-2 mb-1.5">
                     {/* Rank Number */}
@@ -312,7 +311,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
 
                   {/* Bar Visualization */}
                   <div className="ml-7">
-                    <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#2A3A35' : '#E8F7F0' }}>
+                    <div className="relative h-2 rounded-full" style={{ backgroundColor: '#E8F7F0' }}>
                       <div
                         className="absolute left-0 top-0 h-full rounded-full"
                         style={{
@@ -328,7 +327,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
             </div>
 
             {/* Legend */}
-            <div className="mt-4 pt-4 border-t" style={{ borderColor: darkMode ? '#3A3A3A' : '#F7F4F6' }}>
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: '#F7F4F6' }}>
               <p className="text-xs" style={{ color: colors.textMuted }}>
                 📊 排名基于英语成绩 — 分数越高，排名越靠前
               </p>
@@ -352,7 +351,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                 key={school.id}
                 onClick={() => onSelectSchool(school)}
                 className="w-full text-left hover:opacity-80 transition-all rounded-xl p-3"
-                style={{ backgroundColor: darkMode ? '#342A3A10' : '#F0EBFF20' }}
+                style={{ backgroundColor: '#F0EBFF20' }}
               >
                 <div className="flex items-center gap-2 mb-1.5">
                   {/* Rank Number */}
@@ -369,7 +368,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                     </h4>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className="text-xs font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1"
-                        style={{ backgroundColor: darkMode ? '#342A3A' : '#F0EBFF', color: colors.textMuted }}>
+                        style={{ backgroundColor: '#F0EBFF', color: colors.textMuted }}>
                         <TrendingUp className="w-3 h-3" />
                         +{school.trends.mathChange} pts
                       </span>
@@ -390,7 +389,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
 
                 {/* Bar Visualization */}
                 <div className="ml-7">
-                  <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#342A3A' : '#F0EBFF' }}>
+                  <div className="relative h-2 rounded-full" style={{ backgroundColor: '#F0EBFF' }}>
                     <div
                       className="absolute left-0 top-0 h-full rounded-full"
                       style={{
@@ -406,7 +405,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
           </div>
 
           {/* Legend */}
-          <div className="mt-4 pt-4 border-t" style={{ borderColor: darkMode ? '#3A3A3A' : '#F7F4F6' }}>
+          <div className="mt-4 pt-4 border-t" style={{ borderColor: '#F7F4F6' }}>
             <p className="text-xs" style={{ color: colors.textMuted }}>
               📊 排名基于成绩增长 — 进步越大，排名越靠前
             </p>
@@ -416,7 +415,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
 
       {/* Asian Families Spotlight */}
       {asianFriendlySchools.length > 0 && (
-        <div className="relative rounded-[32px] p-12 overflow-hidden shadow-xl" style={{ backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE' }}>
+        <div className="relative rounded-[32px] p-12 overflow-hidden shadow-xl" style={{ backgroundColor: '#FFE7EE' }}>
           <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full" style={{ backgroundColor: 'var(--color-secondary-mint)' }} />
 
           <div className="relative z-10">
@@ -454,7 +453,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                         </span>
                         {school.giftedProgram && (
                           <span className="text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1"
-                            style={{ backgroundColor: darkMode ? '#2A3A35' : '#E8F7F0', color: colors.secondaryMint }}>
+                            style={{ backgroundColor: '#E8F7F0', color: colors.secondaryMint }}>
                             <GraduationCap className="w-3 h-3" />
                             Gifted
                           </span>
@@ -473,7 +472,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                           {school.demographics.asian.toFixed(1)}%
                         </span>
                       </div>
-                      <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#3A2A3B' : '#FFE7EE' }}>
+                      <div className="relative h-2 rounded-full" style={{ backgroundColor: '#FFE7EE' }}>
                         <div className="absolute left-0 top-0 h-full rounded-full"
                           style={{ width: `${Math.min(school.demographics.asian, 100)}%`, backgroundColor: colors.primaryBerry, minWidth: '8px' }} />
                       </div>
@@ -487,7 +486,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                           {school.mathProficiency}%
                         </span>
                       </div>
-                      <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#2A3A35' : '#E8F7F0' }}>
+                      <div className="relative h-2 rounded-full" style={{ backgroundColor: '#E8F7F0' }}>
                         <div className="absolute left-0 top-0 h-full rounded-full"
                           style={{ width: `${school.mathProficiency}%`, backgroundColor: colors.secondaryMint, minWidth: '8px' }} />
                       </div>
@@ -501,7 +500,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                           {school.elaProficiency}%
                         </span>
                       </div>
-                      <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#342A3A' : '#F0EBFF' }}>
+                      <div className="relative h-2 rounded-full" style={{ backgroundColor: '#F0EBFF' }}>
                         <div className="absolute left-0 top-0 h-full rounded-full"
                           style={{ width: `${school.elaProficiency}%`, backgroundColor: colors.accentLavender, minWidth: '8px' }} />
                       </div>
@@ -515,7 +514,7 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
                           {school.overallScore}/100
                         </span>
                       </div>
-                      <div className="relative h-2 rounded-full" style={{ backgroundColor: darkMode ? '#3A3A3A' : '#F7F4F6' }}>
+                      <div className="relative h-2 rounded-full" style={{ backgroundColor: '#F7F4F6' }}>
                         <div className="absolute left-0 top-0 h-full rounded-full"
                           style={{ width: `${school.overallScore}%`, backgroundColor: colors.text, minWidth: '8px' }} />
                       </div>
@@ -537,19 +536,19 @@ export function Dashboard({ schools, onSelectSchool, darkMode = false }: Dashboa
           <p className="font-semibold" style={{ color: colors.textMuted }}>Data-driven insights for better decisions</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8" style={{ gap: '32px' }}>
-          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: darkMode ? colors.bgSoft : '#F7F4F6' }}>
+          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: '#F7F4F6' }}>
             <div className="font-black mb-2 text-lg" style={{ color: colors.text }}>Trend Analysis</div>
             <div className="text-sm font-semibold" style={{ color: colors.textMuted }}>
               See which schools are improving over time
             </div>
           </div>
-          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: darkMode ? colors.bgSoft : '#F7F4F6' }}>
+          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: '#F7F4F6' }}>
             <div className="font-black mb-2 text-lg" style={{ color: colors.text }}>Family Insights</div>
             <div className="text-sm font-semibold" style={{ color: colors.textMuted }}>
               Understand enrollment patterns & performance
             </div>
           </div>
-          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: darkMode ? colors.bgSoft : '#F7F4F6' }}>
+          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: '#F7F4F6' }}>
             <div className="font-black mb-2 text-lg" style={{ color: colors.text }}>Equity Scores</div>
             <div className="text-sm font-semibold" style={{ color: colors.textMuted }}>
               Compare performance across all demographics
