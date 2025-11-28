@@ -2978,3 +2978,82 @@ html {
 .menu-drawer-slide {
   animation: slideInFromLeft 0.3s ease-out;
 }
+
+/* Hide scrollbar for horizontal chip scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* ===== BERRY DESIGN SYSTEM UTILITIES ===== */
+@layer utilities {
+  /* Background Colors */
+  .bg-berry-pink-light {
+    background-color: #FFE7EE;
+  }
+
+  .bg-berry-pink {
+    background-color: var(--color-primary-berry);
+  }
+
+  .bg-berry-mint {
+    background-color: var(--color-secondary-mint);
+  }
+
+  .bg-berry-mint-light {
+    background-color: #E8F7F0;
+  }
+
+  .bg-berry-lavender {
+    background-color: var(--color-accent-lavender);
+  }
+
+  .bg-berry-card {
+    background-color: var(--color-bg-card);
+  }
+
+  .bg-berry-soft {
+    background-color: var(--color-bg-soft);
+  }
+
+  /* Text Colors */
+  .text-berry-pink {
+    color: var(--color-primary-berry);
+  }
+
+  .text-berry-mint {
+    color: var(--color-secondary-mint);
+  }
+
+  .text-berry-lavender {
+    color: var(--color-accent-lavender);
+  }
+
+  /* Shadows */
+  .shadow-berry {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-berry-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* County Card Specific */
+  .county-card {
+    border-radius: var(--radius-xxl);
+    background-color: #FFE7EE;
+    border: 1px solid rgba(255, 91, 133, 0.1);
+    box-shadow: var(--shadow-card);
+    padding: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .county-card {
+      padding: 2.5rem;
+    }
+  }
+}

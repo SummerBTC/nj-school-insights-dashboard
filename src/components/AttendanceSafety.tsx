@@ -4,9 +4,10 @@ import type { School } from "../types/school";
 
 interface AttendanceSafetyProps {
   school: School;
+  language: 'en' | 'zh';
 }
 
-export function AttendanceSafety({ school }: AttendanceSafetyProps) {
+export function AttendanceSafety({ school, language }: AttendanceSafetyProps) {
   const getClimateColor = (climate: string) => {
     switch (climate) {
       case "Safe":
@@ -40,11 +41,13 @@ export function AttendanceSafety({ school }: AttendanceSafetyProps) {
       
       <div className="relative z-10">
         <div className="mb-4">
-          <h3 className="text-[#374151]">Attendance & Safety</h3>
+          <h3 className="text-[#374151]">
+            {language === 'en' ? 'Attendance & Safety' : '出勤与安全'}
+          </h3>
         </div>
 
         {/* Three metrics in horizontal layout */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           {/* Chronic Absenteeism */}
           <div className="p-4 bg-[#F9FAFB] rounded-lg">
             <div className="flex items-center gap-2 mb-2">

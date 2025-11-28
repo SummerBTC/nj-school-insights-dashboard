@@ -3,9 +3,10 @@ import type { School } from "../types/school";
 
 interface AsianFamiliesSpotlightProps {
   school: School;
+  language: 'en' | 'zh';
 }
 
-export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) {
+export function AsianFamiliesSpotlight({ school, language }: AsianFamiliesSpotlightProps) {
   const asianMath = school.performanceByDemographic.asian.math;
   const asianELA = school.performanceByDemographic.asian.ela;
   const asianPopulation = school.demographics.asian;
@@ -28,13 +29,19 @@ export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) 
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-white">Asian Families Spotlight</h3>
-            <p className="text-white/80 text-sm">Targeted performance insights</p>
+            <h3 className="text-white">
+              {language === 'en' ? 'Asian Families Spotlight' : '亚裔家庭聚焦'}
+            </h3>
+            <p className="text-white/80 text-sm">
+              {language === 'en' ? 'Targeted performance insights' : '针对性表现分析'}
+            </p>
           </div>
-          
+
           {/* Population Badge */}
           <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/30">
-            <div className="text-white/80 text-xs mb-0.5">Population</div>
+            <div className="text-white/80 text-xs mb-0.5">
+              {language === 'en' ? 'Population' : '人口占比'}
+            </div>
             <div className="text-white text-xl">{asianPopulation}%</div>
           </div>
         </div>
@@ -45,7 +52,9 @@ export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) 
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
             <div className="flex items-center gap-2 mb-2">
               <Calculator className="size-5 text-white" />
-              <span className="text-white/90 text-sm">Math</span>
+              <span className="text-white/90 text-sm">
+                {language === 'en' ? 'Math' : '数学'}
+              </span>
             </div>
             <div className="text-3xl text-white mb-1">{asianMath}%</div>
             
@@ -59,7 +68,9 @@ export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) 
             {/* Gap indicator */}
             <div className="mt-2 pt-2 border-t border-white/20">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/80">vs School Avg</span>
+                <span className="text-white/80">
+                  {language === 'en' ? 'vs School Avg' : '相比校平均'}
+                </span>
                 <span className={`${mathGap > 0 ? 'text-[#86EFAC]' : 'text-[#FCA5A5]'}`}>
                   {mathGap > 0 ? '+' : ''}{mathGap.toFixed(1)}%
                 </span>
@@ -71,7 +82,9 @@ export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) 
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
             <div className="flex items-center gap-2 mb-2">
               <BookOpen className="size-5 text-white" />
-              <span className="text-white/90 text-sm">ELA</span>
+              <span className="text-white/90 text-sm">
+                {language === 'en' ? 'ELA' : '英语'}
+              </span>
             </div>
             <div className="text-3xl text-white mb-1">{asianELA}%</div>
             
@@ -85,7 +98,9 @@ export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) 
             {/* Gap indicator */}
             <div className="mt-2 pt-2 border-t border-white/20">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/80">vs School Avg</span>
+                <span className="text-white/80">
+                  {language === 'en' ? 'vs School Avg' : '相比校平均'}
+                </span>
                 <span className={`${elaGap > 0 ? 'text-[#86EFAC]' : 'text-[#FCA5A5]'}`}>
                   {elaGap > 0 ? '+' : ''}{elaGap.toFixed(1)}%
                 </span>
@@ -98,14 +113,16 @@ export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) 
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
           <div className="flex items-center gap-2 mb-3">
             <BarChart3 className="size-5 text-white" />
-            <span className="text-white text-sm">Performance vs Schoolwide</span>
+            <span className="text-white text-sm">
+              {language === 'en' ? 'Performance vs Schoolwide' : '相比全校表现'}
+            </span>
           </div>
-          
+
           <div className="space-y-3">
             {/* Math Gap Bar */}
             <div>
               <div className="flex items-center justify-between text-xs text-white/90 mb-1">
-                <span>Math Gap</span>
+                <span>{language === 'en' ? 'Math Gap' : '数学差距'}</span>
                 <span>{mathGap > 0 ? '+' : ''}{mathGap.toFixed(1)}%</span>
               </div>
               <div className="relative h-2 bg-white/20 rounded-full overflow-hidden">
@@ -119,7 +136,7 @@ export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) 
             {/* ELA Gap Bar */}
             <div>
               <div className="flex items-center justify-between text-xs text-white/90 mb-1">
-                <span>ELA Gap</span>
+                <span>{language === 'en' ? 'ELA Gap' : '英语差距'}</span>
                 <span>{elaGap > 0 ? '+' : ''}{elaGap.toFixed(1)}%</span>
               </div>
               <div className="relative h-2 bg-white/20 rounded-full overflow-hidden">
@@ -134,16 +151,22 @@ export function AsianFamiliesSpotlight({ school }: AsianFamiliesSpotlightProps) 
 
         {/* Year-over-Year Trend Summary */}
         <div className="mt-4 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-          <div className="text-white/80 text-xs mb-2">📊 Year-over-Year Trend</div>
+          <div className="text-white/80 text-xs mb-2">
+            📊 {language === 'en' ? 'Year-over-Year Trend' : '年度趋势'}
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-white/90 text-sm">Math Trend</span>
+              <span className="text-white/90 text-sm">
+                {language === 'en' ? 'Math Trend' : '数学趋势'}
+              </span>
               <span className={`text-sm ${asianMathTrend >= 0 ? 'text-[#86EFAC]' : 'text-[#FCA5A5]'}`}>
                 {asianMathTrend > 0 ? '↗' : asianMathTrend < 0 ? '↘' : '→'} {asianMathTrend > 0 ? '+' : ''}{asianMathTrend}%
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-white/90 text-sm">ELA Trend</span>
+              <span className="text-white/90 text-sm">
+                {language === 'en' ? 'ELA Trend' : '英语趋势'}
+              </span>
               <span className={`text-sm ${asianELATrend >= 0 ? 'text-[#86EFAC]' : 'text-[#FCA5A5]'}`}>
                 {asianELATrend > 0 ? '↗' : asianELATrend < 0 ? '↘' : '→'} {asianELATrend > 0 ? '+' : ''}{asianELATrend}%
               </span>

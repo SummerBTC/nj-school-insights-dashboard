@@ -1,91 +1,102 @@
-import { Users } from "lucide-react";
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
 import type { School } from "../types/school";
 
 interface DemographicsBarChartProps {
   school: School;
+  language: 'en' | 'zh';
 }
 
-export function DemographicsBarChart({ school }: DemographicsBarChartProps) {
+export function DemographicsBarChart({ school, language }: DemographicsBarChartProps) {
   const demographics = [
     {
-      label: "Asian",
+      name: "Asian",
       value: school.demographics.asian,
-      color: "#3B82F6",
-      bgColor: "#EFF6FF"
+      color: "#3B82F6"
     },
     {
-      label: "White",
+      name: "White",
       value: school.demographics.white,
-      color: "#22C55E",
-      bgColor: "#F0FDF4"
+      color: "#22C55E"
     },
     {
-      label: "Hispanic",
+      name: "Hispanic",
       value: school.demographics.hispanic,
-      color: "#F59E0B",
-      bgColor: "#FFFBEB"
+      color: "#F59E0B"
     },
     {
-      label: "Black",
+      name: "Black",
       value: school.demographics.black,
-      color: "#A855F7",
-      bgColor: "#F5F3FF"
+      color: "#A855F7"
     },
-  ].sort((a, b) => b.value - a.value); // Sort by value descending
+  ].filter(d => d.value > 0); // Only show groups with students
 
-  const maxValue = Math.max(...demographics.map(d => d.value));
+  // Custom label to show percentage on pie slices
+  const renderLabel = (entry: any) => {
+    return `${entry.value.toFixed(1)}%`;
+  };
 
   return (
     <div className="bg-white rounded-xl p-6 border border-[#E5E7EB] shadow-sm">
       <div className="mb-6">
-        <h3 className="text-[#374151] font-semibold">Student Demographics</h3>
-        <p className="text-sm text-[#6B7280]">Breakdown by Ethnicity</p>
+        <h3 className="text-[#374151] font-semibold">
+          {language === 'en' ? 'Student Demographics' : '学生人口统计'}
+        </h3>
+        <p className="text-sm text-[#6B7280]">
+          {language === 'en' ? 'Breakdown by Ethnicity' : '按族裔分类'}
+        </p>
       </div>
 
-      <div className="space-y-4">
-        {demographics.map((demo) => (
-          <div key={demo.label} className="group">
-            {/* Label and percentage */}
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-sm font-medium text-[#374151]">{demo.label}</span>
-              <span className="text-sm font-semibold" style={{ color: demo.color }}>
-                {demo.value.toFixed(2)}%
-              </span>
-            </div>
-
-            {/* Horizontal bar */}
-            <div className="relative h-8 rounded-lg overflow-hidden" style={{ backgroundColor: demo.bgColor }}>
-              {/* Progress fill */}
-              <div
-                className="absolute top-0 left-0 h-full rounded-lg transition-all duration-500 ease-out group-hover:brightness-110"
-                style={{
-                  width: `${(demo.value / maxValue) * 100}%`,
-                  backgroundColor: demo.color
-                }}
-              />
-
-              {/* Inner bar visualization */}
-              <div className="absolute inset-0 flex items-center px-3">
-                <div className="flex-1 flex items-center justify-end pr-2">
-                  {/* Block characters for visual effect */}
-                  <span className="text-white text-xs font-mono opacity-80">
-                    {demo.value > 10 ? '█'.repeat(Math.min(Math.floor(demo.value / 10), 10)) : ''}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Pie Chart */}
+      <div className="w-full h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={demographics}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={renderLabel}
+              outerRadius={100}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {demographics.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value: number) => `${value.toFixed(2)}%`}
+              contentStyle={{
+                backgroundColor: 'white',
+                border: '1px solid #E5E7EB',
+                borderRadius: '8px'
+              }}
+            />
+            <Legend
+              verticalAlign="bottom"
+              height={36}
+              formatter={(value, entry: any) => (
+                <span style={{ color: '#374151', fontSize: '14px' }}>
+                  {value} ({entry.payload.value.toFixed(1)}%)
+                </span>
+              )}
+            />
+          </PieChart>
+        </ResponsiveContainer>
       </div>
 
       {/* Summary */}
       <div className="mt-6 pt-4 border-t border-[#E5E7EB]">
         <div className="text-xs text-[#6B7280]">
-          <span className="font-medium">Diversity Index:</span>{' '}
+          <span className="font-medium">
+            {language === 'en' ? 'Diversity Index:' : '多样性指数：'}
+          </span>{' '}
           <span className="text-[#374151]">
             {(100 - Math.max(...demographics.map(d => d.value))).toFixed(0)}
           </span>
-          <span className="text-[#9CA3AF]"> (100 = perfect diversity)</span>
+          <span className="text-[#9CA3AF]">
+            {language === 'en' ? ' (100 = perfect diversity)' : ' (100 = 完美多样性)'}
+          </span>
         </div>
       </div>
     </div>

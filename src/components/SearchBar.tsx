@@ -7,9 +7,10 @@ interface SearchBarProps {
   schools: School[];
   onSelectSchool: (school: School) => void;
   selectedSchool: School;
+  language: 'en' | 'zh';
 }
 
-export function SearchBar({ schools, onSelectSchool, selectedSchool }: SearchBarProps) {
+export function SearchBar({ schools, onSelectSchool, selectedSchool, language }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [recentSearches, setRecentSearches] = useState<School[]>([]);
@@ -50,34 +51,35 @@ export function SearchBar({ schools, onSelectSchool, selectedSchool }: SearchBar
   return (
     <div ref={wrapperRef} className="relative w-full">
       <div className="relative">
-        <Search className="absolute top-1/2 -translate-y-1/2 size-5" style={{ color: '#FF5B85', left: '20px' }} />
+        <Search className="absolute top-1/2 -translate-y-1/2 size-6" style={{ color: '#FF5B85', left: '24px' }} />
         <Input
           type="text"
-          placeholder="Search by school name, district, or zip code..."
+          placeholder={language === 'en' ? 'Search by school name, district, or zip code...' : '按学校名称、学区或邮编搜索...'}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          className="pr-4 py-3 text-base border-2 transition-all"
+          className="pr-6 text-lg border-2 transition-all font-medium"
           style={{
             backgroundColor: '#FFFFFF',
             borderColor: '#FF5B85',
             color: '#2E2E2E',
-            borderRadius: '12px',
-            paddingLeft: '48px',
+            borderRadius: '16px',
+            paddingLeft: '60px',
+            height: '60px',
           }}
         />
       </div>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 w-full bg-white border border-[#E5E7EB] rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
+        <div className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl max-h-[320px] overflow-y-auto" style={{ zIndex: 50 }}>
           {query === "" && recentSearches.length > 0 && (
             <div className="p-3 border-b border-[#E5E7EB]">
               <div className="flex items-center gap-2 text-[#6B7280] text-sm mb-2">
                 <Clock className="size-4" />
-                <span>Recent Searches</span>
+                <span>{language === 'en' ? 'Recent Searches' : '最近搜索'}</span>
               </div>
               {recentSearches.map((school) => (
                 <button

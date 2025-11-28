@@ -3,9 +3,10 @@ import type { School } from "../types/school";
 
 interface WhyScoreChangedProps {
   school: School;
+  language: 'en' | 'zh';
 }
 
-export function WhyScoreChanged({ school }: WhyScoreChangedProps) {
+export function WhyScoreChanged({ school, language }: WhyScoreChangedProps) {
   const changes = [];
 
   // Math proficiency change
@@ -151,13 +152,19 @@ export function WhyScoreChanged({ school }: WhyScoreChangedProps) {
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-[#111827]">Why the Score Changed</h3>
-            <p className="text-sm text-[#6B7280]">Key factors impacting performance</p>
+            <h3 className="text-[#111827]">
+              {language === 'en' ? 'Why the Score Changed' : '评分变化原因'}
+            </h3>
+            <p className="text-sm text-[#6B7280]">
+              {language === 'en' ? 'Key factors impacting performance' : '影响表现的关键因素'}
+            </p>
           </div>
 
           {/* Badge highlighting this is a key feature */}
           <div className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-[#EF4444] to-[#F59E0B] rounded-full">
-            <span className="text-white text-xs font-semibold">Exclusive Insight</span>
+            <span className="text-white text-xs font-semibold">
+              {language === 'en' ? 'Exclusive Insight' : '独家见解'}
+            </span>
           </div>
         </div>
 
@@ -195,7 +202,10 @@ export function WhyScoreChanged({ school }: WhyScoreChangedProps) {
         {/* Footer note */}
         <div className="mt-4 pt-4 border-t border-[#EF4444]/20">
           <p className="text-xs text-[#6B7280] italic">
-            💡 This analysis is unique to NJ School Insights - you won't find this level of detail on other platforms
+            {language === 'en'
+              ? '💡 This analysis is unique to NJ School Insights - you won\'t find this level of detail on other platforms'
+              : '💡 此分析是新泽西学校洞察独有的 - 您在其他平台上找不到如此详细的信息'
+            }
           </p>
         </div>
       </div>

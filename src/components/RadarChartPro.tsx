@@ -4,9 +4,10 @@ import { BarChart3 } from "lucide-react";
 
 interface RadarChartProProps {
   school: School;
+  language: 'en' | 'zh';
 }
 
-export function RadarChartPro({ school }: RadarChartProProps) {
+export function RadarChartPro({ school, language }: RadarChartProProps) {
   // Normalize metrics to 0-100 scale
   const normalizeStudentTeacherRatio = (ratio: number) => {
     // Lower is better, so invert: ideal ratio ~10, max considered ~25
@@ -87,9 +88,11 @@ export function RadarChartPro({ school }: RadarChartProProps) {
   return (
     <div className="bg-white rounded-xl p-6 border-2 border-[#3C6EFF]/10 shadow-lg hover:shadow-xl transition-shadow">
       <div className="mb-2">
-        <h3 className="text-[#1F2937] font-semibold text-lg">Performance Radar</h3>
+        <h3 className="text-[#1F2937] font-semibold text-lg">
+          {language === 'en' ? 'Performance Radar' : '表现雷达图'}
+        </h3>
         <p className="text-sm text-[#6B7280]">
-          Five-dimension analysis • 0-100 scale
+          {language === 'en' ? 'Five-dimension analysis • 0-100 scale' : '五维分析 • 0-100分制'}
         </p>
       </div>
 
@@ -164,7 +167,7 @@ export function RadarChartPro({ school }: RadarChartProProps) {
             }}
             formatter={(value: number) => [
               <span className="font-semibold text-[#3C6EFF]">{value.toFixed(1)}</span>,
-              'Score'
+              language === 'en' ? 'Score' : '分数'
             ]}
           />
         </RechartsRadar>
@@ -191,8 +194,17 @@ export function RadarChartPro({ school }: RadarChartProProps) {
       {/* Footer note */}
       <div className="mt-4 px-3 py-2 bg-[#F0F5FF] rounded-lg border border-[#3C6EFF]/20">
         <p className="text-xs text-[#6B7280] text-center">
-          <span className="font-medium text-[#3C6EFF]">●</span> Larger area = stronger overall performance •
-          All metrics normalized to 100-point scale
+          {language === 'en' ? (
+            <>
+              <span className="font-medium text-[#3C6EFF]">●</span> Larger area = stronger overall performance •
+              All metrics normalized to 100-point scale
+            </>
+          ) : (
+            <>
+              <span className="font-medium text-[#3C6EFF]">●</span> 面积越大 = 综合表现越强 •
+              所有指标标准化为100分制
+            </>
+          )}
         </p>
       </div>
     </div>
