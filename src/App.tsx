@@ -417,6 +417,7 @@ export default function App() {
                 <CompareSchools
                   schools={schools}
                   defaultSchool={selectedSchool}
+                  language={language}
                 />
               )}
             </TabsContent>
@@ -430,13 +431,14 @@ export default function App() {
               <SchoolRankingList
                 schools={schools}
                 activeFilters={activeFilters}
+                language={language}
               />
             </TabsContent>
 
             {/* Trends Tab */}
             <TabsContent value="trends">
               {selectedSchool && (
-                <TrendsInsights school={selectedSchool} />
+                <TrendsInsights school={selectedSchool} language={language} />
               )}
             </TabsContent>
           </Tabs>

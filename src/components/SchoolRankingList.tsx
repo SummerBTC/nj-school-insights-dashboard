@@ -5,9 +5,10 @@ import type { School } from "../types/school";
 interface SchoolRankingListProps {
   schools: School[];
   activeFilters: string[];
+  language: 'en' | 'zh';
 }
 
-export function SchoolRankingList({ schools, activeFilters }: SchoolRankingListProps) {
+export function SchoolRankingList({ schools, activeFilters, language }: SchoolRankingListProps) {
   // Apply filters
   const filteredSchools = schools.filter((school) => {
     if (activeFilters.includes("gifted") && !school.giftedProgram) return false;
@@ -31,7 +32,12 @@ export function SchoolRankingList({ schools, activeFilters }: SchoolRankingListP
     <div className="space-y-4">
       {rankedSchools.length === 0 ? (
         <div className="bg-white rounded-lg p-12 border border-[#E5E7EB] text-center">
-          <p className="text-[#6B7280]">No schools match your filter criteria. Try removing some filters.</p>
+          <p className="text-[#6B7280]">
+            {language === 'en'
+              ? 'No schools match your filter criteria. Try removing some filters.'
+              : '没有学校符合您的筛选条件。请尝试移除一些筛选器。'
+            }
+          </p>
         </div>
       ) : (
         rankedSchools.map((school, index) => {
@@ -78,33 +84,46 @@ export function SchoolRankingList({ schools, activeFilters }: SchoolRankingListP
                     </div>
                     <div className="text-right">
                       <div className="text-2xl text-[#3B82F6]">{school.overallScore}</div>
-                      <div className="text-xs text-[#6B7280]">Overall</div>
+                      <div className="text-xs text-[#6B7280]">
+                        {language === 'en' ? 'Overall' : '总分'}
+                      </div>
                     </div>
                   </div>
 
                   {/* Metrics Grid */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="p-3 bg-[#F9FAFB] rounded-lg">
-                      <div className="text-sm text-[#6B7280] mb-1">Math Proficiency</div>
+                      <div className="text-sm text-[#6B7280] mb-1">
+                        {language === 'en' ? 'Math Proficiency' : '数学水平'}
+                      </div>
                       <div className="text-xl text-[#3B82F6]">{school.mathProficiency}%</div>
                       {school.trends.mathChange > 0 && (
                         <div className="flex items-center gap-1 text-xs text-[#22C55E]">
                           <TrendingUp className="size-3" />
-                          +{school.trends.mathChange} pts
+                          +{school.trends.mathChange} {language === 'en' ? 'pts' : '分'}
                         </div>
                       )}
                     </div>
 
                     <div className="p-3 bg-[#F9FAFB] rounded-lg">
-                      <div className="text-sm text-[#6B7280] mb-1">Gifted Program</div>
+                      <div className="text-sm text-[#6B7280] mb-1">
+                        {language === 'en' ? 'Gifted Program' : '资优项目'}
+                      </div>
                       <div className={`flex items-center gap-2 ${school.giftedProgram ? 'text-[#22C55E]' : 'text-[#6B7280]'}`}>
                         <GraduationCap className="size-5" />
-                        <span>{school.giftedProgram ? "Yes" : "No"}</span>
+                        <span>
+                          {school.giftedProgram
+                            ? (language === 'en' ? 'Yes' : '有')
+                            : (language === 'en' ? 'No' : '无')
+                          }
+                        </span>
                       </div>
                     </div>
 
                     <div className="p-3 bg-[#F9FAFB] rounded-lg">
-                      <div className="text-sm text-[#6B7280] mb-1">Student-Teacher</div>
+                      <div className="text-sm text-[#6B7280] mb-1">
+                        {language === 'en' ? 'Student-Teacher' : '师生比'}
+                      </div>
                       <div className="flex items-center gap-2 text-[#374151]">
                         <Users className="size-5" />
                         <span>1:{school.studentTeacherRatio}</span>
@@ -112,7 +131,9 @@ export function SchoolRankingList({ schools, activeFilters }: SchoolRankingListP
                     </div>
 
                     <div className="p-3 bg-[#F9FAFB] rounded-lg">
-                      <div className="text-sm text-[#6B7280] mb-1">Asian Math</div>
+                      <div className="text-sm text-[#6B7280] mb-1">
+                        {language === 'en' ? 'Asian Math' : '亚裔数学'}
+                      </div>
                       <div className="text-xl text-[#374151]">
                         {school.performanceByDemographic.asian.math}%
                       </div>
