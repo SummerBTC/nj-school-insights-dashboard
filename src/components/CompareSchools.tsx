@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Switch } from "./ui/switch";
 import { Radar, RadarChart as RechartsRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from "recharts";
 import { ArrowRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { School } from "../types/school";
 import { areSameLevel, getSchoolLevelLabel } from "../utils/schoolLevel";
+import { SchoolCombobox } from "./SchoolCombobox";
+import { useTheme } from "../theme/ThemeContext";
 
 interface CompareSchoolsProps {
   schools: School[];
@@ -13,6 +14,7 @@ interface CompareSchoolsProps {
 }
 
 export function CompareSchools({ schools, defaultSchool, language }: CompareSchoolsProps) {
+  const { theme } = useTheme();
   const [school1, setSchool1] = useState<School>(defaultSchool);
   const [school2, setSchool2] = useState<School>(schools.find(s => s.id !== defaultSchool.id) || schools[1]);
   const [onlySimilarSchools, setOnlySimilarSchools] = useState<boolean>(true);
@@ -94,7 +96,7 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
 
     if (isNeutral) {
       return (
-        <div className="flex items-center gap-1 text-[#6B7280]">
+        <div className="flex items-center gap-1" style={{ color: theme.textSecondary }}>
           <Minus className="size-4" />
           <span className="text-sm">{language === 'en' ? 'Equal' : '相同'}</span>
         </div>
@@ -102,7 +104,7 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
     }
 
     return (
-      <div className={`flex items-center gap-1 ${isPositive ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
+      <div className="flex items-center gap-1" style={{ color: isPositive ? theme.success : theme.error }}>
         {isPositive ? <TrendingUp className="size-4" /> : <TrendingDown className="size-4" />}
         <span className="text-sm">{Math.abs(diff).toFixed(1)}</span>
       </div>
@@ -112,12 +114,12 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
   return (
     <div className="space-y-6">
       {/* Filter Toggle */}
-      <div className="bg-white rounded-lg p-4 border border-[#E5E7EB] flex items-center justify-between">
+      <div className="rounded-lg p-4 flex items-center justify-between" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
         <div>
-          <div className="text-sm font-medium text-[#374151]">
+          <div className="text-sm font-medium" style={{ color: theme.text }}>
             {language === 'en' ? 'Only show similar schools' : '仅显示相似学校'}
           </div>
-          <div className="text-xs text-[#6B7280] mt-1">
+          <div className="text-xs mt-1" style={{ color: theme.textSecondary }}>
             {onlySimilarSchools
               ? language === 'en'
                 ? `Comparing ${getSchoolLevelLabel(school1.gradeSpan || school1.grades)} only (${availableSchools.length} schools)`
@@ -136,70 +138,64 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
 
       {/* School Selectors */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-        <div className="bg-white rounded-lg p-4 border-2 border-[#3B82F6]">
-          <label className="text-sm text-[#6B7280] mb-2 block">
+        <div className="rounded-lg p-4" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.info}` }}>
+          <label className="text-sm mb-2 block" style={{ color: theme.textSecondary }}>
             {language === 'en' ? 'School 1' : '学校 1'}
           </label>
-          <Select value={school1.id} onValueChange={(id) => setSchool1(schools.find(s => s.id === id)!)}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {schools.map((school) => (
-                <SelectItem key={school.id} value={school.id} disabled={school.id === school2.id}>
-                  {school.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <SchoolCombobox
+            schools={schools}
+            value={school1.id}
+            onValueChange={(id) => setSchool1(schools.find(s => s.id === id)!)}
+            disabledSchoolId={school2.id}
+            placeholder={language === 'en' ? 'Select school...' : '选择学校...'}
+            searchPlaceholder={language === 'en' ? 'Search school...' : '搜索学校...'}
+            emptyText={language === 'en' ? 'No school found.' : '未找到学校。'}
+          />
         </div>
 
         <div className="flex justify-center">
-          <ArrowRight className="size-8 text-[#6B7280]" />
+          <ArrowRight className="size-8" style={{ color: theme.textSecondary }} />
         </div>
 
-        <div className="bg-white rounded-lg p-4 border-2 border-[#22C55E]">
-          <label className="text-sm text-[#6B7280] mb-2 block">
+        <div className="rounded-lg p-4" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.success}` }}>
+          <label className="text-sm mb-2 block" style={{ color: theme.textSecondary }}>
             {language === 'en' ? 'School 2' : '学校 2'}
           </label>
-          <Select value={school2.id} onValueChange={(id) => setSchool2(availableSchools.find(s => s.id === id)!)}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {availableSchools.map((school) => (
-                <SelectItem key={school.id} value={school.id} disabled={school.id === school1.id}>
-                  {school.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <SchoolCombobox
+            schools={availableSchools}
+            value={school2.id}
+            onValueChange={(id) => setSchool2(availableSchools.find(s => s.id === id)!)}
+            disabledSchoolId={school1.id}
+            placeholder={language === 'en' ? 'Select school...' : '选择学校...'}
+            searchPlaceholder={language === 'en' ? 'Search school...' : '搜索学校...'}
+            emptyText={language === 'en' ? 'No school found.' : '未找到学校。'}
+          />
         </div>
       </div>
 
       {/* Radar Chart Comparison */}
-      <div className="bg-white rounded-lg p-6 border border-[#E5E7EB]">
-        <h3 className="mb-4 text-[#374151]">
+      <div className="rounded-lg p-6" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
+        <h3 className="mb-4" style={{ color: theme.text }}>
           {language === 'en' ? 'Performance Overlay' : '表现对比图'}
         </h3>
         <ResponsiveContainer width="100%" height={400}>
           <RechartsRadar data={radarData}>
-            <PolarGrid stroke="#E5E7EB" />
-            <PolarAngleAxis dataKey="metric" tick={{ fill: '#6B7280', fontSize: 12 }} />
-            <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: '#6B7280', fontSize: 10 }} />
+            <PolarGrid stroke={theme.border} />
+            <PolarAngleAxis dataKey="metric" tick={{ fill: theme.textSecondary, fontSize: 12 }} />
+            <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: theme.textSecondary, fontSize: 10 }} />
             <Radar
               name={school1.name}
               dataKey={school1.name}
-              stroke="#3B82F6"
-              fill="#3B82F6"
+              stroke={theme.info}
+              fill={theme.info}
               fillOpacity={0.3}
               strokeWidth={2}
             />
             <Radar
               name={school2.name}
               dataKey={school2.name}
-              stroke="#22C55E"
-              fill="#22C55E"
+              stroke={theme.success}
+              fill={theme.success}
               fillOpacity={0.3}
               strokeWidth={2}
             />
@@ -208,111 +204,13 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
         </ResponsiveContainer>
       </div>
 
-      {/* Detailed Comparison Table */}
-      <div className="bg-white rounded-lg border border-[#E5E7EB] overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-[#F9FAFB]">
-              <tr>
-                <th className="px-6 py-4 text-left text-[#374151]">
-                  {language === 'en' ? 'Metric' : '指标'}
-                </th>
-                <th className="px-6 py-4 text-center text-[#3B82F6]">{school1.name}</th>
-                <th className="px-6 py-4 text-center text-[#6B7280]">
-                  {language === 'en' ? 'Difference' : '差异'}
-                </th>
-                <th className="px-6 py-4 text-center text-[#22C55E]">{school2.name}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#E5E7EB]">
-              <tr>
-                <td className="px-6 py-4 text-[#374151]">
-                  {language === 'en' ? 'Overall Score' : '综合评分'}
-                </td>
-                <td className="px-6 py-4 text-center text-[#3B82F6]">{school1.overallScore}</td>
-                <td className="px-6 py-4 flex justify-center">
-                  <DifferenceIndicator val1={school1.overallScore} val2={school2.overallScore} />
-                </td>
-                <td className="px-6 py-4 text-center text-[#22C55E]">{school2.overallScore}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-[#374151]">
-                  {language === 'en' ? 'Math Proficiency' : '数学水平'}
-                </td>
-                <td className="px-6 py-4 text-center">{school1.mathProficiency}%</td>
-                <td className="px-6 py-4 flex justify-center">
-                  <DifferenceIndicator val1={school1.mathProficiency} val2={school2.mathProficiency} />
-                </td>
-                <td className="px-6 py-4 text-center">{school2.mathProficiency}%</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-[#374151]">
-                  {language === 'en' ? 'ELA Proficiency' : '英语水平'}
-                </td>
-                <td className="px-6 py-4 text-center">{school1.elaProficiency}%</td>
-                <td className="px-6 py-4 flex justify-center">
-                  <DifferenceIndicator val1={school1.elaProficiency} val2={school2.elaProficiency} />
-                </td>
-                <td className="px-6 py-4 text-center">{school2.elaProficiency}%</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-[#374151]">
-                  {language === 'en' ? 'Chronic Absenteeism' : '长期缺勤率'}
-                </td>
-                <td className="px-6 py-4 text-center">{school1.chronicAbsenteeism}%</td>
-                <td className="px-6 py-4 flex justify-center">
-                  <DifferenceIndicator val1={school2.chronicAbsenteeism} val2={school1.chronicAbsenteeism} />
-                </td>
-                <td className="px-6 py-4 text-center">{school2.chronicAbsenteeism}%</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-[#374151]">
-                  {language === 'en' ? 'Student-Teacher Ratio' : '师生比'}
-                </td>
-                <td className="px-6 py-4 text-center">1:{school1.studentTeacherRatio}</td>
-                <td className="px-6 py-4 flex justify-center">
-                  <DifferenceIndicator val1={school2.studentTeacherRatio} val2={school1.studentTeacherRatio} />
-                </td>
-                <td className="px-6 py-4 text-center">1:{school2.studentTeacherRatio}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-[#374151]">
-                  {language === 'en' ? 'Enrollment' : '入学人数'}
-                </td>
-                <td className="px-6 py-4 text-center">{school1.enrollment}</td>
-                <td className="px-6 py-4 flex justify-center">
-                  <DifferenceIndicator val1={school1.enrollment} val2={school2.enrollment} />
-                </td>
-                <td className="px-6 py-4 text-center">{school2.enrollment}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-[#374151]">
-                  {language === 'en' ? 'Gifted Program' : '资优项目'}
-                </td>
-                <td className="px-6 py-4 text-center">{school1.giftedProgram ? "✓" : "✗"}</td>
-                <td className="px-6 py-4 text-center text-[#6B7280]">-</td>
-                <td className="px-6 py-4 text-center">{school2.giftedProgram ? "✓" : "✗"}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 text-[#374151]">
-                  {language === 'en' ? 'School Climate' : '学校氛围'}
-                </td>
-                <td className="px-6 py-4 text-center">{school1.schoolClimate}</td>
-                <td className="px-6 py-4 text-center text-[#6B7280]">-</td>
-                <td className="px-6 py-4 text-center">{school2.schoolClimate}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
       {/* Summary Insights */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-[#EFF6FF] rounded-lg p-6 border border-[#3B82F6]/20">
-          <h4 className="text-[#3B82F6] mb-3">
+        <div className="rounded-lg p-6" style={{ backgroundColor: theme.backgroundHover, border: `1px solid ${theme.info}` }}>
+          <h4 className="mb-3" style={{ color: theme.info }}>
             {school1.name} {language === 'en' ? 'Strengths' : '优势'}
           </h4>
-          <ul className="space-y-2 text-sm text-[#374151]">
+          <ul className="space-y-2 text-sm" style={{ color: theme.text }}>
             {school1.mathProficiency > school2.mathProficiency && (
               <li>
                 • {language === 'en'
@@ -351,11 +249,11 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
           </ul>
         </div>
 
-        <div className="bg-[#F0FDF4] rounded-lg p-6 border border-[#22C55E]/20">
-          <h4 className="text-[#22C55E] mb-3">
+        <div className="rounded-lg p-6" style={{ backgroundColor: theme.backgroundHover, border: `1px solid ${theme.success}` }}>
+          <h4 className="mb-3" style={{ color: theme.success }}>
             {school2.name} {language === 'en' ? 'Strengths' : '优势'}
           </h4>
-          <ul className="space-y-2 text-sm text-[#374151]">
+          <ul className="space-y-2 text-sm" style={{ color: theme.text }}>
             {school2.mathProficiency > school1.mathProficiency && (
               <li>
                 • {language === 'en'
@@ -392,6 +290,104 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
               <li>• {language === 'en' ? 'Offers gifted program' : '提供资优项目'}</li>
             )}
           </ul>
+        </div>
+      </div>
+
+      {/* Detailed Comparison Table */}
+      <div className="rounded-lg overflow-hidden" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead style={{ backgroundColor: theme.backgroundHover }}>
+              <tr>
+                <th className="px-6 py-4 text-left" style={{ color: theme.text }}>
+                  {language === 'en' ? 'Metric' : '指标'}
+                </th>
+                <th className="px-6 py-4 text-center" style={{ color: theme.info }}>{school1.name}</th>
+                <th className="px-6 py-4 text-center" style={{ color: theme.textSecondary }}>
+                  {language === 'en' ? 'Difference' : '差异'}
+                </th>
+                <th className="px-6 py-4 text-center" style={{ color: theme.success }}>{school2.name}</th>
+              </tr>
+            </thead>
+            <tbody style={{ borderColor: theme.border }} className="divide-y">
+              <tr>
+                <td style={{ color: theme.text }} className="px-6 py-4">
+                  {language === 'en' ? 'Overall Score' : '综合评分'}
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.info }}>{school1.overallScore}</td>
+                <td className="px-6 py-4 flex justify-center">
+                  <DifferenceIndicator val1={school1.overallScore} val2={school2.overallScore} />
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.success }}>{school2.overallScore}</td>
+              </tr>
+              <tr>
+                <td style={{ color: theme.text }} className="px-6 py-4">
+                  {language === 'en' ? 'Math Proficiency' : '数学水平'}
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school1.mathProficiency}%</td>
+                <td className="px-6 py-4 flex justify-center">
+                  <DifferenceIndicator val1={school1.mathProficiency} val2={school2.mathProficiency} />
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school2.mathProficiency}%</td>
+              </tr>
+              <tr>
+                <td style={{ color: theme.text }} className="px-6 py-4">
+                  {language === 'en' ? 'ELA Proficiency' : '英语水平'}
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school1.elaProficiency}%</td>
+                <td className="px-6 py-4 flex justify-center">
+                  <DifferenceIndicator val1={school1.elaProficiency} val2={school2.elaProficiency} />
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school2.elaProficiency}%</td>
+              </tr>
+              <tr>
+                <td style={{ color: theme.text }} className="px-6 py-4">
+                  {language === 'en' ? 'Chronic Absenteeism' : '长期缺勤率'}
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school1.chronicAbsenteeism}%</td>
+                <td className="px-6 py-4 flex justify-center">
+                  <DifferenceIndicator val1={school2.chronicAbsenteeism} val2={school1.chronicAbsenteeism} />
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school2.chronicAbsenteeism}%</td>
+              </tr>
+              <tr>
+                <td style={{ color: theme.text }} className="px-6 py-4">
+                  {language === 'en' ? 'Student-Teacher Ratio' : '师生比'}
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>1:{school1.studentTeacherRatio}</td>
+                <td className="px-6 py-4 flex justify-center">
+                  <DifferenceIndicator val1={school2.studentTeacherRatio} val2={school1.studentTeacherRatio} />
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>1:{school2.studentTeacherRatio}</td>
+              </tr>
+              <tr>
+                <td style={{ color: theme.text }} className="px-6 py-4">
+                  {language === 'en' ? 'Enrollment' : '入学人数'}
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school1.enrollment}</td>
+                <td className="px-6 py-4 flex justify-center">
+                  <DifferenceIndicator val1={school1.enrollment} val2={school2.enrollment} />
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school2.enrollment}</td>
+              </tr>
+              <tr>
+                <td style={{ color: theme.text }} className="px-6 py-4">
+                  {language === 'en' ? 'Gifted Program' : '资优项目'}
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school1.giftedProgram ? "✓" : "✗"}</td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.textSecondary }}>-</td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school2.giftedProgram ? "✓" : "✗"}</td>
+              </tr>
+              <tr>
+                <td style={{ color: theme.text }} className="px-6 py-4">
+                  {language === 'en' ? 'School Climate' : '学校氛围'}
+                </td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school1.schoolClimate}</td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.textSecondary }}>-</td>
+                <td className="px-6 py-4 text-center" style={{ color: theme.text }}>{school2.schoolClimate}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

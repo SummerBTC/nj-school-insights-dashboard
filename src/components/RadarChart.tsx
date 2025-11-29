@@ -1,4 +1,5 @@
 import { Radar, RadarChart as RechartsRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { useTheme } from "../theme/ThemeContext";
 import type { School } from "../types/school";
 import { BarChart3 } from "lucide-react";
 

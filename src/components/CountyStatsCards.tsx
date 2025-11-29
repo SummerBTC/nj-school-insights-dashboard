@@ -1,4 +1,5 @@
 import type { School } from "../types/school";
+import { useTheme } from "../theme/ThemeContext";
 
 interface CountyStatsCardsProps {
   overallScore: number;
@@ -15,37 +16,35 @@ export function CountyStatsCards({
   avgMath,
   language,
 }: CountyStatsCardsProps) {
+  const { theme } = useTheme();
+
   return (
-    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
       {/* 综合评分 */}
       <div
-        className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow"
-        style={{ border: '1px solid #F3EAF5' }}
+        className="rounded-xl p-4 border"
+        style={{ backgroundColor: theme.backgroundHover, borderColor: theme.primary + '33' }}
       >
-        <div className="text-sm text-gray-600 mb-2">
+        <div className="text-sm mb-1" style={{ color: theme.primary }}>
           {language === 'en' ? 'Overall Score' : '综合评分'}
         </div>
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl font-semibold text-pink-500">
-            {overallScore || 0}
-          </span>
-          <span className="text-sm text-gray-500">/100</span>
+        <div className="text-2xl" style={{ color: theme.primary }}>
+          {overallScore || 0}
+          <span className="text-sm" style={{ color: theme.textMuted }}>/100</span>
         </div>
       </div>
 
       {/* 学校总数 */}
       <div
-        className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow"
-        style={{ border: '1px solid #F3EAF5' }}
+        className="rounded-xl p-4 border"
+        style={{ backgroundColor: theme.backgroundHover, borderColor: theme.success + '33' }}
       >
-        <div className="text-sm text-gray-600 mb-2">
+        <div className="text-sm mb-1" style={{ color: theme.success }}>
           {language === 'en' ? 'Total Schools' : '学校总数'}
         </div>
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl font-semibold text-emerald-600">
-            {totalSchools}
-          </span>
-          <span className="text-sm text-gray-500">
+        <div className="text-2xl" style={{ color: theme.success }}>
+          {totalSchools}
+          <span className="text-sm ml-1" style={{ color: theme.textMuted }}>
             {language === 'en' ? 'schools' : '所'}
           </span>
         </div>
@@ -53,17 +52,15 @@ export function CountyStatsCards({
 
       {/* 资优项目 */}
       <div
-        className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow"
-        style={{ border: '1px solid #F3EAF5' }}
+        className="rounded-xl p-4 border"
+        style={{ backgroundColor: theme.backgroundHover, borderColor: theme.warning + '33' }}
       >
-        <div className="text-sm text-gray-600 mb-2">
+        <div className="text-sm mb-1" style={{ color: theme.warning }}>
           {language === 'en' ? 'Gifted Programs' : '资优项目'}
         </div>
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl font-semibold text-purple-500">
-            {giftedPrograms}
-          </span>
-          <span className="text-sm text-gray-500">
+        <div className="text-2xl" style={{ color: theme.warning }}>
+          {giftedPrograms}
+          <span className="text-sm ml-1" style={{ color: theme.textMuted }}>
             {language === 'en' ? 'programs' : '个'}
           </span>
         </div>
@@ -71,17 +68,15 @@ export function CountyStatsCards({
 
       {/* 平均数学 */}
       <div
-        className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow"
-        style={{ border: '1px solid #F3EAF5' }}
+        className="rounded-xl p-4 border"
+        style={{ backgroundColor: theme.backgroundHover, borderColor: theme.info + '33' }}
       >
-        <div className="text-sm text-gray-600 mb-2">
+        <div className="text-sm mb-1" style={{ color: theme.info }}>
           {language === 'en' ? 'Avg Math' : '平均数学'}
         </div>
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl font-semibold text-blue-600">
-            {avgMath || 0}
-          </span>
-          <span className="text-sm text-gray-500">%</span>
+        <div className="text-2xl" style={{ color: theme.info }}>
+          {avgMath || 0}
+          <span className="text-sm" style={{ color: theme.textMuted }}>%</span>
         </div>
       </div>
     </div>

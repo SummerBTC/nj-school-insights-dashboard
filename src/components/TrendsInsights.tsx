@@ -1,6 +1,7 @@
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { TrendingDown, AlertCircle, Users, BarChart3 } from "lucide-react";
 import type { School } from "../types/school";
+import { useTheme } from "../theme/ThemeContext";
 
 interface TrendsInsightsProps {
   school: School;
@@ -8,6 +9,7 @@ interface TrendsInsightsProps {
 }
 
 export function TrendsInsights({ school, language }: TrendsInsightsProps) {
+  const { theme } = useTheme();
   // Generate 3-year trend data
   const currentYear = 2025;
   const mathTrendData = [
@@ -44,13 +46,6 @@ export function TrendsInsights({ school, language }: TrendsInsightsProps) {
       Math: school.mathProficiency,
       ELA: school.elaProficiency,
     },
-  ];
-
-  const demographicData = [
-    { demographic: "Asian", percentage: school.demographics.asian, math: school.performanceByDemographic.asian.math },
-    { demographic: "White", percentage: school.demographics.white, math: school.performanceByDemographic.white.math },
-    { demographic: "Hispanic", percentage: school.demographics.hispanic, math: school.performanceByDemographic.hispanic.math },
-    { demographic: "Black", percentage: school.demographics.black, math: school.performanceByDemographic.black.math },
   ];
 
   // Root cause analysis
@@ -120,100 +115,105 @@ export function TrendsInsights({ school, language }: TrendsInsightsProps) {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "high":
-        return "border-[#EF4444] bg-[#FEF2F2]";
+        return { borderColor: theme.error, backgroundColor: theme.backgroundHover };
       case "medium":
-        return "border-[#FBBF24] bg-[#FFFBEB]";
+        return { borderColor: theme.warning, backgroundColor: theme.backgroundHover };
       default:
-        return "border-[#22C55E] bg-[#F0FDF4]";
+        return { borderColor: theme.success, backgroundColor: theme.backgroundHover };
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Root Cause Analysis */}
-      <div className="bg-white rounded-lg p-6 border border-[#E5E7EB]">
-        <h3 className="mb-4 text-[#374151]">
+      <div className="rounded-lg p-6" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
+        <h3 className="mb-4" style={{ color: theme.text }}>
           {language === 'en' ? 'Why Performance Changed: Root Cause Analysis' : '表现变化原因：根本原因分析'}
         </h3>
         <div className="space-y-4">
-          {rootCauses.map((cause, index) => (
-            <div 
-              key={index}
-              className={`p-4 rounded-lg border-l-4 ${getSeverityColor(cause.severity)}`}
-            >
-              <div className="flex items-start gap-3">
-                <cause.icon className="size-5 text-[#374151] mt-0.5 flex-shrink-0" />
-                <div>
-                  <h4 className="text-[#111827] mb-1">{cause.title}</h4>
-                  <p className="text-sm text-[#6B7280]">{cause.description}</p>
+          {rootCauses.map((cause, index) => {
+            const colors = getSeverityColor(cause.severity);
+            return (
+              <div
+                key={index}
+                className="p-4 rounded-lg border-l-4"
+                style={{ borderLeftColor: colors.borderColor, backgroundColor: colors.backgroundColor }}
+              >
+                <div className="flex items-start gap-3">
+                  <cause.icon className="size-5 mt-0.5 flex-shrink-0" style={{ color: theme.text }} />
+                  <div>
+                    <h4 className="mb-1" style={{ color: theme.text }}>{cause.title}</h4>
+                    <p className="text-sm" style={{ color: theme.textSecondary }}>{cause.description}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       {/* 3-Year Academic Trend */}
-      <div className="bg-white rounded-lg p-6 border border-[#E5E7EB]">
-        <h3 className="mb-4 text-[#374151]">
+      <div className="rounded-lg p-6" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
+        <h3 className="mb-4" style={{ color: theme.text }}>
           {language === 'en' ? '3-Year Academic Performance Trend' : '3年学业表现趋势'}
         </h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={combinedTrendData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+            <CartesianGrid strokeDasharray="3 3" stroke={theme.border} />
             <XAxis
               dataKey="year"
-              tick={{ fill: '#6B7280' }}
+              tick={{ fill: theme.textSecondary }}
             />
             <YAxis
               domain={[0, 100]}
-              tick={{ fill: '#6B7280' }}
+              tick={{ fill: theme.textSecondary }}
               label={{
                 value: language === 'en' ? 'Proficiency %' : '优秀率 %',
                 angle: -90,
                 position: 'insideLeft',
-                fill: '#6B7280'
+                fill: theme.textSecondary
               }}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'white',
-                border: '1px solid #E5E7EB',
+                backgroundColor: theme.backgroundElevated,
+                border: `1px solid ${theme.border}`,
                 borderRadius: '8px',
+                color: theme.text
               }}
             />
             <Legend />
-            <Line 
-              type="monotone" 
-              dataKey="Math" 
-              stroke="#3B82F6" 
+            <Line
+              type="monotone"
+              dataKey="Math"
+              stroke={theme.info}
               strokeWidth={2}
-              dot={{ fill: '#3B82F6', r: 4 }}
+              dot={{ fill: theme.info, r: 4 }}
             />
-            <Line 
-              type="monotone" 
-              dataKey="ELA" 
-              stroke="#22C55E" 
+            <Line
+              type="monotone"
+              dataKey="ELA"
+              stroke={theme.success}
               strokeWidth={2}
-              dot={{ fill: '#22C55E', r: 4 }}
+              dot={{ fill: theme.success, r: 4 }}
             />
           </LineChart>
         </ResponsiveContainer>
 
         <div className="mt-4 grid grid-cols-2 gap-4">
-          <div className="p-3 bg-[#F9FAFB] rounded-lg">
-            <div className="text-sm text-[#6B7280] mb-1">
+          <div className="p-3 rounded-lg" style={{ backgroundColor: theme.backgroundHover }}>
+            <div className="text-sm mb-1" style={{ color: theme.textSecondary }}>
               {language === 'en' ? 'Math Change' : '数学变化'}
             </div>
-            <div className={`text-xl ${school.trends.mathChange >= 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
+            <div className="text-xl" style={{ color: school.trends.mathChange >= 0 ? theme.success : theme.error }}>
               {school.trends.mathChange > 0 ? '+' : ''}{school.trends.mathChange} {language === 'en' ? 'pts' : '分'}
             </div>
           </div>
-          <div className="p-3 bg-[#F9FAFB] rounded-lg">
-            <div className="text-sm text-[#6B7280] mb-1">
+          <div className="p-3 rounded-lg" style={{ backgroundColor: theme.backgroundHover }}>
+            <div className="text-sm mb-1" style={{ color: theme.textSecondary }}>
               {language === 'en' ? 'ELA Change' : '英语变化'}
             </div>
-            <div className={`text-xl ${school.trends.elaChange >= 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
+            <div className="text-xl" style={{ color: school.trends.elaChange >= 0 ? theme.success : theme.error }}>
               {school.trends.elaChange > 0 ? '+' : ''}{school.trends.elaChange} {language === 'en' ? 'pts' : '分'}
             </div>
           </div>
@@ -221,87 +221,51 @@ export function TrendsInsights({ school, language }: TrendsInsightsProps) {
       </div>
 
       {/* Absenteeism Trend */}
-      <div className="bg-white rounded-lg p-6 border border-[#E5E7EB]">
-        <h3 className="mb-4 text-[#374151]">
+      <div className="rounded-lg p-6" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
+        <h3 className="mb-4" style={{ color: theme.text }}>
           {language === 'en' ? 'Chronic Absenteeism Trend' : '长期缺勤趋势'}
         </h3>
         <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={absenteeismTrendData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+          <LineChart data={absenteeismTrendData}>
+            <CartesianGrid strokeDasharray="3 3" stroke={theme.border} />
             <XAxis
               dataKey="year"
-              tick={{ fill: '#6B7280' }}
+              tick={{ fill: theme.textSecondary }}
             />
             <YAxis
-              tick={{ fill: '#6B7280' }}
+              tick={{ fill: theme.textSecondary }}
               label={{
                 value: language === 'en' ? 'Absenteeism %' : '缺勤率 %',
                 angle: -90,
                 position: 'insideLeft',
-                fill: '#6B7280'
+                fill: theme.textSecondary
               }}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: 'white',
-                border: '1px solid #E5E7EB',
+                backgroundColor: theme.backgroundElevated,
+                border: `1px solid ${theme.border}`,
                 borderRadius: '8px',
+                color: theme.text
               }}
             />
-            <Bar 
-              dataKey="value" 
-              fill="#FBBF24"
-              radius={[8, 8, 0, 0]}
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke={theme.warning}
+              strokeWidth={2}
+              dot={{ fill: theme.warning, r: 4 }}
             />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Demographic Shifts & Performance */}
-      <div className="bg-white rounded-lg p-6 border border-[#E5E7EB]">
-        <h3 className="mb-4 text-[#374151]">
-          {language === 'en' ? 'Demographic Distribution & Math Performance' : '人口分布与数学表现'}
-        </h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={demographicData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-            <XAxis
-              dataKey="demographic"
-              tick={{ fill: '#6B7280' }}
-            />
-            <YAxis
-              tick={{ fill: '#6B7280' }}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'white',
-                border: '1px solid #E5E7EB',
-                borderRadius: '8px',
-              }}
-            />
-            <Legend />
-            <Bar
-              dataKey="percentage"
-              fill="#3B82F6"
-              name={language === 'en' ? '% of Students' : '学生占比 %'}
-              radius={[8, 8, 0, 0]}
-            />
-            <Bar
-              dataKey="math"
-              fill="#22C55E"
-              name={language === 'en' ? 'Math Proficiency %' : '数学水平 %'}
-              radius={[8, 8, 0, 0]}
-            />
-          </BarChart>
+          </LineChart>
         </ResponsiveContainer>
 
-        <div className="mt-4 pt-4 border-t border-[#E5E7EB]">
-          <p className="text-sm text-[#6B7280]">
-            {language === 'en'
-              ? 'This chart shows the relationship between student demographics and math performance. Large gaps may indicate equity issues requiring targeted interventions.'
-              : '此图表显示学生人口统计与数学表现之间的关系。较大的差距可能表明需要针对性干预的公平性问题。'
-            }
-          </p>
+        <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: theme.backgroundHover }}>
+          <div className="text-sm mb-1" style={{ color: theme.textSecondary }}>
+            {language === 'en' ? 'Absenteeism Change' : '缺勤率变化'}
+          </div>
+          <div className="text-xl" style={{ color: school.trends.absenteeismChange <= 0 ? theme.success : theme.error }}>
+            {school.trends.absenteeismChange > 0 ? '+' : ''}{school.trends.absenteeismChange} {language === 'en' ? 'pts' : '分'}
+          </div>
         </div>
       </div>
     </div>

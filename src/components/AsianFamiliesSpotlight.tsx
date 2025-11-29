@@ -1,4 +1,5 @@
 import { TrendingUp, TrendingDown, Users, Calculator, BookOpen, BarChart3 } from "lucide-react";
+import { useTheme } from "../theme/ThemeContext";
 import type { School } from "../types/school";
 
 interface AsianFamiliesSpotlightProps {
@@ -7,6 +8,7 @@ interface AsianFamiliesSpotlightProps {
 }
 
 export function AsianFamiliesSpotlight({ school, language }: AsianFamiliesSpotlightProps) {
+  const { theme } = useTheme();
   const asianMath = school.performanceByDemographic.asian.math;
   const asianELA = school.performanceByDemographic.asian.ela;
   const asianPopulation = school.demographics.asian;

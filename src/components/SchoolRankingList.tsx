@@ -1,4 +1,5 @@
 import { Trophy, TrendingUp, Users, GraduationCap } from "lucide-react";
+import { useTheme } from "../theme/ThemeContext";
 import { Badge } from "./ui/badge";
 import type { School } from "../types/school";
 
@@ -9,6 +10,8 @@ interface SchoolRankingListProps {
 }
 
 export function SchoolRankingList({ schools, activeFilters, language }: SchoolRankingListProps) {
+  const { theme } = useTheme();
+
   // Apply filters
   const filteredSchools = schools.filter((school) => {
     if (activeFilters.includes("gifted") && !school.giftedProgram) return false;
@@ -29,10 +32,10 @@ export function SchoolRankingList({ schools, activeFilters, language }: SchoolRa
   };
 
   return (
-    <div className="space-y-4">
+    <div className="rounded-lg overflow-hidden border" style={{ backgroundColor: theme.backgroundElevated, borderColor: theme.border }}>
       {rankedSchools.length === 0 ? (
-        <div className="bg-white rounded-lg p-12 border border-[#E5E7EB] text-center">
-          <p className="text-[#6B7280]">
+        <div className="p-12 text-center">
+          <p style={{ color: theme.textSecondary }}>
             {language === 'en'
               ? 'No schools match your filter criteria. Try removing some filters.'
               : '没有学校符合您的筛选条件。请尝试移除一些筛选器。'
@@ -40,110 +43,131 @@ export function SchoolRankingList({ schools, activeFilters, language }: SchoolRa
           </p>
         </div>
       ) : (
-        rankedSchools.map((school, index) => {
-          const rank = index + 1;
-          return (
-            <div
-              key={school.id}
-              className="bg-gradient-to-r from-white via-white to-[#FFFBEB] rounded-xl p-6 border-2 border-[#E5E7EB] hover:border-[#FBBF24] transition-all hover:shadow-xl relative overflow-hidden"
-            >
-              {/* Decorative element for top 3 */}
-              {rank <= 3 && (
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#FBBF24]/10 to-transparent rounded-full blur-2xl" />
-              )}
-              
-              <div className="flex items-start gap-4 relative z-10">
-                {/* Rank Number */}
-                <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-                  rank === 1 ? 'bg-gradient-to-br from-[#FBBF24] to-[#F59E0B] text-white shadow-lg' :
-                  rank === 2 ? 'bg-gradient-to-br from-[#94A3B8] to-[#64748B] text-white shadow-lg' :
-                  rank === 3 ? 'bg-gradient-to-br from-[#D97706] to-[#B45309] text-white shadow-lg' :
-                  'bg-[#F9FAFB] text-[#6B7280]'
-                }`}>
-                  {rank <= 3 ? (
-                    <Trophy className="size-6" />
-                  ) : (
-                    <span className="text-xl">{rank}</span>
-                  )}
-                </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead style={{ backgroundColor: theme.backgroundHover }}>
+              <tr>
+                <th className="px-4 py-3 text-left text-sm font-semibold" style={{ color: theme.text }}>
+                  {language === 'en' ? 'Rank' : '排名'}
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold" style={{ color: theme.text }}>
+                  {language === 'en' ? 'School Name' : '学校名称'}
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold" style={{ color: theme.text }}>
+                  {language === 'en' ? 'District' : '学区'}
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
+                  {language === 'en' ? 'Overall' : '总分'}
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
+                  {language === 'en' ? 'Math' : '数学'}
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
+                  {language === 'en' ? 'ELA' : '英语'}
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
+                  {language === 'en' ? 'Gifted' : '资优'}
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
+                  {language === 'en' ? 'S-T Ratio' : '师生比'}
+                </th>
+                <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
+                  {language === 'en' ? 'Asian Math' : '亚裔数学'}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y" style={{ borderColor: theme.border }}>
+              {rankedSchools.map((school, index) => {
+                const rank = index + 1;
+                return (
+                  <tr
+                    key={school.id}
+                    className="hover:bg-opacity-50 transition-colors"
+                    style={{
+                      backgroundColor: rank <= 3 ? theme.primaryGlow : 'transparent'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = theme.backgroundHover;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = rank <= 3 ? theme.primaryGlow : 'transparent';
+                    }}
+                  >
+                    {/* Rank */}
+                    <td className="px-4 py-3">
+                      <div
+                        className="flex items-center justify-center w-10 h-10 rounded-full"
+                        style={
+                          rank === 1 ? { background: 'linear-gradient(to bottom right, #FBBF24, #F59E0B)', color: '#FFFFFF' } :
+                          rank === 2 ? { background: 'linear-gradient(to bottom right, #94A3B8, #64748B)', color: '#FFFFFF' } :
+                          rank === 3 ? { background: 'linear-gradient(to bottom right, #D97706, #B45309)', color: '#FFFFFF' } :
+                          { backgroundColor: theme.backgroundHover, color: theme.textSecondary }
+                        }
+                      >
+                        {rank <= 3 ? (
+                          <Trophy className="size-5" />
+                        ) : (
+                          <span className="text-sm font-semibold">{rank}</span>
+                        )}
+                      </div>
+                    </td>
 
-                {/* School Info */}
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h4 className="text-[#111827] mb-1">{school.name}</h4>
-                      <div className="flex items-center gap-2 text-sm text-[#6B7280]">
-                        <span>{school.district}</span>
-                        <span>•</span>
-                        <span>{school.county}</span>
-                        <span>•</span>
-                        <Badge variant="outline" className="border-[#3B82F6] text-[#3B82F6]">
-                          {school.grades}
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl text-[#3B82F6]">{school.overallScore}</div>
-                      <div className="text-xs text-[#6B7280]">
-                        {language === 'en' ? 'Overall' : '总分'}
-                      </div>
-                    </div>
-                  </div>
+                    {/* School Name */}
+                    <td className="px-4 py-3">
+                      <div className="font-medium" style={{ color: theme.text }}>{school.name}</div>
+                      <div className="text-xs" style={{ color: theme.textSecondary }}>{school.grades} • {school.county}</div>
+                    </td>
 
-                  {/* Metrics Grid */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="p-3 bg-[#F9FAFB] rounded-lg">
-                      <div className="text-sm text-[#6B7280] mb-1">
-                        {language === 'en' ? 'Math Proficiency' : '数学水平'}
-                      </div>
-                      <div className="text-xl text-[#3B82F6]">{school.mathProficiency}%</div>
-                      {school.trends.mathChange > 0 && (
-                        <div className="flex items-center gap-1 text-xs text-[#22C55E]">
-                          <TrendingUp className="size-3" />
-                          +{school.trends.mathChange} {language === 'en' ? 'pts' : '分'}
+                    {/* District */}
+                    <td className="px-4 py-3 text-sm" style={{ color: theme.textSecondary }}>
+                      {school.district}
+                    </td>
+
+                    {/* Overall Score */}
+                    <td className="px-4 py-3 text-center">
+                      <div className="text-lg font-bold" style={{ color: theme.primary }}>{school.overallScore}</div>
+                    </td>
+
+                    {/* Math */}
+                    <td className="px-4 py-3 text-center">
+                      <div className="font-semibold" style={{ color: theme.text }}>{school.mathProficiency}%</div>
+                      {school.trends.mathChange !== 0 && (
+                        <div className="flex items-center justify-center gap-1 text-xs" style={{ color: school.trends.mathChange > 0 ? theme.success : theme.error }}>
+                          <TrendingUp className={`size-3 ${school.trends.mathChange < 0 ? 'rotate-180' : ''}`} />
+                          {school.trends.mathChange > 0 ? '+' : ''}{school.trends.mathChange}
                         </div>
                       )}
-                    </div>
+                    </td>
 
-                    <div className="p-3 bg-[#F9FAFB] rounded-lg">
-                      <div className="text-sm text-[#6B7280] mb-1">
-                        {language === 'en' ? 'Gifted Program' : '资优项目'}
-                      </div>
-                      <div className={`flex items-center gap-2 ${school.giftedProgram ? 'text-[#22C55E]' : 'text-[#6B7280]'}`}>
-                        <GraduationCap className="size-5" />
-                        <span>
-                          {school.giftedProgram
-                            ? (language === 'en' ? 'Yes' : '有')
-                            : (language === 'en' ? 'No' : '无')
-                          }
-                        </span>
-                      </div>
-                    </div>
+                    {/* ELA */}
+                    <td className="px-4 py-3 text-center font-semibold" style={{ color: theme.text }}>
+                      {school.elaProficiency}%
+                    </td>
 
-                    <div className="p-3 bg-[#F9FAFB] rounded-lg">
-                      <div className="text-sm text-[#6B7280] mb-1">
-                        {language === 'en' ? 'Student-Teacher' : '师生比'}
-                      </div>
-                      <div className="flex items-center gap-2 text-[#374151]">
-                        <Users className="size-5" />
-                        <span>1:{school.studentTeacherRatio}</span>
-                      </div>
-                    </div>
+                    {/* Gifted */}
+                    <td className="px-4 py-3 text-center">
+                      {school.giftedProgram ? (
+                        <span style={{ color: theme.success }}>✓</span>
+                      ) : (
+                        <span style={{ color: theme.textMuted }}>-</span>
+                      )}
+                    </td>
 
-                    <div className="p-3 bg-[#F9FAFB] rounded-lg">
-                      <div className="text-sm text-[#6B7280] mb-1">
-                        {language === 'en' ? 'Asian Math' : '亚裔数学'}
-                      </div>
-                      <div className="text-xl text-[#374151]">
-                        {school.performanceByDemographic.asian.math}%
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })
+                    {/* Student-Teacher Ratio */}
+                    <td className="px-4 py-3 text-center text-sm" style={{ color: theme.text }}>
+                      1:{school.studentTeacherRatio}
+                    </td>
+
+                    {/* Asian Math */}
+                    <td className="px-4 py-3 text-center font-semibold" style={{ color: theme.text }}>
+                      {school.performanceByDemographic.asian.math}%
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import { TrendingDown, TrendingUp, AlertCircle, Users, GraduationCap, BarChart3 } from "lucide-react";
+import { useTheme } from "../theme/ThemeContext";
 import type { School } from "../types/school";
 
 interface WhyScoreChangedProps {
@@ -7,6 +8,7 @@ interface WhyScoreChangedProps {
 }
 
 export function WhyScoreChanged({ school, language }: WhyScoreChangedProps) {
+  const { theme } = useTheme();
   const changes = [];
 
   // Math proficiency change
@@ -109,53 +111,49 @@ export function WhyScoreChanged({ school, language }: WhyScoreChangedProps) {
     switch (type) {
       case "negative":
         return {
-          bg: "bg-[#FEF2F2]",
-          border: "border-[#EF4444]",
-          dot: "bg-[#EF4444]",
-          text: "text-[#991B1B]",
-          icon: "text-[#EF4444]"
+          bg: theme.error + '15',
+          border: theme.error,
+          text: theme.error,
+          icon: theme.error
         };
       case "warning":
         return {
-          bg: "bg-[#FFFBEB]",
-          border: "border-[#FBBF24]",
-          dot: "bg-[#FBBF24]",
-          text: "text-[#92400E]",
-          icon: "text-[#FBBF24]"
+          bg: theme.warning + '15',
+          border: theme.warning,
+          text: theme.warning,
+          icon: theme.warning
         };
       case "positive":
         return {
-          bg: "bg-[#F0FDF4]",
-          border: "border-[#22C55E]",
-          dot: "bg-[#22C55E]",
-          text: "text-[#14532D]",
-          icon: "text-[#22C55E]"
+          bg: theme.success + '15',
+          border: theme.success,
+          text: theme.success,
+          icon: theme.success
         };
       default:
         return {
-          bg: "bg-[#F9FAFB]",
-          border: "border-[#6B7280]",
-          dot: "bg-[#6B7280]",
-          text: "text-[#374151]",
-          icon: "text-[#6B7280]"
+          bg: theme.backgroundHover,
+          border: theme.border,
+          text: theme.textSecondary,
+          icon: theme.textSecondary
         };
     }
   };
 
   return (
-    <div className="bg-gradient-to-br from-white to-[#FEF2F2] rounded-xl p-6 border-2 border-[#EF4444]/20 shadow-lg relative overflow-hidden">
+    <div className="rounded-xl p-6 border-2 shadow-lg relative overflow-hidden" style={{ backgroundColor: theme.backgroundElevated, borderColor: theme.error + '33' }}>
       {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-[#EF4444]/10 to-transparent rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#FBBF24]/10 to-transparent rounded-full blur-2xl" />
-      
+      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-transparent to-transparent rounded-full blur-3xl" style={{ background: `radial-gradient(circle, ${theme.error}20 0%, transparent 70%)` }} />
+      <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-transparent to-transparent rounded-full blur-2xl" style={{ background: `radial-gradient(circle, ${theme.warning}20 0%, transparent 70%)` }} />
+
       <div className="relative z-10">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-[#111827]">
+            <h3 style={{ color: theme.text }}>
               {language === 'en' ? 'Why the Score Changed' : '评分变化原因'}
             </h3>
-            <p className="text-sm text-[#6B7280]">
+            <p className="text-sm" style={{ color: theme.textSecondary }}>
               {language === 'en' ? 'Key factors impacting performance' : '影响表现的关键因素'}
             </p>
           </div>
@@ -173,25 +171,29 @@ export function WhyScoreChanged({ school, language }: WhyScoreChangedProps) {
           {topChanges.map((change, index) => {
             const style = getChangeStyle(change.type);
             const Icon = change.icon;
-            
+
             return (
               <div
                 key={index}
-                className={`${style.bg} ${style.border} border-l-4 rounded-lg p-4 flex items-start gap-3 transition-all hover:shadow-md`}
+                className="border-l-4 rounded-lg p-4 flex items-start gap-3 transition-all hover:shadow-md"
+                style={{
+                  backgroundColor: style.bg,
+                  borderLeftColor: style.border
+                }}
               >
                 {/* Arrow indicator */}
                 {change.type === "negative" && (
-                  <TrendingDown className="size-5 text-[#EF4444] flex-shrink-0 mt-0.5" />
+                  <TrendingDown className="size-5 flex-shrink-0 mt-0.5" style={{ color: style.icon }} />
                 )}
                 {change.type === "positive" && (
-                  <TrendingUp className="size-5 text-[#22C55E] flex-shrink-0 mt-0.5" />
+                  <TrendingUp className="size-5 flex-shrink-0 mt-0.5" style={{ color: style.icon }} />
                 )}
                 {change.type === "warning" && (
-                  <AlertCircle className="size-5 text-[#FBBF24] flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="size-5 flex-shrink-0 mt-0.5" style={{ color: style.icon }} />
                 )}
 
                 {/* Text */}
-                <p className={`${style.text} flex-1`}>
+                <p className="flex-1" style={{ color: style.text }}>
                   {change.text}
                 </p>
               </div>
@@ -200,8 +202,8 @@ export function WhyScoreChanged({ school, language }: WhyScoreChangedProps) {
         </div>
 
         {/* Footer note */}
-        <div className="mt-4 pt-4 border-t border-[#EF4444]/20">
-          <p className="text-xs text-[#6B7280] italic">
+        <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.error + '33' }}>
+          <p className="text-xs italic" style={{ color: theme.textSecondary }}>
             {language === 'en'
               ? '💡 This analysis is unique to NJ School Insights - you won\'t find this level of detail on other platforms'
               : '💡 此分析是新泽西学校洞察独有的 - 您在其他平台上找不到如此详细的信息'

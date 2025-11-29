@@ -1,4 +1,5 @@
 import { Badge } from "./ui/badge";
+import { useTheme } from "../theme/ThemeContext";
 import { MapPin, Users, GraduationCap } from "lucide-react";
 import type { School } from "../types/school";
 
@@ -8,24 +9,26 @@ interface OverviewCardProps {
 }
 
 export function OverviewCard({ school, language }: OverviewCardProps) {
+  const { theme } = useTheme();
+
   return (
-    <div className="bg-gradient-to-br from-white via-white to-[#EFF6FF] rounded-xl p-8 border-2 border-[#3B82F6]/20 shadow-lg relative overflow-hidden">
+    <div className="rounded-xl p-8 border-2 shadow-lg relative overflow-hidden" style={{ backgroundColor: theme.backgroundElevated, borderColor: theme.info + '33' }}>
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#3B82F6]/5 to-transparent rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-[#22C55E]/5 to-transparent rounded-full blur-3xl" />
-      
+
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-[#111827] mb-2 text-4xl font-bold">{school.name}</h2>
-            <div className="flex items-center gap-3 text-[#6B7280]">
-              <Badge variant="outline" className="border-[#3B82F6] text-[#3B82F6] bg-[#EFF6FF]">
+            <h2 className="mb-2 text-4xl font-bold" style={{ color: theme.text }}>{school.name}</h2>
+            <div className="flex items-center gap-3" style={{ color: theme.textSecondary }}>
+              <Badge variant="outline" style={{ borderColor: theme.info, color: theme.info, backgroundColor: theme.info + '1A' }}>
                 {school.type}
               </Badge>
               {school.giftedProgram && (
-                <Badge variant="outline" className="border-[#22C55E] text-[#22C55E] bg-[#DCFCE7] flex items-center gap-1">
+                <Badge variant="outline" className="flex items-center gap-1" style={{ borderColor: theme.success, color: theme.success, backgroundColor: theme.success + '1A' }}>
                   <GraduationCap className="size-3" />
-                  {language === 'en' ? 'Gifted' : '资优'}
+                  {language === 'en' ? 'Contains Gifted Program' : '包含资优项目'}
                 </Badge>
               )}
               <span>•</span>
@@ -45,51 +48,51 @@ export function OverviewCard({ school, language }: OverviewCardProps) {
           </div>
         </div>
 
-        <p className="text-[#6B7280] mb-6">
+        <p className="mb-6" style={{ color: theme.textSecondary }}>
           {school.description}
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="bg-gradient-to-br from-[#DBEAFE] to-[#EFF6FF] p-4 rounded-xl border border-[#3B82F6]/20">
-            <div className="text-sm text-[#1E40AF] mb-1">
+          <div className="p-4 rounded-xl border" style={{ backgroundColor: theme.backgroundHover, borderColor: theme.info + '33' }}>
+            <div className="text-sm mb-1" style={{ color: theme.info }}>
               {language === 'en' ? 'Math Proficiency' : '数学水平'}
             </div>
-            <div className="text-2xl text-[#1E40AF]">{school.mathProficiency}%</div>
+            <div className="text-2xl" style={{ color: theme.info }}>{school.mathProficiency}%</div>
             {school.trends.mathChange !== 0 && (
-              <div className={`text-sm ${school.trends.mathChange > 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
+              <div className="text-sm" style={{ color: school.trends.mathChange > 0 ? theme.success : theme.error }}>
                 {school.trends.mathChange > 0 ? '▲' : '▼'} {Math.abs(school.trends.mathChange)} {language === 'en' ? 'pt' : '分'}
               </div>
             )}
           </div>
 
-          <div className="bg-gradient-to-br from-[#D1FAE5] to-[#DCFCE7] p-4 rounded-xl border border-[#22C55E]/20">
-            <div className="text-sm text-[#15803D] mb-1">
+          <div className="p-4 rounded-xl border" style={{ backgroundColor: theme.backgroundHover, borderColor: theme.success + '33' }}>
+            <div className="text-sm mb-1" style={{ color: theme.success }}>
               {language === 'en' ? 'ELA Proficiency' : '英语水平'}
             </div>
-            <div className="text-2xl text-[#15803D]">{school.elaProficiency}%</div>
+            <div className="text-2xl" style={{ color: theme.success }}>{school.elaProficiency}%</div>
             {school.trends.elaChange !== 0 && (
-              <div className={`text-sm ${school.trends.elaChange > 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
+              <div className="text-sm" style={{ color: school.trends.elaChange > 0 ? theme.success : theme.error }}>
                 {school.trends.elaChange > 0 ? '▲' : '▼'} {Math.abs(school.trends.elaChange)} {language === 'en' ? 'pt' : '分'}
               </div>
             )}
           </div>
 
-          <div className="bg-gradient-to-br from-[#FEF3C7] to-[#FEF9C3] p-4 rounded-xl border border-[#FBBF24]/20">
-            <div className="text-sm text-[#92400E] mb-1">
+          <div className="p-4 rounded-xl border" style={{ backgroundColor: theme.backgroundHover, borderColor: theme.warning + '33' }}>
+            <div className="text-sm mb-1" style={{ color: theme.warning }}>
               {language === 'en' ? 'Attendance' : '出勤率'}
             </div>
-            <div className="text-2xl text-[#92400E]">{100 - school.chronicAbsenteeism}%</div>
-            <div className="text-sm text-[#92400E]/70">
+            <div className="text-2xl" style={{ color: theme.warning }}>{100 - school.chronicAbsenteeism}%</div>
+            <div className="text-sm" style={{ color: theme.textMuted }}>
               {school.chronicAbsenteeism}% {language === 'en' ? 'absent' : '缺勤'}
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-[#E9D5FF] to-[#F3E8FF] p-4 rounded-xl border border-[#A855F7]/20">
-            <div className="text-sm text-[#6B21A8] mb-1">
+          <div className="p-4 rounded-xl border" style={{ backgroundColor: theme.backgroundHover, borderColor: theme.primary + '33' }}>
+            <div className="text-sm mb-1" style={{ color: theme.primary }}>
               {language === 'en' ? 'Student-Teacher' : '师生比'}
             </div>
-            <div className="text-2xl text-[#6B21A8]">1:{school.studentTeacherRatio}</div>
-            <div className="flex items-center gap-1 text-sm text-[#6B21A8]/70">
+            <div className="text-2xl" style={{ color: theme.primary }}>1:{school.studentTeacherRatio}</div>
+            <div className="flex items-center gap-1 text-sm" style={{ color: theme.textMuted }}>
               <Users className="size-3" />
               <span>{school.enrollment}</span>
             </div>

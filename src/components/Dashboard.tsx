@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { TrendingUp, GraduationCap, Star } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import type { School } from "../types/school";
 import { getSchoolLevel, type SchoolLevel } from "../utils/schoolLevel";
 import { CountyStatsCards } from "./CountyStatsCards";
+import { useTheme } from "../theme/ThemeContext";
 
 interface DashboardProps {
   schools: School[];
@@ -11,6 +12,7 @@ interface DashboardProps {
 }
 
 export function Dashboard({ schools, onSelectSchool, language }: DashboardProps) {
+  const { theme } = useTheme();
   // School level filter state
   const [levelFilter, setLevelFilter] = useState<SchoolLevel | "All">("All");
 
@@ -62,45 +64,31 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
     [filteredSchools]
   );
 
-  const topSchoolsByGrowth = useMemo(
-    () =>
-      [...filteredSchools]
-        .sort((a, b) => b.trends.mathChange - a.trends.mathChange)
-        .slice(0, 5),
-    [filteredSchools]
-  );
-
-  // Schools with high Asian enrollment
+  // Schools with high Asian enrollment (using filtered schools)
   const asianFriendlySchools = useMemo(
     () =>
-      [...schools]
+      [...filteredSchools]
         .filter((s) => s.demographics.asian > 15)
         .sort((a, b) => b.demographics.asian - a.demographics.asian)
         .slice(0, 3),
-    [schools]
+    [filteredSchools]
   );
 
   // Calculate percentile rank (simplified)
   const percentileRank = Math.round((countyStats.averageScore / 100) * 100);
 
-  // SchoolBerry Design System Colors
+  // Map theme colors for easier access
   const colors = {
-    primaryBerry: '#FF5B85',
-    secondaryMint: '#64D7A5',
-    accentLavender: '#C9B6FF',
-    heroBg: '#FFE7EE',
-    cardBg: '#FFFFFF',
-    bgDefault: '#FFFDFC',
-    bgSoft: '#F7F4F6',
-    text: '#2E2E2E',
-    textSecondary: '#555555',
-    textMuted: '#888888',
-    success: '#4CCB71',
-    warning: '#FFBD2F',
+    primaryBerry: theme.primary,
+    secondaryMint: theme.success,
+    accentLavender: theme.accent,
+    cardBg: theme.backgroundElevated,
+    text: theme.text,
+    textMuted: theme.textSecondary,
     sectionBg: {
-      pink: '#FFE7EE',
-      mint: '#E8F7F0',
-      lavender: '#F0EBFF',
+      pink: theme.primaryGlow,
+      mint: theme.primaryGlow,
+      lavender: theme.primaryGlow,
     }
   };
 
@@ -109,18 +97,18 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
       {/* County Overview Summary - Duolingo/Notion Style */}
       <section className="max-w-6xl mx-auto mt-4 mb-8">
         {/* 标题行 */}
-        <div className="flex items-baseline justify-between gap-3 mb-4">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">
+        <div className="mb-4">
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold" style={{ color: theme.text }}>
               {countyStats.countyName} {language === 'en' ? 'County' : '县'}
             </h2>
-            <p className="text-sm text-gray-600">
-              {language === 'en' ? 'Education quality at a glance' : '教育质量一览'}
-            </p>
+            <div className="shrink-0 px-3 py-1.5 rounded-full text-sm font-medium flex items-center" style={{ backgroundColor: theme.primaryGlow, color: theme.primary }}>
+              {language === 'en' ? `Top ${100 - percentileRank}% in NJ` : `新泽西州前${100 - percentileRank}%`}
+            </div>
           </div>
-          <div className="shrink-0 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 text-sm font-medium">
-            {language === 'en' ? `Top ${100 - percentileRank}% in NJ` : `新泽西州前${100 - percentileRank}%`}
-          </div>
+          <p className="text-sm mt-1" style={{ color: theme.textSecondary }}>
+            {language === 'en' ? 'Education quality at a glance' : '教育质量一览'}
+          </p>
         </div>
 
         {/* Stats Cards */}
@@ -153,9 +141,9 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
                 onClick={() => setLevelFilter(level)}
                 className="px-6 py-3 rounded-full font-bold text-sm transition-all whitespace-nowrap"
                 style={{
-                  backgroundColor: levelFilter === level ? colors.primaryBerry : colors.cardBg,
-                  color: levelFilter === level ? '#FFFFFF' : colors.text,
-                  boxShadow: levelFilter === level ? '0px 4px 12px rgba(255, 91, 133, 0.3)' : '0px 2px 8px rgba(0, 0, 0, 0.06)',
+                  backgroundColor: levelFilter === level ? theme.primary : theme.backgroundElevated,
+                  color: levelFilter === level ? theme.textInverse : theme.text,
+                  boxShadow: levelFilter === level ? `0px 4px 12px ${theme.primaryGlow}` : `0px 2px 8px ${theme.shadow}`,
                   minWidth: 'fit-content',
                 }}
               >
@@ -188,7 +176,7 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
                   key={school.id}
                   onClick={() => onSelectSchool(school)}
                   className="w-full text-left hover:opacity-80 transition-all rounded-xl p-3"
-                  style={{ backgroundColor: '#FFE7EE20' }}
+                  style={{ backgroundColor: theme.backgroundHover }}
                 >
                   <div className="flex items-center gap-2 mb-1.5">
                     {/* Rank Number */}
@@ -215,7 +203,7 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
 
                   {/* Bar Visualization */}
                   <div className="ml-7">
-                    <div className="relative h-2 rounded-full" style={{ backgroundColor: '#FFE7EE' }}>
+                    <div className="relative h-2 rounded-full" style={{ backgroundColor: theme.borderLight }}>
                       <div
                         className="absolute left-0 top-0 h-full rounded-full"
                         style={{
@@ -231,7 +219,7 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
             </div>
 
             {/* Legend */}
-            <div className="mt-4 pt-4 border-t" style={{ borderColor: '#F7F4F6' }}>
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.border }}>
               <p className="text-xs" style={{ color: colors.textMuted }}>
                 📊 排名基于数学成绩 — 分数越高，排名越靠前
               </p>
@@ -259,7 +247,7 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
                   key={school.id}
                   onClick={() => onSelectSchool(school)}
                   className="w-full text-left hover:opacity-80 transition-all rounded-xl p-3"
-                  style={{ backgroundColor: '#E8F7F020' }}
+                  style={{ backgroundColor: theme.backgroundHover }}
                 >
                   <div className="flex items-center gap-2 mb-1.5">
                     {/* Rank Number */}
@@ -286,7 +274,7 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
 
                   {/* Bar Visualization */}
                   <div className="ml-7">
-                    <div className="relative h-2 rounded-full" style={{ backgroundColor: '#E8F7F0' }}>
+                    <div className="relative h-2 rounded-full" style={{ backgroundColor: theme.borderLight }}>
                       <div
                         className="absolute left-0 top-0 h-full rounded-full"
                         style={{
@@ -302,138 +290,56 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
             </div>
 
             {/* Legend */}
-            <div className="mt-4 pt-4 border-t" style={{ borderColor: '#F7F4F6' }}>
+            <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.border }}>
               <p className="text-xs" style={{ color: colors.textMuted }}>
                 📊 排名基于英语成绩 — 分数越高，排名越靠前
               </p>
             </div>
           </div>
         </div>
-
-        {/* Growing Schools */}
-        <div className="rounded-[24px] p-6 shadow-xl" style={{ backgroundColor: colors.cardBg }}>
-          <div className="mb-4">
-            <h3 className="text-xl font-black mb-1" style={{ color: colors.text }}>
-              {language === 'en' ? 'Fastest Growing' : '进步最快'}
-            </h3>
-            <p className="text-sm font-semibold" style={{ color: colors.textMuted }}>
-              {language === 'en'
-                ? (levelFilter === "All" ? "Rising stars on the move" : `Fastest improving ${levelFilter.toLowerCase()} schools`)
-                : (levelFilter === "All" ? "进步之星" : `进步最快的${levelFilter === 'Elementary' ? '小学' : levelFilter === 'Middle' ? '中学' : levelFilter === 'High' ? '高中' : ''}`)
-              }
-            </p>
-          </div>
-
-          {/* Compact Bar Chart */}
-          <div className="space-y-2">
-            {topSchoolsByGrowth.map((school, idx) => (
-              <button
-                key={school.id}
-                onClick={() => onSelectSchool(school)}
-                className="w-full text-left hover:opacity-80 transition-all rounded-xl p-3"
-                style={{ backgroundColor: '#F0EBFF20' }}
-              >
-                <div className="flex items-center gap-2 mb-1.5">
-                  {/* Rank Number */}
-                  <div className="w-5 flex-shrink-0">
-                    <span className="text-lg font-black" style={{ color: colors.textMuted }}>
-                      {idx + 1}
-                    </span>
-                  </div>
-
-                  {/* School Name */}
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-sm truncate" style={{ color: colors.text }}>
-                      {school.name}
-                    </h4>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full inline-flex items-center gap-1"
-                        style={{ backgroundColor: '#F0EBFF', color: colors.textMuted }}>
-                        <TrendingUp className="w-3 h-3" />
-                        +{school.trends.mathChange} pts
-                      </span>
-                      <span className="text-xs font-semibold"
-                        style={{ color: colors.textMuted }}>
-                        {school.grades}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Score - Compact */}
-                  <div className="flex-shrink-0">
-                    <span className="text-lg font-black" style={{ color: colors.accentLavender }}>
-                      {school.mathProficiency}%
-                    </span>
-                  </div>
-                </div>
-
-                {/* Bar Visualization */}
-                <div className="ml-7">
-                  <div className="relative h-2 rounded-full" style={{ backgroundColor: '#F0EBFF' }}>
-                    <div
-                      className="absolute left-0 top-0 h-full rounded-full"
-                      style={{
-                        width: `${school.mathProficiency}%`,
-                        backgroundColor: colors.accentLavender,
-                        minWidth: '8px',
-                      }}
-                    />
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Legend */}
-          <div className="mt-4 pt-4 border-t" style={{ borderColor: '#F7F4F6' }}>
-            <p className="text-xs" style={{ color: colors.textMuted }}>
-              📊 排名基于成绩增长 — 进步越大，排名越靠前
-            </p>
-          </div>
-        </div>
       </div>
 
       {/* Asian Families Spotlight */}
       {asianFriendlySchools.length > 0 && (
-        <div className="relative rounded-[32px] p-12 overflow-hidden shadow-xl" style={{ backgroundColor: '#FFE7EE' }}>
-          <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full" style={{ backgroundColor: 'var(--color-secondary-mint)' }} />
+        <div className="relative rounded-[32px] p-12 overflow-hidden shadow-xl" style={{ backgroundColor: theme.primaryGlow }}>
+          <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full opacity-30" style={{ backgroundColor: theme.primary }} />
 
           <div className="relative z-10">
             <div className="mb-8">
-              <h3 className="text-3xl font-black mb-2" style={{ color: colors.text }}>
+              <h3 className="text-3xl font-black mb-2" style={{ color: theme.text }}>
                 {language === 'en' ? 'Top 3 Schools - Popular with Asian Families' : '亚裔家庭热门学校 Top 3'}
               </h3>
-              <p className="font-semibold text-lg" style={{ color: colors.textMuted }}>
-                {language === 'en' ? 'Ranked by Asian enrollment · Multi-dimensional comparison' : '按亚裔入学率排名 · 多维度对比'}
+              <p className="font-semibold text-lg" style={{ color: theme.textSecondary }}>
+                {language === 'en' ? 'Ranked by Asian enrollment · Info tiles display' : '按亚裔入学率排名 · 信息块展示'}
               </p>
             </div>
 
-            {/* Schools Comparison with Multi-dimensional Bars */}
-            <div className="space-y-6">
+            {/* Meta Tiles - Info Block Display */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {asianFriendlySchools.map((school, idx) => (
                 <button
                   key={school.id}
                   onClick={() => onSelectSchool(school)}
-                  className="w-full text-left hover:opacity-90 transition-all rounded-[24px] p-6"
-                  style={{ backgroundColor: colors.cardBg, boxShadow: '0px 4px 18px rgba(0, 0, 0, 0.07)' }}
+                  className="text-left hover:scale-105 transition-transform rounded-2xl p-6"
+                  style={{ backgroundColor: theme.backgroundElevated, boxShadow: `0px 8px 24px ${theme.shadow}`, border: `2px solid ${theme.border}` }}
                 >
                   {/* School Header */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-black text-white text-sm"
-                      style={{ backgroundColor: idx === 0 ? colors.primaryBerry : colors.secondaryMint }}>
+                  <div className="flex items-center gap-3 mb-4 pb-4" style={{ borderBottom: `2px solid ${theme.border}` }}>
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-white text-lg"
+                      style={{ backgroundColor: theme.primary }}>
                       {idx + 1}
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-black text-lg" style={{ color: colors.text }}>
+                      <h4 className="font-black text-base leading-tight" style={{ color: theme.text }}>
                         {school.name}
                       </h4>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs font-semibold" style={{ color: colors.textMuted }}>
+                        <span className="text-xs font-semibold" style={{ color: theme.textSecondary }}>
                           {school.grades}
                         </span>
                         {school.giftedProgram && (
                           <span className="text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1"
-                            style={{ backgroundColor: '#E8F7F0', color: colors.secondaryMint }}>
+                            style={{ backgroundColor: theme.primaryGlow, color: theme.primary }}>
                             <GraduationCap className="w-3 h-3" />
                             Gifted
                           </span>
@@ -442,62 +348,46 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
                     </div>
                   </div>
 
-                  {/* Multi-dimensional Comparison Bars */}
+                  {/* Meta Info Tiles - No Bars, Just Numbers */}
                   <div className="space-y-3">
-                    {/* Asian Enrollment */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-bold" style={{ color: colors.textMuted }}>亚裔入学率</span>
-                        <span className="text-sm font-black" style={{ color: colors.primaryBerry }}>
-                          {school.demographics.asian.toFixed(1)}%
-                        </span>
-                      </div>
-                      <div className="relative h-2 rounded-full" style={{ backgroundColor: '#FFE7EE' }}>
-                        <div className="absolute left-0 top-0 h-full rounded-full"
-                          style={{ width: `${Math.min(school.demographics.asian, 100)}%`, backgroundColor: colors.primaryBerry, minWidth: '8px' }} />
-                      </div>
-                    </div>
-
-                    {/* Math */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-bold" style={{ color: colors.textMuted }}>数学成绩</span>
-                        <span className="text-sm font-black" style={{ color: colors.secondaryMint }}>
-                          {school.mathProficiency}%
-                        </span>
-                      </div>
-                      <div className="relative h-2 rounded-full" style={{ backgroundColor: '#E8F7F0' }}>
-                        <div className="absolute left-0 top-0 h-full rounded-full"
-                          style={{ width: `${school.mathProficiency}%`, backgroundColor: colors.secondaryMint, minWidth: '8px' }} />
-                      </div>
-                    </div>
-
-                    {/* ELA */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-bold" style={{ color: colors.textMuted }}>英语成绩</span>
-                        <span className="text-sm font-black" style={{ color: colors.accentLavender }}>
-                          {school.elaProficiency}%
-                        </span>
-                      </div>
-                      <div className="relative h-2 rounded-full" style={{ backgroundColor: '#F0EBFF' }}>
-                        <div className="absolute left-0 top-0 h-full rounded-full"
-                          style={{ width: `${school.elaProficiency}%`, backgroundColor: colors.accentLavender, minWidth: '8px' }} />
-                      </div>
-                    </div>
-
                     {/* Overall Score */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-xs font-bold" style={{ color: colors.textMuted }}>综合评分</span>
-                        <span className="text-sm font-black" style={{ color: colors.text }}>
-                          {school.overallScore}/100
-                        </span>
-                      </div>
-                      <div className="relative h-2 rounded-full" style={{ backgroundColor: '#F7F4F6' }}>
-                        <div className="absolute left-0 top-0 h-full rounded-full"
-                          style={{ width: `${school.overallScore}%`, backgroundColor: colors.text, minWidth: '8px' }} />
-                      </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium" style={{ color: theme.textSecondary }}>
+                        {language === 'en' ? 'Overall Score' : '综合评分'}
+                      </span>
+                      <span className="text-2xl font-black" style={{ color: theme.primary }}>
+                        {school.overallScore}
+                      </span>
+                    </div>
+
+                    {/* Asian Enrollment Rate */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium" style={{ color: theme.textSecondary }}>
+                        {language === 'en' ? 'Asian Enrollment' : '亚裔入学率'}
+                      </span>
+                      <span className="text-2xl font-black" style={{ color: theme.primary }}>
+                        {school.demographics.asian.toFixed(1)}%
+                      </span>
+                    </div>
+
+                    {/* Math Score */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium" style={{ color: theme.textSecondary }}>
+                        {language === 'en' ? 'Math Score' : '数学成绩'}
+                      </span>
+                      <span className="text-2xl font-black" style={{ color: theme.primary }}>
+                        {school.mathProficiency}%
+                      </span>
+                    </div>
+
+                    {/* ELA Score */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium" style={{ color: theme.textSecondary }}>
+                        {language === 'en' ? 'ELA Score' : '英语成绩'}
+                      </span>
+                      <span className="text-2xl font-black" style={{ color: theme.primary }}>
+                        {school.elaProficiency}%
+                      </span>
                     </div>
                   </div>
                 </button>
@@ -506,44 +396,6 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
           </div>
         </div>
       )}
-
-      {/* Why SchoolBerry */}
-      <div className="rounded-[32px] shadow-xl" style={{ backgroundColor: colors.cardBg, marginTop: '48px', padding: '48px' }}>
-        <div className="mb-8">
-          <h4 className="text-3xl font-black mb-2" style={{ color: colors.text }}>
-            {language === 'en' ? 'Why SchoolBerry is Better' : '为什么选择 SchoolBerry'}
-          </h4>
-          <p className="font-semibold" style={{ color: colors.textMuted }}>
-            {language === 'en' ? 'Data-driven insights for better decisions' : '数据驱动的洞察，助力更好的决策'}
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8" style={{ gap: '32px' }}>
-          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: '#F7F4F6' }}>
-            <div className="font-black mb-2 text-lg" style={{ color: colors.text }}>
-              {language === 'en' ? 'Trend Analysis' : '趋势分析'}
-            </div>
-            <div className="text-sm font-semibold" style={{ color: colors.textMuted }}>
-              {language === 'en' ? 'See which schools are improving over time' : '查看学校随时间的进步趋势'}
-            </div>
-          </div>
-          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: '#F7F4F6' }}>
-            <div className="font-black mb-2 text-lg" style={{ color: colors.text }}>
-              {language === 'en' ? 'Family Insights' : '家庭洞察'}
-            </div>
-            <div className="text-sm font-semibold" style={{ color: colors.textMuted }}>
-              {language === 'en' ? 'Understand enrollment patterns & performance' : '了解入学模式和学业表现'}
-            </div>
-          </div>
-          <div className="rounded-[24px] p-7 shadow-lg" style={{ backgroundColor: '#F7F4F6' }}>
-            <div className="font-black mb-2 text-lg" style={{ color: colors.text }}>
-              {language === 'en' ? 'Equity Scores' : '公平评分'}
-            </div>
-            <div className="text-sm font-semibold" style={{ color: colors.textMuted }}>
-              {language === 'en' ? 'Compare performance across all demographics' : '对比所有人口群体的表现'}
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
