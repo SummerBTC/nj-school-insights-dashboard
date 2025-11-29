@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Search, Clock } from "lucide-react";
 import { Input } from "./ui/input";
 import type { School } from "../types/school";
+import { useTheme } from "../theme/ThemeContext";
 
 interface SearchBarProps {
   schools: School[];
@@ -11,6 +12,7 @@ interface SearchBarProps {
 }
 
 export function SearchBar({ schools, onSelectSchool, selectedSchool, language }: SearchBarProps) {
+  const { theme } = useTheme();
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [recentSearches, setRecentSearches] = useState<School[]>([]);
@@ -51,7 +53,7 @@ export function SearchBar({ schools, onSelectSchool, selectedSchool, language }:
   return (
     <div ref={wrapperRef} className="relative w-full">
       <div className="relative">
-        <Search className="absolute top-1/2 -translate-y-1/2 size-6" style={{ color: '#FF5B85', left: '24px' }} />
+        <Search className="absolute top-1/2 -translate-y-1/2 size-6" style={{ color: theme.primary, left: '24px' }} />
         <Input
           type="text"
           placeholder={language === 'en' ? 'Search by school name, district, or zip code...' : '按学校名称、学区或邮编搜索...'}
@@ -63,9 +65,9 @@ export function SearchBar({ schools, onSelectSchool, selectedSchool, language }:
           onFocus={() => setIsOpen(true)}
           className="pr-6 text-lg border-2 transition-all font-medium"
           style={{
-            backgroundColor: '#FFFFFF',
-            borderColor: '#FF5B85',
-            color: '#2E2E2E',
+            backgroundColor: theme.backgroundElevated,
+            borderColor: theme.primary,
+            color: theme.text,
             borderRadius: '16px',
             paddingLeft: '60px',
             height: '60px',
@@ -74,10 +76,10 @@ export function SearchBar({ schools, onSelectSchool, selectedSchool, language }:
       </div>
 
       {isOpen && (
-        <div className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl max-h-[320px] overflow-y-auto" style={{ zIndex: 50 }}>
+        <div className="absolute left-0 right-0 mt-2 rounded-2xl shadow-xl max-h-[320px] overflow-y-auto" style={{ backgroundColor: theme.backgroundElevated, zIndex: 50, boxShadow: `0 10px 40px ${theme.shadowStrong}` }}>
           {query === "" && recentSearches.length > 0 && (
-            <div className="p-3 border-b border-[#E5E7EB]">
-              <div className="flex items-center gap-2 text-[#6B7280] text-sm mb-2">
+            <div className="p-3 border-b" style={{ borderColor: theme.border }}>
+              <div className="flex items-center gap-2 text-sm mb-2" style={{ color: theme.textSecondary }}>
                 <Clock className="size-4" />
                 <span>{language === 'en' ? 'Recent Searches' : '最近搜索'}</span>
               </div>
@@ -85,13 +87,16 @@ export function SearchBar({ schools, onSelectSchool, selectedSchool, language }:
                 <button
                   key={school.id}
                   onClick={() => handleSelectSchool(school)}
-                  className="w-full text-left px-3 py-2 hover:bg-[#F9FAFB] rounded flex items-center justify-between group"
+                  className="w-full text-left px-3 py-2 rounded flex items-center justify-between group"
+                  style={{ backgroundColor: 'transparent' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = theme.backgroundHover}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   <div>
-                    <div className="text-[#374151]">{school.name}</div>
-                    <div className="text-sm text-[#6B7280]">{school.district} • {school.county}</div>
+                    <div style={{ color: theme.text }}>{school.name}</div>
+                    <div className="text-sm" style={{ color: theme.textSecondary }}>{school.district} • {school.county}</div>
                   </div>
-                  <span className="text-xs text-[#3B82F6] opacity-0 group-hover:opacity-100">Select</span>
+                  <span className="text-xs opacity-0 group-hover:opacity-100" style={{ color: theme.primary }}>Select</span>
                 </button>
               ))}
             </div>
@@ -104,24 +109,27 @@ export function SearchBar({ schools, onSelectSchool, selectedSchool, language }:
                   <button
                     key={school.id}
                     onClick={() => handleSelectSchool(school)}
-                    className="w-full text-left px-3 py-3 hover:bg-[#F9FAFB] rounded flex items-center justify-between group"
+                    className="w-full text-left px-3 py-3 rounded flex items-center justify-between group"
+                    style={{ backgroundColor: 'transparent' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = theme.backgroundHover}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <div className="flex-1">
-                      <div className="text-[#374151] flex items-center gap-2">
+                      <div className="flex items-center gap-2" style={{ color: theme.text }}>
                         {school.name}
-                        <span className="text-xs text-[#6B7280]">• {school.grades}</span>
+                        <span className="text-xs" style={{ color: theme.textSecondary }}>• {school.grades}</span>
                       </div>
-                      <div className="text-sm text-[#6B7280]">
+                      <div className="text-sm" style={{ color: theme.textSecondary }}>
                         {school.district} • {school.county} • {school.zipCode}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-[#3B82F6]">Score: {school.overallScore}</div>
+                      <div className="text-sm" style={{ color: theme.primary }}>Score: {school.overallScore}</div>
                     </div>
                   </button>
                 ))
               ) : (
-                <div className="px-3 py-6 text-center text-[#6B7280]">
+                <div className="px-3 py-6 text-center" style={{ color: theme.textSecondary }}>
                   No schools found matching "{query}"
                 </div>
               )}

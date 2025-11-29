@@ -1,4 +1,5 @@
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from "recharts";
+import { useTheme } from "../theme/ThemeContext";
 import type { School } from "../types/school";
 
 interface DemographicsBarChartProps {
@@ -7,6 +8,7 @@ interface DemographicsBarChartProps {
 }
 
 export function DemographicsBarChart({ school, language }: DemographicsBarChartProps) {
+  const { theme } = useTheme();
   const demographics = [
     {
       name: "Asian",
@@ -36,12 +38,12 @@ export function DemographicsBarChart({ school, language }: DemographicsBarChartP
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 border border-[#E5E7EB] shadow-sm">
+    <div className="rounded-xl p-6 border shadow-sm" style={{ backgroundColor: theme.backgroundElevated, borderColor: theme.border }}>
       <div className="mb-6">
-        <h3 className="text-[#374151] font-semibold">
+        <h3 className="font-semibold" style={{ color: theme.text }}>
           {language === 'en' ? 'Student Demographics' : '学生人口统计'}
         </h3>
-        <p className="text-sm text-[#6B7280]">
+        <p className="text-sm" style={{ color: theme.textSecondary }}>
           {language === 'en' ? 'Breakdown by Ethnicity' : '按族裔分类'}
         </p>
       </div>
@@ -67,16 +69,17 @@ export function DemographicsBarChart({ school, language }: DemographicsBarChartP
             <Tooltip
               formatter={(value: number) => `${value.toFixed(2)}%`}
               contentStyle={{
-                backgroundColor: 'white',
-                border: '1px solid #E5E7EB',
-                borderRadius: '8px'
+                backgroundColor: theme.backgroundElevated,
+                border: `1px solid ${theme.border}`,
+                borderRadius: '8px',
+                color: theme.text
               }}
             />
             <Legend
               verticalAlign="bottom"
               height={36}
               formatter={(value, entry: any) => (
-                <span style={{ color: '#374151', fontSize: '14px' }}>
+                <span style={{ color: theme.text, fontSize: '14px' }}>
                   {value} ({entry.payload.value.toFixed(1)}%)
                 </span>
               )}
@@ -86,15 +89,15 @@ export function DemographicsBarChart({ school, language }: DemographicsBarChartP
       </div>
 
       {/* Summary */}
-      <div className="mt-6 pt-4 border-t border-[#E5E7EB]">
-        <div className="text-xs text-[#6B7280]">
+      <div className="mt-6 pt-4 border-t" style={{ borderColor: theme.border }}>
+        <div className="text-xs" style={{ color: theme.textSecondary }}>
           <span className="font-medium">
             {language === 'en' ? 'Diversity Index:' : '多样性指数：'}
           </span>{' '}
-          <span className="text-[#374151]">
+          <span style={{ color: theme.text }}>
             {(100 - Math.max(...demographics.map(d => d.value))).toFixed(0)}
           </span>
-          <span className="text-[#9CA3AF]">
+          <span style={{ color: theme.textMuted }}>
             {language === 'en' ? ' (100 = perfect diversity)' : ' (100 = 完美多样性)'}
           </span>
         </div>

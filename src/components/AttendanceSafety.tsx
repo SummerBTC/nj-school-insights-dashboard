@@ -1,4 +1,5 @@
 import { Calendar, Shield, AlertTriangle, TrendingUp, TrendingDown } from "lucide-react";
+import { useTheme } from "../theme/ThemeContext";
 import { Badge } from "./ui/badge";
 import type { School } from "../types/school";
 
@@ -8,6 +9,7 @@ interface AttendanceSafetyProps {
 }
 
 export function AttendanceSafety({ school, language }: AttendanceSafetyProps) {
+  const { theme } = useTheme();
   const getClimateColor = (climate: string) => {
     switch (climate) {
       case "Safe":
@@ -35,13 +37,13 @@ export function AttendanceSafety({ school, language }: AttendanceSafetyProps) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-white to-[#FFFBEB] rounded-xl p-6 border-2 border-[#FBBF24]/20 shadow-lg relative overflow-hidden">
+    <div className="rounded-xl p-6 border-2 shadow-lg relative overflow-hidden" style={{ backgroundColor: theme.backgroundElevated, borderColor: theme.warning + '33' }}>
       {/* Decorative background */}
-      <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#FBBF24]/10 to-transparent rounded-full blur-2xl" />
-      
+      <div className="absolute bottom-0 left-0 w-32 h-32 rounded-full blur-2xl" style={{ background: `radial-gradient(circle, ${theme.warning}20 0%, transparent 70%)` }} />
+
       <div className="relative z-10">
         <div className="mb-4">
-          <h3 className="text-[#374151]">
+          <h3 style={{ color: theme.text }}>
             {language === 'en' ? 'Attendance & Safety' : '出勤与安全'}
           </h3>
         </div>
@@ -49,39 +51,38 @@ export function AttendanceSafety({ school, language }: AttendanceSafetyProps) {
         {/* Three metrics in horizontal layout */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           {/* Chronic Absenteeism */}
-          <div className="p-4 bg-[#F9FAFB] rounded-lg">
+          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.backgroundHover }}>
             <div className="flex items-center gap-2 mb-2">
-              <Calendar className="size-4 text-[#3B82F6]" />
-              <span className="text-sm text-[#374151] font-medium">Chronic Absenteeism</span>
+              <Calendar className="size-4" style={{ color: theme.info }} />
+              <span className="text-sm font-medium" style={{ color: theme.text }}>Chronic Absenteeism</span>
             </div>
-            <div className={`text-3xl font-bold mb-2 ${school.chronicAbsenteeism < 5 ? 'text-[#22C55E]' : school.chronicAbsenteeism < 10 ? 'text-[#FBBF24]' : 'text-[#EF4444]'}`}>
+            <div className="text-3xl font-bold mb-2" style={{
+              color: school.chronicAbsenteeism < 5 ? theme.success : school.chronicAbsenteeism < 10 ? theme.warning : theme.error
+            }}>
               {school.chronicAbsenteeism}%
             </div>
 
             {/* Progress bar */}
-            <div className="relative h-1.5 bg-[#E5E7EB] rounded-full overflow-hidden mb-2">
+            <div className="relative h-1.5 rounded-full overflow-hidden mb-2" style={{ backgroundColor: theme.border }}>
               <div
-                className={`absolute top-0 left-0 h-full transition-all ${
-                  school.chronicAbsenteeism < 5
-                    ? 'bg-[#22C55E]'
-                    : school.chronicAbsenteeism < 10
-                    ? 'bg-[#FBBF24]'
-                    : 'bg-[#EF4444]'
-                }`}
-                style={{ width: `${Math.min(school.chronicAbsenteeism * 2, 100)}%` }}
+                className="absolute top-0 left-0 h-full transition-all"
+                style={{
+                  width: `${Math.min(school.chronicAbsenteeism * 2, 100)}%`,
+                  backgroundColor: school.chronicAbsenteeism < 5 ? theme.success : school.chronicAbsenteeism < 10 ? theme.warning : theme.error
+                }}
               />
             </div>
 
-            <div className="text-xs text-[#6B7280]">
+            <div className="text-xs" style={{ color: theme.textSecondary }}>
               Attendance: {100 - school.chronicAbsenteeism}%
             </div>
           </div>
 
           {/* School Climate */}
-          <div className="p-4 bg-[#F9FAFB] rounded-lg">
+          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.backgroundHover }}>
             <div className="flex items-center gap-2 mb-2">
-              <Shield className="size-4 text-[#3B82F6]" />
-              <span className="text-sm text-[#374151] font-medium">School Climate</span>
+              <Shield className="size-4" style={{ color: theme.info }} />
+              <span className="text-sm font-medium" style={{ color: theme.text }}>School Climate</span>
             </div>
             <Badge className={`${getClimateColor(school.schoolClimate)} text-lg px-3 py-1`}>
               {school.schoolClimate}
@@ -89,10 +90,10 @@ export function AttendanceSafety({ school, language }: AttendanceSafetyProps) {
           </div>
 
           {/* Bullying Reports */}
-          <div className="p-4 bg-[#F9FAFB] rounded-lg">
+          <div className="p-4 rounded-lg" style={{ backgroundColor: theme.backgroundHover }}>
             <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="size-4 text-[#3B82F6]" />
-              <span className="text-sm text-[#374151] font-medium">Bullying Reports</span>
+              <AlertTriangle className="size-4" style={{ color: theme.info }} />
+              <span className="text-sm font-medium" style={{ color: theme.text }}>Bullying Reports</span>
             </div>
             <Badge className={`${getBullyingColor(school.bullyingReports)} text-lg px-3 py-1`}>
               {school.bullyingReports}
@@ -102,10 +103,10 @@ export function AttendanceSafety({ school, language }: AttendanceSafetyProps) {
 
         {/* Insight Box */}
         {school.chronicAbsenteeism > 10 && (
-          <div className="mt-4 p-3 bg-[#FEF2F2] border border-[#EF4444]/20 rounded-lg">
+          <div className="mt-4 p-3 border rounded-lg" style={{ backgroundColor: theme.error + '15', borderColor: theme.error + '33' }}>
             <div className="flex items-start gap-2">
-              <AlertTriangle className="size-4 text-[#EF4444] mt-0.5 flex-shrink-0" />
-              <div className="text-sm text-[#EF4444]">
+              <AlertTriangle className="size-4 mt-0.5 flex-shrink-0" style={{ color: theme.error }} />
+              <div className="text-sm" style={{ color: theme.error }}>
                 High absenteeism may impact student performance and school culture. Consider investigating root causes.
               </div>
             </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import { GraduationCap, Menu, X } from "lucide-react";
+import { GraduationCap, Menu, X, Moon, Sun } from "lucide-react";
 import { SearchBar } from "./components/SearchBar";
 import { Dashboard } from "./components/Dashboard";
 import { OverviewCard } from "./components/OverviewCard";
@@ -18,8 +18,10 @@ import { CompareSchools } from "./components/CompareSchools";
 import { TrendsInsights } from "./components/TrendsInsights";
 import  fetchNjSchools  from "./data/fetchNjSchools";
 import type { School } from "./types/school";
+import { useTheme } from "./theme/ThemeContext";
 
 export default function App() {
+  const { theme, mode, toggleTheme } = useTheme();
   const [schools, setSchools] = useState<School[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -78,13 +80,14 @@ export default function App() {
   }, [mobileMenuOpen]);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FFFDFC' }}>
+    <div className="min-h-screen" style={{ backgroundColor: theme.background }}>
       {/* Fixed Header - Contains banner, tabs, and search bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white" style={{ boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)' }}>
-        {/* Banner - SchoolBerry Design System */}
-        <div style={{ backgroundColor: '#FF5B85' }}>
-          <div className="max-w-7xl mx-auto px-6 py-2.5">
-            <div className="flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: theme.backgroundElevated, boxShadow: `0px 2px 8px ${theme.shadow}` }}>
+        {/* Banner - SchoolBerry Design System with Search */}
+        <div style={{ backgroundColor: theme.primary }}>
+          <div className="max-w-7xl mx-auto px-6 py-3">
+            {/* Top Row: Logo and Controls */}
+            <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3 lg:gap-6">
                 {/* Mobile Menu Toggle - Only on mobile and tablet, to the left of logo */}
                 <button
@@ -95,7 +98,7 @@ export default function App() {
                   <Menu className="size-6" />
                 </button>
 
-                <h1 className="text-2xl font-black tracking-tight flex items-center gap-2" style={{ color: '#FFFFFF' }}>
+                <h1 className="text-lg font-bold tracking-wide flex items-center gap-2" style={{ color: '#FFFFFF', fontFamily: "'Fredoka', 'Comic Sans MS', 'Trebuchet MS', cursive", letterSpacing: '0.02em' }}>
                   SchoolBerry
                   <span className="px-2 py-0.5 rounded-full text-xs font-bold" style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: '#FFFFFF' }}>
                     BETA
@@ -106,6 +109,15 @@ export default function App() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
+                {/* Theme Toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-2xl hover:scale-110 transition-transform"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: '#FFFFFF' }}
+                  title={mode === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+                >
+                  {mode === 'light' ? <Moon className="size-5" /> : <Sun className="size-5" />}
+                </button>
                 {/* Language Toggle */}
                 <button
                   onClick={toggleLanguage}
@@ -117,22 +129,35 @@ export default function App() {
                 </button>
               </div>
             </div>
+
+            {/* Search Bar - Always visible in banner */}
+            {schools.length > 0 && (
+              <SearchBar
+                schools={schools}
+                onSelectSchool={(school) => {
+                  setSelectedSchool(school);
+                  setActiveTab("school-details");
+                }}
+                selectedSchool={selectedSchool}
+                language={language}
+              />
+            )}
           </div>
         </div>
 
         {/* Tabs Bar - Desktop Only (hidden on mobile and tablet) */}
         {!loading && !error && schools.length > 0 && (
-          <div className="desktop-tabs m-0" style={{ backgroundColor: '#FFE7EE' }}>
+          <div className="desktop-tabs m-0" style={{ backgroundColor: theme.primaryGlow }}>
             <div className="max-w-7xl mx-auto px-6">
               {/* Desktop Tabs - React Style with Underline */}
-              <div className="border-b-2 pb-0 m-0" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
+              <div className="border-b-2 pb-0 m-0" style={{ borderColor: theme.border }}>
                 <div className="flex gap-2 m-0">
                   <button
                     onClick={() => setActiveTab("overall")}
                     className="px-6 py-3 font-black text-base transition-all relative"
                     style={{
-                      color: activeTab === "overall" ? '#FF5B85' : ('#6B7280'),
-                      borderBottom: activeTab === "overall" ? '3px solid #FF5B85' : '3px solid transparent',
+                      color: activeTab === "overall" ? theme.primary : theme.textSecondary,
+                      borderBottom: activeTab === "overall" ? `3px solid ${theme.primary}` : '3px solid transparent',
                       marginBottom: '-2px',
                     }}
                   >
@@ -142,19 +167,19 @@ export default function App() {
                     onClick={() => setActiveTab("school-details")}
                     className="px-6 py-3 font-black text-base transition-all relative"
                     style={{
-                      color: activeTab === "school-details" ? '#FF5B85' : ('#6B7280'),
-                      borderBottom: activeTab === "school-details" ? '3px solid #FF5B85' : '3px solid transparent',
+                      color: activeTab === "school-details" ? theme.primary : theme.textSecondary,
+                      borderBottom: activeTab === "school-details" ? `3px solid ${theme.primary}` : '3px solid transparent',
                       marginBottom: '-2px',
                     }}
                   >
-                    {language === 'en' ? 'Search School' : '搜索学校'}
+                    {language === 'en' ? 'School Details' : '学校详情'}
                   </button>
                   <button
                     onClick={() => setActiveTab("compare")}
                     className="px-6 py-3 font-black text-base transition-all relative"
                     style={{
-                      color: activeTab === "compare" ? '#FF5B85' : ('#6B7280'),
-                      borderBottom: activeTab === "compare" ? '3px solid #FF5B85' : '3px solid transparent',
+                      color: activeTab === "compare" ? theme.primary : theme.textSecondary,
+                      borderBottom: activeTab === "compare" ? `3px solid ${theme.primary}` : '3px solid transparent',
                       marginBottom: '-2px',
                     }}
                   >
@@ -164,8 +189,8 @@ export default function App() {
                     onClick={() => setActiveTab("rankings")}
                     className="px-6 py-3 font-black text-base transition-all relative"
                     style={{
-                      color: activeTab === "rankings" ? '#FF5B85' : ('#6B7280'),
-                      borderBottom: activeTab === "rankings" ? '3px solid #FF5B85' : '3px solid transparent',
+                      color: activeTab === "rankings" ? theme.primary : theme.textSecondary,
+                      borderBottom: activeTab === "rankings" ? `3px solid ${theme.primary}` : '3px solid transparent',
                       marginBottom: '-2px',
                     }}
                   >
@@ -175,8 +200,8 @@ export default function App() {
                     onClick={() => setActiveTab("trends")}
                     className="px-6 py-3 font-black text-base transition-all relative"
                     style={{
-                      color: activeTab === "trends" ? '#FF5B85' : ('#6B7280'),
-                      borderBottom: activeTab === "trends" ? '3px solid #FF5B85' : '3px solid transparent',
+                      color: activeTab === "trends" ? theme.primary : theme.textSecondary,
+                      borderBottom: activeTab === "trends" ? `3px solid ${theme.primary}` : '3px solid transparent',
                       marginBottom: '-2px',
                     }}
                   >
@@ -187,36 +212,20 @@ export default function App() {
             </div>
           </div>
         )}
-
-        {/* Search Bar - Below tabs, in Overall and School Details tabs */}
-        {schools.length > 0 && (activeTab === "overall" || (activeTab === "school-details" && selectedSchool)) && (
-          <div className="border-b border-pink-50 bg-white">
-            <div className="max-w-7xl mx-auto px-6 py-3">
-              <SearchBar
-                schools={schools}
-                onSelectSchool={(school) => {
-                  setSelectedSchool(school);
-                  setActiveTab("school-details");
-                }}
-                selectedSchool={selectedSchool}
-                language={language}
-              />
-            </div>
-          </div>
-        )}
       </header>
 
       {/* Full-Screen Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="mobile-menu-btn fixed inset-0 z-50 bg-white flex flex-col">
+        <div className="mobile-menu-btn fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: theme.backgroundElevated }}>
           {/* Top Row: Close Button */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-            <span className="text-xl font-black" style={{ color: '#FF5B85' }}>Menu</span>
+          <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: theme.border }}>
+            <span className="text-xl font-black" style={{ color: theme.primary }}>Menu</span>
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-xl transition-colors"
+              style={{ backgroundColor: theme.backgroundHover }}
             >
-              <X className="size-7" style={{ color: '#FF5B85' }} />
+              <X className="size-7" style={{ color: theme.primary }} />
             </button>
           </div>
 
@@ -226,8 +235,8 @@ export default function App() {
               onClick={() => { setActiveTab("overall"); setMobileMenuOpen(false); }}
               className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
               style={{
-                backgroundColor: activeTab === "overall" ? '#FFE7EE' : '#F7F4F6',
-                color: activeTab === "overall" ? '#FF5B85' : '#6B7280'
+                backgroundColor: activeTab === "overall" ? theme.primaryGlow : theme.backgroundHover,
+                color: activeTab === "overall" ? theme.primary : theme.textSecondary
               }}
             >
               {language === 'en' ? '🏠 County Overview' : '🏠 县区概览'}
@@ -236,18 +245,18 @@ export default function App() {
               onClick={() => { setActiveTab("school-details"); setMobileMenuOpen(false); }}
               className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
               style={{
-                backgroundColor: activeTab === "school-details" ? '#FFE7EE' : '#F7F4F6',
-                color: activeTab === "school-details" ? '#FF5B85' : '#6B7280'
+                backgroundColor: activeTab === "school-details" ? theme.primaryGlow : theme.backgroundHover,
+                color: activeTab === "school-details" ? theme.primary : theme.textSecondary
               }}
             >
-              {language === 'en' ? '🔍 Search School' : '🔍 搜索学校'}
+              {language === 'en' ? '🔍 School Details' : '🔍 学校详情'}
             </button>
             <button
               onClick={() => { setActiveTab("compare"); setMobileMenuOpen(false); }}
               className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
               style={{
-                backgroundColor: activeTab === "compare" ? '#FFE7EE' : '#F7F4F6',
-                color: activeTab === "compare" ? '#FF5B85' : '#6B7280'
+                backgroundColor: activeTab === "compare" ? theme.primaryGlow : theme.backgroundHover,
+                color: activeTab === "compare" ? theme.primary : theme.textSecondary
               }}
             >
               {language === 'en' ? '⚖️ Compare' : '⚖️ 对比'}
@@ -256,8 +265,8 @@ export default function App() {
               onClick={() => { setActiveTab("rankings"); setMobileMenuOpen(false); }}
               className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
               style={{
-                backgroundColor: activeTab === "rankings" ? '#FFE7EE' : '#F7F4F6',
-                color: activeTab === "rankings" ? '#FF5B85' : '#6B7280'
+                backgroundColor: activeTab === "rankings" ? theme.primaryGlow : theme.backgroundHover,
+                color: activeTab === "rankings" ? theme.primary : theme.textSecondary
               }}
             >
               {language === 'en' ? '🏆 Rankings' : '🏆 排名'}
@@ -266,8 +275,8 @@ export default function App() {
               onClick={() => { setActiveTab("trends"); setMobileMenuOpen(false); }}
               className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
               style={{
-                backgroundColor: activeTab === "trends" ? '#FFE7EE' : '#F7F4F6',
-                color: activeTab === "trends" ? '#FF5B85' : '#6B7280'
+                backgroundColor: activeTab === "trends" ? theme.primaryGlow : theme.backgroundHover,
+                color: activeTab === "trends" ? theme.primary : theme.textSecondary
               }}
             >
               {language === 'en' ? '📈 Trends' : '📈 趋势'}
@@ -284,7 +293,7 @@ export default function App() {
       )}
 
       {/* Main Content */}
-      <main className="relative z-0 max-w-7xl mx-auto px-6 pb-8 min-h-screen pt-[180px]" style={{ backgroundColor: '#FFFDFC' }}>
+      <main className="relative z-0 max-w-7xl mx-auto px-6 pb-8 min-h-screen pt-[180px]" style={{ backgroundColor: theme.background }}>
         {/* 加载中 / 报错 提示 */}
         {loading && (
           <div className="text-center text-sm text-slate-500 py-16">
@@ -345,66 +354,49 @@ export default function App() {
                 {/* RIGHT COLUMN (1/3 width) - Details & Supplementary */}
                 <div className="space-y-6">
                   {/* School Details Card */}
-                  <div className="bg-white rounded-xl p-6 border border-[#E5E7EB] shadow-sm">
-                    <h3 className="text-[#374151] font-semibold mb-4">
+                  <div className="rounded-xl p-6 border shadow-sm" style={{ backgroundColor: theme.backgroundElevated, borderColor: theme.border }}>
+                    <h3 className="font-semibold mb-4" style={{ color: theme.text }}>
                       {language === 'en' ? 'School Details' : '学校详情'}
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="text-center p-3 bg-[#EFF6FF] rounded-lg">
-                        <div className="text-xs text-[#6B7280] mb-1">
+                      <div className="text-center p-3 rounded-lg" style={{ backgroundColor: theme.info + '1A' }}>
+                        <div className="text-xs mb-1" style={{ color: theme.textSecondary }}>
                           {language === 'en' ? 'Student-Teacher Ratio' : '师生比'}
                         </div>
-                        <div className="text-xl font-bold text-[#3B82F6]">
+                        <div className="text-xl font-bold" style={{ color: theme.info }}>
                           1:{selectedSchool.studentTeacherRatio}
                         </div>
                       </div>
-                      <div className="text-center p-3 bg-[#F0FDF4] rounded-lg">
-                        <div className="text-xs text-[#6B7280] mb-1">
+                      <div className="text-center p-3 rounded-lg" style={{ backgroundColor: theme.success + '1A' }}>
+                        <div className="text-xs mb-1" style={{ color: theme.textSecondary }}>
                           {language === 'en' ? 'Total Enrollment' : '总入学人数'}
                         </div>
-                        <div className="text-xl font-bold text-[#22C55E]">
+                        <div className="text-xl font-bold" style={{ color: theme.success }}>
                           {selectedSchool.enrollment}
                         </div>
-                        <div className="text-xs text-[#9CA3AF]">
+                        <div className="text-xs" style={{ color: theme.textMuted }}>
                           {language === 'en' ? 'students' : '学生'}
                         </div>
                       </div>
-                      <div className="text-center p-3 bg-[#F9FAFB] rounded-lg">
-                        <div className="text-xs text-[#6B7280] mb-1">
+                      <div className="text-center p-3 rounded-lg" style={{ backgroundColor: theme.backgroundHover }}>
+                        <div className="text-xs mb-1" style={{ color: theme.textSecondary }}>
                           {language === 'en' ? 'District' : '学区'}
                         </div>
-                        <div className="text-sm font-medium text-[#374151]">
+                        <div className="text-sm font-medium" style={{ color: theme.text }}>
                           {selectedSchool.district}
                         </div>
                       </div>
-                      <div className="text-center p-3 bg-[#FEF3C7] rounded-lg">
-                        <div className="text-xs text-[#6B7280] mb-1">
+                      <div className="text-center p-3 rounded-lg" style={{ backgroundColor: theme.warning + '1A' }}>
+                        <div className="text-xs mb-1" style={{ color: theme.textSecondary }}>
                           {language === 'en' ? 'Grade Span' : '年级范围'}
                         </div>
-                        <div className="text-sm font-medium text-[#374151]">
+                        <div className="text-sm font-medium" style={{ color: theme.text }}>
                           {selectedSchool.gradeSpan || "K-12"}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Climate & Safety Mini Card */}
-                  <div className="bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl p-5 border border-[#059669] shadow-md">
-                    <div className="text-white/90 text-xs mb-2">
-                      {language === 'en' ? 'Climate & Safety' : '氛围与安全'}
-                    </div>
-                    <div className="text-3xl font-bold text-white mb-1">
-                      {(100 - selectedSchool.chronicAbsenteeism).toFixed(0)}
-                    </div>
-                    <div className="text-white/80 text-sm">
-                      {language === 'en' ? 'Safety Index' : '安全指数'}
-                    </div>
-                    <div className="mt-3 pt-3 border-t border-white/20">
-                      <div className="text-xs text-white/70">
-                        {language === 'en' ? 'Based on attendance and incident data' : '基于出勤率和事件数据'}
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
                 </>

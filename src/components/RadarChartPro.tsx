@@ -1,4 +1,5 @@
 import { Radar, RadarChart as RechartsRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { useTheme } from "../theme/ThemeContext";
 import type { School } from "../types/school";
 import { BarChart3 } from "lucide-react";
 
@@ -8,6 +9,7 @@ interface RadarChartProProps {
 }
 
 export function RadarChartPro({ school, language }: RadarChartProProps) {
+  const { theme } = useTheme();
   // Normalize metrics to 0-100 scale
   const normalizeStudentTeacherRatio = (ratio: number) => {
     // Lower is better, so invert: ideal ratio ~10, max considered ~25
@@ -86,12 +88,12 @@ export function RadarChartPro({ school, language }: RadarChartProProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 border-2 border-[#3C6EFF]/10 shadow-lg hover:shadow-xl transition-shadow">
+    <div className="rounded-xl p-6 border-2 shadow-lg hover:shadow-xl transition-shadow" style={{ backgroundColor: theme.backgroundElevated, borderColor: theme.primary + '1A' }}>
       <div className="mb-2">
-        <h3 className="text-[#1F2937] font-semibold text-lg">
+        <h3 className="font-semibold text-lg" style={{ color: theme.text }}>
           {language === 'en' ? 'Performance Radar' : '表现雷达图'}
         </h3>
-        <p className="text-sm text-[#6B7280]">
+        <p className="text-sm" style={{ color: theme.textSecondary }}>
           {language === 'en' ? 'Five-dimension analysis • 0-100 scale' : '五维分析 • 0-100分制'}
         </p>
       </div>
@@ -100,7 +102,7 @@ export function RadarChartPro({ school, language }: RadarChartProProps) {
         <RechartsRadar data={metrics}>
           {/* Grid with professional styling */}
           <PolarGrid
-            stroke="#D1D5DB"
+            stroke={theme.border}
             strokeWidth={1.5}
             gridType="polygon"
           />
@@ -109,7 +111,7 @@ export function RadarChartPro({ school, language }: RadarChartProProps) {
           <PolarAngleAxis
             dataKey="metric"
             tick={{
-              fill: '#374151',
+              fill: theme.text,
               fontSize: 13,
               fontWeight: 600
             }}
@@ -120,12 +122,12 @@ export function RadarChartPro({ school, language }: RadarChartProProps) {
             angle={90}
             domain={[0, 100]}
             tick={{
-              fill: '#6B7280',
+              fill: theme.textSecondary,
               fontSize: 11,
               fontWeight: 500
             }}
             tickCount={5}
-            stroke="#9CA3AF"
+            stroke={theme.border}
             strokeWidth={1}
           />
 
@@ -154,19 +156,19 @@ export function RadarChartPro({ school, language }: RadarChartProProps) {
           {/* Tooltip */}
           <Tooltip
             contentStyle={{
-              backgroundColor: 'rgba(255, 255, 255, 0.98)',
-              border: '2px solid #3C6EFF',
+              backgroundColor: theme.backgroundElevated,
+              border: `2px solid ${theme.primary}`,
               borderRadius: '12px',
               padding: '12px 16px',
-              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)'
+              boxShadow: `0 10px 25px ${theme.shadow}`
             }}
             labelStyle={{
-              color: '#1F2937',
+              color: theme.text,
               fontWeight: 600,
               marginBottom: '4px'
             }}
             formatter={(value: number) => [
-              <span className="font-semibold text-[#3C6EFF]">{value.toFixed(1)}</span>,
+              <span className="font-semibold" style={{ color: theme.primary }}>{value.toFixed(1)}</span>,
               language === 'en' ? 'Score' : '分数'
             ]}
           />
@@ -174,34 +176,46 @@ export function RadarChartPro({ school, language }: RadarChartProProps) {
       </ResponsiveContainer>
 
       {/* Metric values grid */}
-      <div className="mt-4 pt-4 border-t-2 border-[#E5E7EB]">
+      <div className="mt-4 pt-4 border-t-2" style={{ borderColor: theme.border }}>
         <div className="flex flex-wrap justify-center gap-2">
           {metrics.map((m, idx) => (
             <div
               key={m.metric}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg border border-[#E5E7EB] hover:border-[#3C6EFF] hover:bg-[#F0F5FF] transition-all cursor-default"
+              className="flex items-center gap-1 px-3 py-2 rounded-lg border transition-all cursor-default"
+              style={{
+                borderColor: theme.border,
+                backgroundColor: theme.backgroundHover
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = theme.primary;
+                e.currentTarget.style.backgroundColor = theme.primaryGlow;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = theme.border;
+                e.currentTarget.style.backgroundColor = theme.backgroundHover;
+              }}
             >
-              <div className="text-xs text-[#6B7280]">{m.metric}</div>
-              <div className="text-lg font-bold text-[#3C6EFF]">
+              <div className="text-xs" style={{ color: theme.textSecondary }}>{m.metric}</div>
+              <div className="text-lg font-bold" style={{ color: theme.primary }}>
                 {m.displayValue.toFixed(0)}
               </div>
-              <div className="text-[10px] text-[#9CA3AF]">/ 100</div>
+              <div className="text-[10px]" style={{ color: theme.textMuted }}>/ 100</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Footer note */}
-      <div className="mt-4 px-3 py-2 bg-[#F0F5FF] rounded-lg border border-[#3C6EFF]/20">
-        <p className="text-xs text-[#6B7280] text-center">
+      <div className="mt-4 px-3 py-2 rounded-lg border" style={{ backgroundColor: theme.primaryGlow, borderColor: theme.primary + '33' }}>
+        <p className="text-xs text-center" style={{ color: theme.textSecondary }}>
           {language === 'en' ? (
             <>
-              <span className="font-medium text-[#3C6EFF]">●</span> Larger area = stronger overall performance •
+              <span className="font-medium" style={{ color: theme.primary }}>●</span> Larger area = stronger overall performance •
               All metrics normalized to 100-point scale
             </>
           ) : (
             <>
-              <span className="font-medium text-[#3C6EFF]">●</span> 面积越大 = 综合表现越强 •
+              <span className="font-medium" style={{ color: theme.primary }}>●</span> 面积越大 = 综合表现越强 •
               所有指标标准化为100分制
             </>
           )}
