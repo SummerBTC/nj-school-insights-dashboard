@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, Info } from "lucide-react";
 import type { School } from "../types/school";
 import { getSchoolLevel, type SchoolLevel } from "../utils/schoolLevel";
 import { CountyStatsCards } from "./CountyStatsCards";
 import { useTheme } from "../theme/ThemeContext";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 
 interface DashboardProps {
   schools: School[];
@@ -123,34 +124,100 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
 
       {/* Top Schools Section */}
       <div className="space-y-8">
-        {/* Filter Tabs */}
-        <div className="flex gap-4 flex-wrap">
-          {(["All", "Elementary", "Middle", "High"] as const).map((level) => {
-            const getLevelLabel = (lvl: typeof level) => {
-              if (language === 'en') {
-                return lvl === "All" ? "All Schools" : `${lvl} School`;
-              } else {
-                const labels = { All: "所有学校", Elementary: "小学", Middle: "中学", High: "高中" };
-                return labels[lvl];
-              }
-            };
+        {/* Filter Toggle Button Group - Compact & Unified */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <span className="text-base font-bold" style={{ color: theme.text }}>
+            {language === 'en' ? 'Filter by level:' : '按级别筛选：'}
+          </span>
 
-            return (
-              <button
-                key={level}
-                onClick={() => setLevelFilter(level)}
-                className="px-6 py-3 rounded-full font-bold text-sm transition-all whitespace-nowrap"
-                style={{
-                  backgroundColor: levelFilter === level ? theme.primary : theme.backgroundElevated,
-                  color: levelFilter === level ? theme.textInverse : theme.text,
-                  boxShadow: levelFilter === level ? `0px 4px 12px ${theme.primaryGlow}` : `0px 2px 8px ${theme.shadow}`,
-                  minWidth: 'fit-content',
-                }}
-              >
-                {getLevelLabel(level)}
-              </button>
-            );
-          })}
+          {/* Toggle Button Group - Connected Buttons */}
+          <div className="inline-flex rounded-xl border-2 overflow-hidden shadow-sm" style={{ borderColor: theme.border }}>
+            {(["High", "Middle", "Elementary", "All"] as const).map((level, index) => {
+              const getLevelLabel = (lvl: typeof level) => {
+                if (language === 'en') {
+                  if (lvl === "All") return "All Schools";
+                  if (lvl === "Middle") return "Middle School";
+                  if (lvl === "High") return "High School";
+                  return lvl;
+                } else {
+                  const labels = { All: "全部", Elementary: "小学", Middle: "初中", High: "高中" };
+                  return labels[lvl];
+                }
+              };
+
+              const getTooltipText = (lvl: typeof level) => {
+                if (language === 'en') {
+                  if (lvl === "All") return "Includes all grade levels (K–12).";
+                  if (lvl === "Elementary") return "Elementary School: K–5 (ages 5–11).";
+                  if (lvl === "Middle") return "Middle School: 6–8 (ages 11–14).";
+                  if (lvl === "High") return "High School: 9–12 (ages 14–18).";
+                } else {
+                  if (lvl === "All") return "包括所有年级（K-12）。";
+                  if (lvl === "Elementary") return "小学：K-5（5-11岁）。";
+                  if (lvl === "Middle") return "初中：6-8（11-14岁）。";
+                  if (lvl === "High") return "高中：9-12（14-18岁）。";
+                }
+                return "";
+              };
+
+              const isActive = levelFilter === level;
+
+              return (
+                <Tooltip key={level}>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => setLevelFilter(level)}
+                      className="px-6 py-3 font-bold text-base transition-all duration-200 whitespace-nowrap border-r-2 last:border-r-0"
+                      style={{
+                        backgroundColor: isActive ? theme.primary : theme.backgroundElevated,
+                        color: isActive ? '#FFFFFF' : theme.text,
+                        borderRightColor: theme.border,
+                        minWidth: '100px',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.backgroundColor = theme.backgroundHover;
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                          e.currentTarget.style.boxShadow = `0px 2px 8px ${theme.shadow}`;
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.backgroundColor = theme.backgroundElevated;
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }
+                      }}
+                    >
+                      {getLevelLabel(level)}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="top"
+                    className="max-w-xs p-3"
+                    style={{
+                      backgroundColor: theme.backgroundElevated,
+                      color: theme.text,
+                      border: `1px solid ${theme.border}`,
+                      boxShadow: `0px 4px 12px ${theme.shadow}`
+                    }}
+                  >
+                    <p className="text-xs">{getTooltipText(level)}</p>
+                  </TooltipContent>
+                </Tooltip>
+              );
+            })}
+          </div>
+
+          {/* Active Filter Indicator */}
+          {levelFilter !== "All" && (
+            <div className="text-sm font-semibold px-3 py-2 rounded-full" style={{ backgroundColor: theme.primary + '20', color: theme.primary }}>
+              {language === 'en'
+                ? `${filteredSchools.length} schools`
+                : `${filteredSchools.length} 所学校`
+              }
+            </div>
+          )}
         </div>
 
         {/* Math & ELA Schools - Side by Side on Desktop */}
@@ -221,7 +288,9 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
             {/* Legend */}
             <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.border }}>
               <p className="text-xs" style={{ color: colors.textMuted }}>
-                📊 排名基于数学成绩 — 分数越高，排名越靠前
+                {language === 'en'
+                  ? '📊 Ranked by Math proficiency — higher scores rank higher'
+                  : '📊 排名基于数学成绩 — 分数越高，排名越靠前'}
               </p>
             </div>
           </div>
@@ -292,7 +361,9 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
             {/* Legend */}
             <div className="mt-4 pt-4 border-t" style={{ borderColor: theme.border }}>
               <p className="text-xs" style={{ color: colors.textMuted }}>
-                📊 排名基于英语成绩 — 分数越高，排名越靠前
+                {language === 'en'
+                  ? '📊 Ranked by ELA proficiency — higher scores rank higher'
+                  : '📊 排名基于英语成绩 — 分数越高，排名越靠前'}
               </p>
             </div>
           </div>

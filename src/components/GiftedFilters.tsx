@@ -1,6 +1,5 @@
-import { Badge } from "./ui/badge";
 import { useTheme } from "../theme/ThemeContext";
-import { X } from "lucide-react";
+import { X, Check } from "lucide-react";
 
 interface GiftedFiltersProps {
   activeFilters: string[];
@@ -8,10 +7,10 @@ interface GiftedFiltersProps {
 }
 
 const availableFilters = [
-  { id: "gifted", label: "Gifted Program" },
-  { id: "lowAbsentee", label: "Low Absentee (<5%)" },
-  { id: "highMath", label: "High Math (>80%)" },
-  { id: "highAsianPerformance", label: "High Asian Performance (>85%)" },
+  { id: "gifted", label: "Gifted", shortLabel: "Gifted" },
+  { id: "lowAbsentee", label: "Low Absentee (<5%)", shortLabel: "Low Absent" },
+  { id: "highMath", label: "High Math (>80%)", shortLabel: "High Math" },
+  { id: "highAsianPerformance", label: "High Asian (>85%)", shortLabel: "High Asian" },
 ];
 
 export function GiftedFilters({ activeFilters, onFilterChange }: GiftedFiltersProps) {
@@ -53,6 +52,7 @@ export function GiftedFilters({ activeFilters, onFilterChange }: GiftedFiltersPr
           )}
         </div>
 
+        {/* Compact Button Group - Airbnb Style */}
         <div className="flex flex-wrap gap-2">
           {availableFilters.map((filter) => {
             const isActive = activeFilters.includes(filter.id);
@@ -60,20 +60,25 @@ export function GiftedFilters({ activeFilters, onFilterChange }: GiftedFiltersPr
               <button
                 key={filter.id}
                 onClick={() => toggleFilter(filter.id)}
-                className="transition-all"
+                className="px-4 py-2.5 rounded-full text-sm font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap border-2"
+                style={
+                  isActive
+                    ? {
+                        backgroundColor: theme.info,
+                        color: '#FFFFFF',
+                        borderColor: theme.info,
+                        boxShadow: `0px 2px 8px ${theme.info}33`
+                      }
+                    : {
+                        backgroundColor: theme.backgroundElevated,
+                        borderColor: theme.border,
+                        color: theme.textSecondary
+                      }
+                }
               >
-                <Badge
-                  variant={isActive ? "default" : "outline"}
-                  className="cursor-pointer px-4 py-2"
-                  style={
-                    isActive
-                      ? { backgroundColor: theme.info, color: '#FFFFFF', borderColor: theme.info }
-                      : { borderColor: theme.border, color: theme.textSecondary }
-                  }
-                >
-                  {filter.label}
-                  {isActive && <X className="size-3 ml-2" />}
-                </Badge>
+                {isActive && <Check className="size-4" />}
+                <span className="hidden sm:inline">{filter.label}</span>
+                <span className="sm:hidden">{filter.shortLabel}</span>
               </button>
             );
           })}

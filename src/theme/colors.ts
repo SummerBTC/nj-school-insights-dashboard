@@ -1,9 +1,12 @@
 export const lightTheme = {
-  // Primary purple shades - 前沿科技紫色
+  // Banner color - specifically for header/banner background
+  bannerPurple: '#7C3AED', // Vibrant purple for banner
+
+  // Primary purple shades - for UI text, icons, and accents
   primary: '#7C3AED', // Vibrant purple
   primaryLight: '#A78BFA', // Light purple
   primaryDark: '#5B21B6', // Deep purple
-  primaryGlow: 'rgba(124, 58, 237, 0.15)', // Purple glow
+  primaryGlow: '#C4B5FD33', // Purple glow (hex with alpha)
 
   // Accent purples
   accent: '#8B5CF6', // Medium purple
@@ -40,16 +43,19 @@ export const lightTheme = {
   chart5: '#6D28D9',
 
   // Shadows
-  shadow: 'rgba(124, 58, 237, 0.1)',
-  shadowStrong: 'rgba(124, 58, 237, 0.2)',
+  shadow: '#7C3AED1A', // Purple shadow (hex with alpha)
+  shadowStrong: '#7C3AED33', // Stronger purple shadow (hex with alpha)
 };
 
 export const darkTheme = {
-  // Primary purple shades - 深色科技紫
-  primary: '#A78BFA', // Lighter purple for dark mode
+  // Banner color - specifically for header/banner background
+  bannerPurple: '#7133EA', // Dark purple for banner (better contrast with white text)
+
+  // Primary purple shades - for UI text, icons, and accents
+  primary: '#9D80F9', // Light purple for readable text/icons in dark mode
   primaryLight: '#C4B5FD', // Very light purple
   primaryDark: '#7C3AED', // Vibrant purple
-  primaryGlow: 'rgba(167, 139, 250, 0.2)', // Purple glow
+  primaryGlow: '#9D80F933', // Purple glow (hex with alpha)
 
   // Accent purples
   accent: '#8B5CF6', // Medium purple
@@ -86,8 +92,8 @@ export const darkTheme = {
   chart5: '#7C3AED',
 
   // Shadows
-  shadow: 'rgba(0, 0, 0, 0.3)',
-  shadowStrong: 'rgba(0, 0, 0, 0.5)',
+  shadow: '#0000004D', // Black shadow (hex with alpha)
+  shadowStrong: '#00000080', // Stronger black shadow (hex with alpha)
 };
 
 export type Theme = typeof lightTheme;

@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Switch } from "./ui/switch";
 import { Radar, RadarChart as RechartsRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from "recharts";
-import { ArrowRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { ArrowRight, TrendingUp, TrendingDown, Minus, RotateCcw } from "lucide-react";
 import type { School } from "../types/school";
 import { areSameLevel, getSchoolLevelLabel } from "../utils/schoolLevel";
 import { SchoolCombobox } from "./SchoolCombobox";
@@ -9,19 +9,19 @@ import { useTheme } from "../theme/ThemeContext";
 
 interface CompareSchoolsProps {
   schools: School[];
-  defaultSchool: School;
+  defaultSchool?: School | null;
   language: 'en' | 'zh';
 }
 
 export function CompareSchools({ schools, defaultSchool, language }: CompareSchoolsProps) {
   const { theme } = useTheme();
-  const [school1, setSchool1] = useState<School>(defaultSchool);
-  const [school2, setSchool2] = useState<School>(schools.find(s => s.id !== defaultSchool.id) || schools[1]);
+  const [school1, setSchool1] = useState<School | null>(defaultSchool || null);
+  const [school2, setSchool2] = useState<School | null>(null);
   const [onlySimilarSchools, setOnlySimilarSchools] = useState<boolean>(true);
 
   // Filter schools for School 2 dropdown based on toggle
   const availableSchools = useMemo(() => {
-    if (!onlySimilarSchools) {
+    if (!onlySimilarSchools || !school1) {
       return schools;
     }
 
@@ -33,13 +33,13 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
 
   // Auto-update school2 if current selection is filtered out
   useMemo(() => {
-    if (onlySimilarSchools && !availableSchools.find(s => s.id === school2.id)) {
+    if (school1 && school2 && onlySimilarSchools && !availableSchools.find(s => s.id === school2.id)) {
       const newSchool2 = availableSchools.find(s => s.id !== school1.id);
       if (newSchool2) {
         setSchool2(newSchool2);
       }
     }
-  }, [availableSchools, onlySimilarSchools, school1.id, school2.id]);
+  }, [availableSchools, onlySimilarSchools, school1, school2]);
 
   const normalizeStudentTeacherRatio = (ratio: number) => {
     return Math.max(0, Math.min(100, ((25 - ratio) / 15) * 100));
@@ -58,7 +58,7 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
     return Math.max(0, 100 - gap);
   };
 
-  const radarData = [
+  const radarData = school1 && school2 ? [
     {
       metric: "Math",
       [school1.name]: school1.mathProficiency,
@@ -84,7 +84,7 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
       [school1.name]: calculateEquityScore(school1),
       [school2.name]: calculateEquityScore(school2),
     },
-  ];
+  ] : [];
 
   const getDifference = (val1: number, val2: number) => {
     const diff = val1 - val2;
@@ -111,98 +111,123 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
     );
   };
 
+  const handleReset = () => {
+    setSchool1(null);
+    setSchool2(null);
+    setOnlySimilarSchools(true);
+  };
+
   return (
     <div className="space-y-6">
-      {/* Filter Toggle */}
-      <div className="rounded-lg p-4 flex items-center justify-between" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
-        <div>
-          <div className="text-sm font-medium" style={{ color: theme.text }}>
-            {language === 'en' ? 'Only show similar schools' : '仅显示相似学校'}
+      {/* Filter Toggle with Reset Button */}
+      <div className="flex gap-4 flex-wrap">
+        <div className="rounded-lg p-4 flex items-center justify-between flex-1 min-w-[300px]" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
+          <div>
+            <div className="text-sm font-medium" style={{ color: theme.text }}>
+              {language === 'en' ? 'Only show similar schools' : '仅显示相似学校'}
+            </div>
+            <div className="text-xs mt-1" style={{ color: theme.textSecondary }}>
+              {onlySimilarSchools && school1
+                ? language === 'en'
+                  ? `Comparing ${getSchoolLevelLabel(school1.gradeSpan || school1.grades)} only (${availableSchools.length} schools)`
+                  : `仅对比${getSchoolLevelLabel(school1.gradeSpan || school1.grades)} (${availableSchools.length}所学校)`
+                : language === 'en'
+                  ? `Showing all schools (${schools.length} schools)`
+                  : `显示所有学校 (${schools.length}所)`
+              }
+            </div>
           </div>
-          <div className="text-xs mt-1" style={{ color: theme.textSecondary }}>
-            {onlySimilarSchools
-              ? language === 'en'
-                ? `Comparing ${getSchoolLevelLabel(school1.gradeSpan || school1.grades)} only (${availableSchools.length} schools)`
-                : `仅对比${getSchoolLevelLabel(school1.gradeSpan || school1.grades)} (${availableSchools.length}所学校)`
-              : language === 'en'
-                ? `Showing all schools (${schools.length} schools)`
-                : `显示所有学校 (${schools.length}所)`
-            }
-          </div>
+          <Switch
+            checked={onlySimilarSchools}
+            onCheckedChange={setOnlySimilarSchools}
+          />
         </div>
-        <Switch
-          checked={onlySimilarSchools}
-          onCheckedChange={setOnlySimilarSchools}
-        />
+
+        {/* Reset Button */}
+        <button
+          onClick={handleReset}
+          className="flex items-center gap-2 px-6 py-4 rounded-lg text-sm font-semibold transition-all hover:scale-105"
+          style={{
+            backgroundColor: theme.backgroundElevated,
+            color: theme.textSecondary,
+            border: `1px solid ${theme.border}`
+          }}
+        >
+          <RotateCcw className="size-4" />
+          {language === 'en' ? 'Reset' : '重置'}
+        </button>
       </div>
 
       {/* School Selectors */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-        <div className="rounded-lg p-4" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.info}` }}>
-          <label className="text-sm mb-2 block" style={{ color: theme.textSecondary }}>
+      <div className="flex items-center justify-center gap-3 flex-wrap">
+        <div className="rounded-lg p-5 flex items-center gap-4 min-w-[320px]" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.info}` }}>
+          <label className="text-lg font-bold whitespace-nowrap" style={{ color: theme.info }}>
             {language === 'en' ? 'School 1' : '学校 1'}
           </label>
           <SchoolCombobox
             schools={schools}
-            value={school1.id}
-            onValueChange={(id) => setSchool1(schools.find(s => s.id === id)!)}
-            disabledSchoolId={school2.id}
+            value={school1?.id || ""}
+            onValueChange={(id) => setSchool1(schools.find(s => s.id === id) || null)}
+            disabledSchoolId={school2?.id}
             placeholder={language === 'en' ? 'Select school...' : '选择学校...'}
             searchPlaceholder={language === 'en' ? 'Search school...' : '搜索学校...'}
             emptyText={language === 'en' ? 'No school found.' : '未找到学校。'}
+            className="text-base flex-1"
           />
         </div>
 
-        <div className="flex justify-center">
-          <ArrowRight className="size-8" style={{ color: theme.textSecondary }} />
-        </div>
+        <ArrowRight className="size-8 flex-shrink-0" style={{ color: theme.textSecondary }} />
 
-        <div className="rounded-lg p-4" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.success}` }}>
-          <label className="text-sm mb-2 block" style={{ color: theme.textSecondary }}>
+        <div className="rounded-lg p-5 flex items-center gap-4 min-w-[320px]" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.success}` }}>
+          <label className="text-lg font-bold whitespace-nowrap" style={{ color: theme.success }}>
             {language === 'en' ? 'School 2' : '学校 2'}
           </label>
           <SchoolCombobox
             schools={availableSchools}
-            value={school2.id}
-            onValueChange={(id) => setSchool2(availableSchools.find(s => s.id === id)!)}
-            disabledSchoolId={school1.id}
+            value={school2?.id || ""}
+            onValueChange={(id) => setSchool2(availableSchools.find(s => s.id === id) || null)}
+            disabledSchoolId={school1?.id}
             placeholder={language === 'en' ? 'Select school...' : '选择学校...'}
             searchPlaceholder={language === 'en' ? 'Search school...' : '搜索学校...'}
             emptyText={language === 'en' ? 'No school found.' : '未找到学校。'}
+            className="text-base flex-1"
           />
         </div>
       </div>
 
-      {/* Radar Chart Comparison */}
-      <div className="rounded-lg p-6" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
-        <h3 className="mb-4" style={{ color: theme.text }}>
-          {language === 'en' ? 'Performance Overlay' : '表现对比图'}
-        </h3>
-        <ResponsiveContainer width="100%" height={400}>
-          <RechartsRadar data={radarData}>
-            <PolarGrid stroke={theme.border} />
-            <PolarAngleAxis dataKey="metric" tick={{ fill: theme.textSecondary, fontSize: 12 }} />
-            <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: theme.textSecondary, fontSize: 10 }} />
-            <Radar
-              name={school1.name}
-              dataKey={school1.name}
-              stroke={theme.info}
-              fill={theme.info}
-              fillOpacity={0.3}
-              strokeWidth={2}
-            />
-            <Radar
-              name={school2.name}
-              dataKey={school2.name}
-              stroke={theme.success}
-              fill={theme.success}
-              fillOpacity={0.3}
-              strokeWidth={2}
-            />
-            <Legend />
-          </RechartsRadar>
-        </ResponsiveContainer>
-      </div>
+      {/* Only show comparison content if both schools are selected */}
+      {school1 && school2 && (
+        <>
+          {/* Radar Chart Comparison */}
+          <div className="rounded-lg p-6" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
+            <h3 className="mb-4" style={{ color: theme.text }}>
+              {language === 'en' ? 'Performance Overlay' : '表现对比图'}
+            </h3>
+            <ResponsiveContainer width="100%" height={400}>
+              <RechartsRadar data={radarData}>
+                <PolarGrid stroke={theme.border} />
+                <PolarAngleAxis dataKey="metric" tick={{ fill: theme.textSecondary, fontSize: 12 }} />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: theme.textSecondary, fontSize: 10 }} />
+                <Radar
+                  name={school1.name}
+                  dataKey={school1.name}
+                  stroke={theme.info}
+                  fill={theme.info}
+                  fillOpacity={0.3}
+                  strokeWidth={2}
+                />
+                <Radar
+                  name={school2.name}
+                  dataKey={school2.name}
+                  stroke={theme.success}
+                  fill={theme.success}
+                  fillOpacity={0.3}
+                  strokeWidth={2}
+                />
+                <Legend />
+              </RechartsRadar>
+            </ResponsiveContainer>
+          </div>
 
       {/* Summary Insights */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -390,6 +415,8 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
           </table>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

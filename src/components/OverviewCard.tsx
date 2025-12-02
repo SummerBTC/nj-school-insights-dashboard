@@ -1,6 +1,7 @@
 import { Badge } from "./ui/badge";
 import { useTheme } from "../theme/ThemeContext";
-import { MapPin, Users, GraduationCap } from "lucide-react";
+import { MapPin, Users, GraduationCap, Info } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 import type { School } from "../types/school";
 
 interface OverviewCardProps {

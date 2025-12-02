@@ -2,20 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import { GraduationCap, Menu, X, Moon, Sun } from "lucide-react";
+import { GraduationCap, Menu, X, Moon, Sun, Info } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./components/ui/tooltip";
 import { SearchBar } from "./components/SearchBar";
 import { Dashboard } from "./components/Dashboard";
 import { OverviewCard } from "./components/OverviewCard";
+import { BerryEmptyState } from "./components/BerryEmptyState";
 import { RadarChartPro } from "./components/RadarChartPro";
 import { DemographicsBarChart } from "./components/DemographicsBarChart";
 import { AcademicSnapshot } from "./components/AcademicSnapshot";
 import { AttendanceSafety } from "./components/AttendanceSafety";
 import { WhyScoreChanged } from "./components/WhyScoreChanged";
 import { AsianFamiliesSpotlight } from "./components/AsianFamiliesSpotlight";
-import { GiftedFilters } from "./components/GiftedFilters";
-import { SchoolRankingList } from "./components/SchoolRankingList";
+import { RankingControls, type SortOption, type GroupByOption } from "./components/RankingControls";
+import { EnhancedSchoolRankingList } from "./components/EnhancedSchoolRankingList";
 import { CompareSchools } from "./components/CompareSchools";
-import { TrendsInsights } from "./components/TrendsInsights";
+import { EnhancedTrendsInsights } from "./components/EnhancedTrendsInsights";
 import  fetchNjSchools  from "./data/fetchNjSchools";
 import type { School } from "./types/school";
 import { useTheme } from "./theme/ThemeContext";
@@ -24,7 +26,10 @@ export default function App() {
   const { theme, mode, toggleTheme } = useTheme();
   const [schools, setSchools] = useState<School[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
+  const [quickFind, setQuickFind] = useState<string>('');
+  const [sortBy, setSortBy] = useState<SortOption>('overall');
+  const [groupBy, setGroupBy] = useState<GroupByOption>('none');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("overall");
@@ -41,7 +46,8 @@ export default function App() {
       try {
         const data = await fetchNjSchools();
         setSchools(data);
-        setSelectedSchool(data[0] ?? null);
+        // DO NOT auto-select first school - let user search and choose
+        setSelectedSchool(null);
       } catch (e) {
         console.error("❌ Failed to load schools", e);
         setError("Failed to load NJ school data.");
@@ -84,7 +90,7 @@ export default function App() {
       {/* Fixed Header - Contains banner, tabs, and search bar */}
       <header className="fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: theme.backgroundElevated, boxShadow: `0px 2px 8px ${theme.shadow}` }}>
         {/* Banner - SchoolBerry Design System with Search */}
-        <div style={{ backgroundColor: theme.primary }}>
+        <div style={{ backgroundColor: theme.bannerPurple }}>
           <div className="max-w-7xl mx-auto px-6 py-3">
             {/* Top Row: Logo and Controls */}
             <div className="flex items-center justify-between mb-3">
@@ -136,7 +142,10 @@ export default function App() {
                 schools={schools}
                 onSelectSchool={(school) => {
                   setSelectedSchool(school);
-                  setActiveTab("school-details");
+                  // Only navigate to school-details if not already on a page that shows school data
+                  if (activeTab !== "school-details" && activeTab !== "trends" && activeTab !== "compare") {
+                    setActiveTab("school-details");
+                  }
                 }}
                 selectedSchool={selectedSchool}
                 language={language}
@@ -319,8 +328,8 @@ export default function App() {
             </TabsContent>
 
             {/* School Details Tab */}
-            <TabsContent value="school-details" className="space-y-6">
-              {selectedSchool && (
+            <TabsContent value="school-details" className={selectedSchool ? "space-y-6" : "flex items-center justify-center min-h-[calc(100vh-250px)] mt-10"}>
+              {selectedSchool ? (
                 <>
                   {/* Top: School Header Card */}
                   <OverviewCard school={selectedSchool} language={language} />
@@ -387,8 +396,43 @@ export default function App() {
                         </div>
                       </div>
                       <div className="text-center p-3 rounded-lg" style={{ backgroundColor: theme.warning + '1A' }}>
-                        <div className="text-xs mb-1" style={{ color: theme.textSecondary }}>
-                          {language === 'en' ? 'Grade Span' : '年级范围'}
+                        <div className="text-xs mb-1 flex items-center justify-center gap-1" style={{ color: theme.textSecondary }}>
+                          <span>{language === 'en' ? 'Grade Span' : '年级范围'}</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button className="inline-flex items-center">
+                                <Info className="size-3.5 opacity-60 hover:opacity-100 transition-opacity" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent
+                              side="top"
+                              className="max-w-xs p-3"
+                              style={{
+                                backgroundColor: theme.backgroundElevated,
+                                color: theme.text,
+                                border: `1px solid ${theme.border}`,
+                                boxShadow: `0px 4px 12px ${theme.shadow}`
+                              }}
+                            >
+                              {language === 'en' ? (
+                                <div className="space-y-1.5 text-xs">
+                                  <p className="font-semibold">US School System:</p>
+                                  <p><strong>Elementary:</strong> K-5 (ages 5-11)</p>
+                                  <p><strong>Middle School:</strong> 6-8 (ages 11-14)</p>
+                                  <p><strong>High School:</strong> 9-12 (ages 14-18)</p>
+                                  <p className="text-[10px] opacity-70 mt-2">K = Kindergarten</p>
+                                </div>
+                              ) : (
+                                <div className="space-y-1.5 text-xs">
+                                  <p className="font-semibold">美国学校系统：</p>
+                                  <p><strong>小学 Elementary:</strong> K-5 (5-11岁)</p>
+                                  <p><strong>初中 Middle:</strong> 6-8 (11-14岁)</p>
+                                  <p><strong>高中 High:</strong> 9-12 (14-18岁)</p>
+                                  <p className="text-[10px] opacity-70 mt-2">K = 幼儿园 Kindergarten</p>
+                                </div>
+                              )}
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                         <div className="text-sm font-medium" style={{ color: theme.text }}>
                           {selectedSchool.gradeSpan || "K-12"}
@@ -400,37 +444,62 @@ export default function App() {
                 </div>
               </div>
                 </>
+              ) : (
+                <BerryEmptyState language={language} variant="school-details" />
               )}
             </TabsContent>
 
             {/* Compare Tab */}
             <TabsContent value="compare">
-              {selectedSchool && (
-                <CompareSchools
-                  schools={schools}
-                  defaultSchool={selectedSchool}
-                  language={language}
-                />
-              )}
+              <CompareSchools
+                schools={schools}
+                defaultSchool={selectedSchool}
+                language={language}
+              />
             </TabsContent>
 
             {/* Rankings Tab */}
             <TabsContent value="rankings">
-              <GiftedFilters
+              <RankingControls
+                quickFind={quickFind}
+                onQuickFindChange={setQuickFind}
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+                groupBy={groupBy}
+                onGroupByChange={setGroupBy}
                 activeFilters={activeFilters}
-                onFilterChange={setActiveFilters}
+                onFilterToggle={(filterId) => {
+                  const newFilters = new Set(activeFilters);
+                  if (newFilters.has(filterId)) {
+                    newFilters.delete(filterId);
+                  } else {
+                    newFilters.add(filterId);
+                  }
+                  setActiveFilters(newFilters);
+                }}
+                onClearFilters={() => setActiveFilters(new Set())}
+                language={language}
               />
-              <SchoolRankingList
+              <EnhancedSchoolRankingList
                 schools={schools}
                 activeFilters={activeFilters}
+                quickFind={quickFind}
+                sortBy={sortBy}
+                groupBy={groupBy}
                 language={language}
               />
             </TabsContent>
 
             {/* Trends Tab */}
-            <TabsContent value="trends">
-              {selectedSchool && (
-                <TrendsInsights school={selectedSchool} language={language} />
+            <TabsContent value="trends" className="flex items-center justify-center min-h-[calc(100vh-250px)]">
+              {selectedSchool ? (
+                <EnhancedTrendsInsights
+                  school={selectedSchool}
+                  language={language}
+                  onReset={() => setSelectedSchool(null)}
+                />
+              ) : (
+                <BerryEmptyState language={language} variant="trends" />
               )}
             </TabsContent>
           </Tabs>
