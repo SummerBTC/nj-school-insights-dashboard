@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Switch } from "./ui/switch";
 import { Radar, RadarChart as RechartsRadar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from "recharts";
-import { ArrowRight, TrendingUp, TrendingDown, Minus, RotateCcw } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, RotateCcw } from "lucide-react";
 import type { School } from "../types/school";
 import { areSameLevel, getSchoolLevelLabel } from "../utils/schoolLevel";
 import { SchoolCombobox } from "./SchoolCombobox";
@@ -175,8 +175,6 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
             className="text-base flex-1"
           />
         </div>
-
-        <ArrowRight className="size-8 flex-shrink-0" style={{ color: theme.textSecondary }} />
 
         <div className="rounded-lg p-5 flex items-center gap-4 min-w-[320px]" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.success}` }}>
           <label className="text-lg font-bold whitespace-nowrap" style={{ color: theme.success }}>

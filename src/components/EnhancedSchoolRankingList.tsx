@@ -186,9 +186,6 @@ export function EnhancedSchoolRankingList({
                         <th className="px-4 py-3 text-left text-sm font-semibold" style={{ color: theme.text }}>
                           {language === 'en' ? 'School Name' : '学校名称'}
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold" style={{ color: theme.text }}>
-                          {language === 'en' ? 'District' : '学区'}
-                        </th>
                         <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
                           {language === 'en' ? 'Overall' : '总分'}
                         </th>
@@ -203,6 +200,9 @@ export function EnhancedSchoolRankingList({
                         </th>
                         <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
                           {language === 'en' ? 'S-T Ratio' : '师生比'}
+                        </th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold" style={{ color: theme.text }}>
+                          {language === 'en' ? 'District' : '学区'}
                         </th>
                       </tr>
                     </thead>
@@ -255,11 +255,6 @@ export function EnhancedSchoolRankingList({
                               <div className="text-xs" style={{ color: theme.textSecondary }}>{school.grades} • {school.county}</div>
                             </td>
 
-                            {/* District */}
-                            <td className="px-4 py-3 text-sm" style={{ color: theme.textSecondary }}>
-                              {school.district}
-                            </td>
-
                             {/* Overall Score */}
                             <td className="px-4 py-3 text-center">
                               <div className="text-lg font-bold" style={{ color: theme.primary }}>{school.overallScore}</div>
@@ -293,6 +288,11 @@ export function EnhancedSchoolRankingList({
                             {/* Student-Teacher Ratio */}
                             <td className="px-4 py-3 text-center text-sm" style={{ color: theme.text }}>
                               1:{school.studentTeacherRatio}
+                            </td>
+
+                            {/* District */}
+                            <td className="px-4 py-3 text-sm" style={{ color: theme.textSecondary }}>
+                              {school.district}
                             </td>
                           </tr>
                         );

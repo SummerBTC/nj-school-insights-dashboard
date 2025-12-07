@@ -99,111 +99,70 @@ export function RankingControls({
       <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-[#3B82F6]/10 to-transparent rounded-full blur-2xl" />
 
       <div className="relative z-10 space-y-4">
-        {/* Header Row: Title + Quick Find + Clear All */}
+        {/* Header Row: Title + Reset Button */}
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🏆</span>
-            <h3 className="text-lg font-bold" style={{ color: theme.text }}>
-              {language === 'en' ? 'Ranking Controls' : '排名控制'}
-            </h3>
-          </div>
+          <h3 className="text-lg font-bold" style={{ color: theme.text }}>
+            {language === 'en' ? 'Rankings' : '排名'}
+          </h3>
 
-          <div className="flex items-center gap-3">
-            {/* Quick Find Input */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4" style={{ color: theme.textSecondary }} />
-              <input
-                type="text"
-                placeholder={language === 'en' ? 'Quick Find (within list)...' : '快速查找（列表内）...'}
-                value={quickFind}
-                onChange={(e) => onQuickFindChange(e.target.value)}
-                className="pl-9 pr-3 py-2 rounded-lg text-sm border-2 transition-all w-64"
-                style={{
-                  backgroundColor: theme.backgroundElevated,
-                  borderColor: quickFind ? theme.info : theme.border,
-                  color: theme.text
-                }}
-              />
-              {quickFind && (
-                <button
-                  onClick={() => onQuickFindChange('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-opacity-80 transition-colors"
-                  style={{ backgroundColor: theme.error + '20', color: theme.error }}
-                >
-                  <X className="size-3" />
-                </button>
-              )}
-            </div>
+          {/* Reset Button */}
+          <button
+            onClick={handleReset}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:scale-105"
+            style={{
+              backgroundColor: theme.backgroundHover,
+              color: theme.textSecondary,
+              border: `1px solid ${theme.border}`
+            }}
+          >
+            <RotateCcw className="size-4" />
+            {language === 'en' ? 'Reset' : '重置'}
+          </button>
+        </div>
 
-            {/* Reset Button */}
+        {/* Quick Find Row */}
+        <div className="relative w-full">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4" style={{ color: theme.textSecondary }} />
+          <input
+            type="text"
+            placeholder={language === 'en' ? 'Quick Find (within list)...' : '快速查找（列表内）...'}
+            value={quickFind}
+            onChange={(e) => onQuickFindChange(e.target.value)}
+            className="pl-10 pr-10 py-2 rounded-lg text-sm border-2 transition-all w-full"
+            style={{
+              backgroundColor: theme.backgroundElevated,
+              borderColor: quickFind ? theme.info : theme.border,
+              color: theme.text
+            }}
+          />
+          {quickFind && (
             <button
-              onClick={handleReset}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:scale-105"
-              style={{
-                backgroundColor: theme.backgroundHover,
-                color: theme.textSecondary,
-                border: `1px solid ${theme.border}`
-              }}
+              onClick={() => onQuickFindChange('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-opacity-80 transition-colors"
+              style={{ backgroundColor: theme.error + '20', color: theme.error }}
             >
-              <RotateCcw className="size-4" />
-              {language === 'en' ? 'Reset' : '重置'}
+              <X className="size-3" />
             </button>
-          </div>
+          )}
         </div>
 
-        {/* Sort & Group By Row */}
-        <div className="flex items-center gap-4 flex-wrap">
-          {/* Sort By */}
-          <div className="flex items-center gap-2">
-            <ArrowUpDown className="size-4" style={{ color: theme.textSecondary }} />
-            <span className="text-sm font-semibold" style={{ color: theme.textSecondary }}>
-              {language === 'en' ? 'Sort by:' : '排序：'}
-            </span>
-            <div className="flex flex-wrap gap-1">
-              {sortOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => onSortChange(option.value)}
-                  className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all border"
-                  style={
-                    sortBy === option.value
-                      ? {
-                          backgroundColor: theme.primary,
-                          color: '#FFFFFF',
-                          borderColor: theme.primary
-                        }
-                      : {
-                          backgroundColor: theme.backgroundElevated,
-                          borderColor: theme.border,
-                          color: theme.textSecondary
-                        }
-                  }
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Group By Row */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <SlidersHorizontal className="size-4" style={{ color: theme.textSecondary }} />
+        {/* Sort By Section */}
+        <div className="space-y-2">
           <span className="text-sm font-semibold" style={{ color: theme.textSecondary }}>
-            {language === 'en' ? 'Group by:' : '分组：'}
+            {language === 'en' ? 'Sort by' : '排序'}
           </span>
           <div className="flex flex-wrap gap-1">
-            {groupByOptions.map((option) => (
+            {sortOptions.map((option) => (
               <button
                 key={option.value}
-                onClick={() => onGroupByChange(option.value)}
+                onClick={() => onSortChange(option.value)}
                 className="px-3 py-1.5 rounded-full text-xs font-semibold transition-all border"
                 style={
-                  groupBy === option.value
+                  sortBy === option.value
                     ? {
-                        backgroundColor: theme.success,
+                        backgroundColor: theme.primary,
                         color: '#FFFFFF',
-                        borderColor: theme.success
+                        borderColor: theme.primary
                       }
                     : {
                         backgroundColor: theme.backgroundElevated,

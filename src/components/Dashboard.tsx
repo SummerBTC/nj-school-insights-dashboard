@@ -135,10 +135,9 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
             {(["High", "Middle", "Elementary", "All"] as const).map((level, index) => {
               const getLevelLabel = (lvl: typeof level) => {
                 if (language === 'en') {
-                  if (lvl === "All") return "All Schools";
-                  if (lvl === "Middle") return "Middle School";
-                  if (lvl === "High") return "High School";
-                  return lvl;
+                  // Short labels for buttons
+                  const labels = { All: "All", Elementary: "Elementary", Middle: "Middle", High: "High" };
+                  return labels[lvl];
                 } else {
                   const labels = { All: "全部", Elementary: "小学", Middle: "初中", High: "高中" };
                   return labels[lvl];
@@ -147,15 +146,15 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
 
               const getTooltipText = (lvl: typeof level) => {
                 if (language === 'en') {
-                  if (lvl === "All") return "Includes all grade levels (K–12).";
-                  if (lvl === "Elementary") return "Elementary School: K–5 (ages 5–11).";
-                  if (lvl === "Middle") return "Middle School: 6–8 (ages 11–14).";
-                  if (lvl === "High") return "High School: 9–12 (ages 14–18).";
+                  if (lvl === "All") return "All Levels: K–12 (ages 5–18)";
+                  if (lvl === "Elementary") return "Elementary School\nGrades: PreK–5\nAges: 4–11";
+                  if (lvl === "Middle") return "Middle School\nGrades: 6–8\nAges: 11–14";
+                  if (lvl === "High") return "High School\nGrades: 9–12\nAges: 14–18";
                 } else {
-                  if (lvl === "All") return "包括所有年级（K-12）。";
-                  if (lvl === "Elementary") return "小学：K-5（5-11岁）。";
-                  if (lvl === "Middle") return "初中：6-8（11-14岁）。";
-                  if (lvl === "High") return "高中：9-12（14-18岁）。";
+                  if (lvl === "All") return "全部等级：K-12（5-18岁）";
+                  if (lvl === "Elementary") return "小学\n年级：PreK-5\n年龄：4-11岁";
+                  if (lvl === "Middle") return "初中\n年级：6-8\n年龄：11-14岁";
+                  if (lvl === "High") return "高中\n年级：9-12\n年龄：14-18岁";
                 }
                 return "";
               };
@@ -167,12 +166,11 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
                   <TooltipTrigger asChild>
                     <button
                       onClick={() => setLevelFilter(level)}
-                      className="px-6 py-3 font-bold text-base transition-all duration-200 whitespace-nowrap border-r-2 last:border-r-0"
+                      className="px-4 py-2 font-semibold text-sm transition-all duration-200 whitespace-nowrap border-r-2 last:border-r-0"
                       style={{
                         backgroundColor: isActive ? theme.primary : theme.backgroundElevated,
                         color: isActive ? '#FFFFFF' : theme.text,
                         borderRightColor: theme.border,
-                        minWidth: '100px',
                       }}
                       onMouseEnter={(e) => {
                         if (!isActive) {
@@ -373,8 +371,6 @@ export function Dashboard({ schools, onSelectSchool, language }: DashboardProps)
       {/* Asian Families Spotlight */}
       {asianFriendlySchools.length > 0 && (
         <div className="relative rounded-[32px] p-12 overflow-hidden shadow-xl" style={{ backgroundColor: theme.primaryGlow }}>
-          <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full opacity-30" style={{ backgroundColor: theme.primary }} />
-
           <div className="relative z-10">
             <div className="mb-8">
               <h3 className="text-3xl font-black mb-2" style={{ color: theme.text }}>

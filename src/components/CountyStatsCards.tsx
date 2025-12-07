@@ -19,7 +19,7 @@ export function CountyStatsCards({
   const { theme } = useTheme();
 
   return (
-    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+    <div className="grid gap-6 grid-cols-2 md:grid-cols-4">
       {/* 综合评分 */}
       <div
         className="rounded-xl p-4 border"

@@ -90,10 +90,10 @@ export default function App() {
       {/* Fixed Header - Contains banner, tabs, and search bar */}
       <header className="fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: theme.backgroundElevated, boxShadow: `0px 2px 8px ${theme.shadow}` }}>
         {/* Banner - SchoolBerry Design System with Search */}
-        <div style={{ backgroundColor: theme.bannerPurple }}>
-          <div className="max-w-7xl mx-auto px-6 py-3">
+        <div style={{ backgroundColor: theme.bannerPurple, height: '40px' }}>
+          <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
             {/* Top Row: Logo and Controls */}
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-3 lg:gap-6">
                 {/* Mobile Menu Toggle - Only on mobile and tablet, to the left of logo */}
                 <button
@@ -135,22 +135,6 @@ export default function App() {
                 </button>
               </div>
             </div>
-
-            {/* Search Bar - Always visible in banner */}
-            {schools.length > 0 && (
-              <SearchBar
-                schools={schools}
-                onSelectSchool={(school) => {
-                  setSelectedSchool(school);
-                  // Only navigate to school-details if not already on a page that shows school data
-                  if (activeTab !== "school-details" && activeTab !== "trends" && activeTab !== "compare") {
-                    setActiveTab("school-details");
-                  }
-                }}
-                selectedSchool={selectedSchool}
-                language={language}
-              />
-            )}
           </div>
         </div>
 
@@ -225,84 +209,113 @@ export default function App() {
 
       {/* Full-Screen Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="mobile-menu-btn fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: theme.backgroundElevated }}>
-          {/* Top Row: Close Button */}
-          <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: theme.border }}>
-            <span className="text-xl font-black" style={{ color: theme.primary }}>Menu</span>
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2 rounded-xl transition-colors"
-              style={{ backgroundColor: theme.backgroundHover }}
-            >
-              <X className="size-7" style={{ color: theme.primary }} />
-            </button>
-          </div>
+        <>
+          {/* Background Overlay with 80% black */}
+          <div
+            className="mobile-menu-btn fixed inset-0 z-[100] bg-black bg-opacity-80"
+            onClick={() => setMobileMenuOpen(false)}
+          />
 
-          {/* Middle: Scrollable Menu Items */}
-          <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center gap-4 py-8 px-6">
-            <button
-              onClick={() => { setActiveTab("overall"); setMobileMenuOpen(false); }}
-              className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
-              style={{
-                backgroundColor: activeTab === "overall" ? theme.primaryGlow : theme.backgroundHover,
-                color: activeTab === "overall" ? theme.primary : theme.textSecondary
-              }}
-            >
-              {language === 'en' ? '🏠 County Overview' : '🏠 县区概览'}
-            </button>
-            <button
-              onClick={() => { setActiveTab("school-details"); setMobileMenuOpen(false); }}
-              className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
-              style={{
-                backgroundColor: activeTab === "school-details" ? theme.primaryGlow : theme.backgroundHover,
-                color: activeTab === "school-details" ? theme.primary : theme.textSecondary
-              }}
-            >
-              {language === 'en' ? '🔍 School Details' : '🔍 学校详情'}
-            </button>
-            <button
-              onClick={() => { setActiveTab("compare"); setMobileMenuOpen(false); }}
-              className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
-              style={{
-                backgroundColor: activeTab === "compare" ? theme.primaryGlow : theme.backgroundHover,
-                color: activeTab === "compare" ? theme.primary : theme.textSecondary
-              }}
-            >
-              {language === 'en' ? '⚖️ Compare' : '⚖️ 对比'}
-            </button>
-            <button
-              onClick={() => { setActiveTab("rankings"); setMobileMenuOpen(false); }}
-              className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
-              style={{
-                backgroundColor: activeTab === "rankings" ? theme.primaryGlow : theme.backgroundHover,
-                color: activeTab === "rankings" ? theme.primary : theme.textSecondary
-              }}
-            >
-              {language === 'en' ? '🏆 Rankings' : '🏆 排名'}
-            </button>
-            <button
-              onClick={() => { setActiveTab("trends"); setMobileMenuOpen(false); }}
-              className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
-              style={{
-                backgroundColor: activeTab === "trends" ? theme.primaryGlow : theme.backgroundHover,
-                color: activeTab === "trends" ? theme.primary : theme.textSecondary
-              }}
-            >
-              {language === 'en' ? '📈 Trends' : '📈 趋势'}
-            </button>
-          </div>
+          {/* Menu Drawer - 5/6 width, slides in from left */}
+          <div className="mobile-menu-btn menu-drawer-slide fixed left-0 top-0 z-[101] flex flex-col w-5/6" style={{ backgroundColor: theme.backgroundElevated, height: '100vh' }}>
+            {/* Top Row: Close Button */}
+            <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: theme.border }}>
+              <span className="text-xl font-black" style={{ color: theme.primary }}>Menu</span>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-xl transition-colors"
+                style={{ backgroundColor: theme.backgroundHover }}
+              >
+                <X className="size-7" style={{ color: theme.primary }} />
+              </button>
+            </div>
 
-          {/* Bottom: Optional Search or CTA Area */}
-          <div className="px-6 pb-8 pt-4 border-t border-gray-200">
-            <div className="text-center text-sm" style={{ color: '#6B7280' }}>
-              {language === 'en' ? 'Swipe down to close' : '向下滑动关闭'}
+            {/* Middle: Scrollable Menu Items */}
+            <div className="flex-1 overflow-y-auto flex flex-col items-stretch py-8 px-6">
+            {/* Search Bar in Menu */}
+            {schools.length > 0 && (
+              <div className="mb-6 max-w-sm mx-auto w-full">
+                <SearchBar
+                  schools={schools}
+                  onSelectSchool={(school) => {
+                    setSelectedSchool(school);
+                    setMobileMenuOpen(false);
+                    if (activeTab !== "school-details" && activeTab !== "trends" && activeTab !== "compare") {
+                      setActiveTab("school-details");
+                    }
+                  }}
+                  selectedSchool={selectedSchool}
+                  language={language}
+                />
+              </div>
+            )}
+
+            <div className="flex flex-col items-center gap-4">
+              <button
+                onClick={() => { setActiveTab("overall"); setMobileMenuOpen(false); }}
+                className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: activeTab === "overall" ? theme.primary : theme.textSecondary
+                }}
+              >
+                {language === 'en' ? 'County Overview' : '县区概览'}
+              </button>
+              <button
+                onClick={() => { setActiveTab("school-details"); setMobileMenuOpen(false); }}
+                className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: activeTab === "school-details" ? theme.primary : theme.textSecondary
+                }}
+              >
+                {language === 'en' ? 'School Details' : '学校详情'}
+              </button>
+              <button
+                onClick={() => { setActiveTab("compare"); setMobileMenuOpen(false); }}
+                className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: activeTab === "compare" ? theme.primary : theme.textSecondary
+                }}
+              >
+                {language === 'en' ? 'Compare' : '对比'}
+              </button>
+              <button
+                onClick={() => { setActiveTab("rankings"); setMobileMenuOpen(false); }}
+                className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: activeTab === "rankings" ? theme.primary : theme.textSecondary
+                }}
+              >
+                {language === 'en' ? 'Rankings' : '排名'}
+              </button>
+              <button
+                onClick={() => { setActiveTab("trends"); setMobileMenuOpen(false); }}
+                className="w-full max-w-sm px-8 py-5 text-center font-black rounded-2xl transition-all text-xl"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: activeTab === "trends" ? theme.primary : theme.textSecondary
+                }}
+              >
+                {language === 'en' ? 'Trends' : '趋势'}
+              </button>
             </div>
           </div>
-        </div>
+
+            {/* Bottom: Optional Search or CTA Area */}
+            <div className="px-6 pb-8 pt-4 border-t border-gray-200">
+              <div className="text-center text-sm" style={{ color: '#6B7280' }}>
+                {language === 'en' ? 'Swipe down to close' : '向下滑动关闭'}
+              </div>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Main Content */}
-      <main className="relative z-0 max-w-7xl mx-auto px-6 pb-8 min-h-screen pt-[180px]" style={{ backgroundColor: theme.background }}>
+      <main className="relative z-0 max-w-7xl mx-auto px-6 pb-8 min-h-screen pt-[100px]" style={{ backgroundColor: theme.background }}>
         {/* 加载中 / 报错 提示 */}
         {loading && (
           <div className="text-center text-sm text-slate-500 py-16">
@@ -445,7 +458,27 @@ export default function App() {
               </div>
                 </>
               ) : (
-                <BerryEmptyState language={language} variant="school-details" />
+                <div className="flex flex-col items-center justify-center gap-8 py-12">
+                  <div className="text-center max-w-md">
+                    <h3 className="text-2xl font-bold mb-3" style={{ color: theme.text }}>
+                      {language === 'en' ? 'Search for a School' : '搜索学校'}
+                    </h3>
+                    <p className="text-base" style={{ color: theme.textSecondary }}>
+                      {language === 'en' ? 'Select a school to view detailed information, performance metrics, and insights.' : '选择一所学校以查看详细信息、成绩指标和洞察。'}
+                    </p>
+                  </div>
+                  <div className="w-full max-w-md">
+                    <SearchBar
+                      schools={schools}
+                      onSelectSchool={(school) => {
+                        setSelectedSchool(school);
+                        setActiveTab("school-details");
+                      }}
+                      selectedSchool={selectedSchool}
+                      language={language}
+                    />
+                  </div>
+                </div>
               )}
             </TabsContent>
 
@@ -499,7 +532,27 @@ export default function App() {
                   onReset={() => setSelectedSchool(null)}
                 />
               ) : (
-                <BerryEmptyState language={language} variant="trends" />
+                <div className="flex flex-col items-center justify-center gap-8 py-12">
+                  <div className="text-center max-w-md">
+                    <h3 className="text-2xl font-bold mb-3" style={{ color: theme.text }}>
+                      {language === 'en' ? 'Search for a School' : '搜索学校'}
+                    </h3>
+                    <p className="text-base" style={{ color: theme.textSecondary }}>
+                      {language === 'en' ? 'Select a school to view trends, historical data, and performance insights over time.' : '选择一所学校以查看趋势、历史数据和随时间变化的表现洞察。'}
+                    </p>
+                  </div>
+                  <div className="w-full max-w-md">
+                    <SearchBar
+                      schools={schools}
+                      onSelectSchool={(school) => {
+                        setSelectedSchool(school);
+                        setActiveTab("trends");
+                      }}
+                      selectedSchool={selectedSchool}
+                      language={language}
+                    />
+                  </div>
+                </div>
               )}
             </TabsContent>
           </Tabs>

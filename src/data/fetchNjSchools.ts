@@ -88,13 +88,13 @@ function transformCsvToSchool(row: CsvRow): School {
 }
 
 export default async function fetchNjSchools(): Promise<School[]> {
-  const csvUrl =
-    "https://mdczhzasxctgndblhocd.supabase.co/storage/v1/object/public/nj_school_data/nj_schools_bergen_light.csv";
+  // Use local CSV file instead of Supabase
+  const csvUrl = "/data/nj_schools_bergen_light.csv";
 
   try {
     const response = await fetch(csvUrl);
     if (!response.ok) {
-      throw new Error("Failed to fetch CSV from Supabase");
+      throw new Error("Failed to fetch CSV from local storage");
     }
 
     const csvText = await response.text();
