@@ -1,0 +1,15 @@
+# robots.txt for NJ School Insights Dashboard
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://njschools.app/sitemap.xml
+
+# Disallow specific paths if needed (currently none)
+# Disallow: /api/
+# Disallow: /admin/
