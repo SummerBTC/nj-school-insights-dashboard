@@ -8,7 +8,7 @@ Allow: /
 Crawl-delay: 1
 
 # Sitemap location
-Sitemap: https://njschools.app/sitemap.xml
+Sitemap: https://schooberry.io/sitemap.xml
 
 # Disallow specific paths if needed (currently none)
 # Disallow: /api/
