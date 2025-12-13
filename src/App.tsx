@@ -77,11 +77,14 @@ export default function App() {
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('menu-open');
     } else {
       document.body.style.overflow = '';
+      document.body.classList.remove('menu-open');
     }
     return () => {
       document.body.style.overflow = '';
+      document.body.classList.remove('menu-open');
     };
   }, [mobileMenuOpen]);
 
@@ -212,12 +215,12 @@ export default function App() {
         <>
           {/* Background Overlay with 80% black */}
           <div
-            className="mobile-menu-btn fixed inset-0 z-[100] bg-black bg-opacity-80"
+            className="mobile-menu-overlay fixed inset-0 bg-black bg-opacity-80"
             onClick={() => setMobileMenuOpen(false)}
           />
 
           {/* Menu Drawer - 5/6 width, slides in from left */}
-          <div className="mobile-menu-btn menu-drawer-slide fixed left-0 top-0 z-[101] flex flex-col w-5/6" style={{ backgroundColor: theme.backgroundElevated, height: '100vh' }}>
+          <div className="menu-drawer-slide flex flex-col w-5/6" style={{ backgroundColor: theme.backgroundElevated }}>
             {/* Top Row: Close Button */}
             <div className="flex items-center justify-between px-6 py-4 border-b" style={{ borderColor: theme.border }}>
               <span className="text-xl font-black" style={{ color: theme.primary }}>Menu</span>
