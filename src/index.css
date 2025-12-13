@@ -3065,3 +3065,466 @@ html {
     }
   }
 }
+
+/* ==========================================
+   📱 移动端优化 | Mobile Optimizations
+   Added: 2025-12-11
+   Purpose: Improve mobile UX and Google Mobile SEO
+   ========================================== */
+
+/* 移动端基础优化 (< 768px) */
+@media (max-width: 767px) {
+  
+  /* ===== 1. 触摸目标大小优化 ===== */
+  /* Google 推荐最小 48x48px，Apple 推荐 44x44px */
+  
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* 移动菜单按钮 */
+  .mobile-menu-btn {
+    padding: 14px !important;  /* 增大到 48px+ */
+  }
+  
+  /* 主题/语言切换按钮 */
+  button[title*="Switch"],
+  button[title*="切换"] {
+    padding: 14px 18px !important;
+    min-height: 48px;
+  }
+  
+  /* Tab 按钮 */
+  [role="tab"], 
+  button[class*="tab"] {
+    padding: 14px 20px !important;
+    min-height: 48px;
+  }
+  
+  
+  /* ===== 2. 字体大小优化 ===== */
+  /* 确保移动端文字可读性 */
+  
+  html {
+    font-size: 16px;  /* 基础字体 16px */
+  }
+  
+  /* 最小文字不低于 14px */
+  .text-xs, 
+  [class*="text-xs"] {
+    font-size: 0.875rem !important;  /* 14px */
+    line-height: 1.5;
+  }
+  
+  /* 标准文字 16px */
+  .text-sm,
+  [class*="text-sm"] {
+    font-size: 1rem !important;  /* 16px */
+    line-height: 1.6;
+  }
+  
+  /* 基础文字 */
+  .text-base,
+  p, li, span {
+    font-size: 1rem;  /* 16px */
+    line-height: 1.6;
+  }
+  
+  /* 标题字体放大 */
+  h1, .text-3xl, .text-4xl {
+    font-size: 1.75rem !important;  /* 28px */
+    line-height: 1.3;
+  }
+  
+  h2, .text-2xl {
+    font-size: 1.5rem !important;  /* 24px */
+    line-height: 1.3;
+  }
+  
+  h3, .text-xl {
+    font-size: 1.25rem !important;  /* 20px */
+    line-height: 1.4;
+  }
+  
+  h4, .text-lg {
+    font-size: 1.125rem !important;  /* 18px */
+    line-height: 1.4;
+  }
+  
+  
+  /* ===== 3. 间距优化 ===== */
+  /* 移动端需要更宽松的间距，方便触摸 */
+  
+  /* 容器内边距 */
+  .max-w-7xl,
+  .container {
+    padding-left: 1.25rem !important;  /* 20px */
+    padding-right: 1.25rem !important;
+  }
+  
+  /* 卡片间距 */
+  .card,
+  [class*="card"],
+  [class*="Card"] {
+    padding: 1.5rem !important;  /* 24px */
+    margin-bottom: 1.25rem !important;  /* 20px */
+  }
+  
+  /* 列表项间距 */
+  li,
+  [role="listitem"],
+  [class*="list-item"] {
+    padding: 1rem 0.75rem !important;  /* 16px 12px */
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Section 间距 */
+  section,
+  [class*="section"] {
+    padding: 2rem 0 !important;  /* 32px */
+  }
+  
+  /* Grid 间距 */
+  .grid {
+    gap: 1.25rem !important;  /* 20px */
+  }
+  
+  
+  /* ===== 4. 表格响应式 ===== */
+  /* 表格在移动端横向滚动 */
+  
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;  /* iOS 平滑滚动 */
+    white-space: nowrap;
+  }
+  
+  thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  tbody {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  /* 表格单元格 */
+  th, td {
+    min-width: 120px;
+    padding: 0.875rem 0.75rem !important;  /* 14px 12px */
+    font-size: 0.875rem;  /* 14px */
+  }
+  
+  /* 排名列表紧凑模式 */
+  .ranking-list,
+  [class*="ranking"],
+  [class*="Ranking"] {
+    font-size: 0.875rem;  /* 14px */
+  }
+  
+  
+  /* ===== 5. 图表响应式 ===== */
+  /* 确保图表在移动端清晰可见 */
+  
+  /* 图表容器 */
+  [class*="chart"],
+  [class*="Chart"],
+  .recharts-wrapper {
+    height: 280px !important;  /* 固定高度 */
+    width: 100% !important;
+    margin: 0 auto;
+  }
+  
+  /* Radar Chart 特殊处理 */
+  [class*="RadarChart"],
+  [class*="radarChart"] {
+    height: 300px !important;
+  }
+  
+  /* 图例字体 */
+  .recharts-legend-item-text,
+  .recharts-text {
+    font-size: 12px !important;
+  }
+  
+  /* 坐标轴文字 */
+  .recharts-cartesian-axis-tick-value {
+    font-size: 11px !important;
+  }
+  
+  
+  /* ===== 6. 输入框优化 ===== */
+  /* 搜索和表单输入 */
+  
+  input[type="text"],
+  input[type="search"],
+  input[type="email"],
+  textarea,
+  select {
+    font-size: 16px !important;  /* 防止 iOS 自动缩放 */
+    min-height: 48px;
+    padding: 12px 16px !important;
+    border-radius: 8px;
+  }
+  
+  /* 搜索栏 */
+  [class*="search"],
+  [class*="Search"] input {
+    font-size: 16px !important;
+    padding: 14px 16px !important;
+  }
+  
+  
+  /* ===== 7. 固定头部优化 ===== */
+  /* 减少固定头部占用的空间 */
+  
+  header {
+    position: sticky;  /* 改为 sticky 而不是 fixed */
+    top: 0;
+  }
+  
+  /* Banner 高度调整 */
+  [style*="height: 40px"],
+  [style*="height:40px"] {
+    height: 56px !important;  /* 增加到 56px，更易点击 */
+  }
+  
+  
+  /* ===== 8. 模态框和弹出层 ===== */
+  
+  /* 确保模态框不超出屏幕 */
+  [role="dialog"],
+  [class*="dialog"],
+  [class*="Dialog"],
+  [class*="modal"],
+  [class*="Modal"] {
+    max-width: 95vw !important;
+    max-height: 90vh !important;
+    overflow-y: auto;
+    margin: 5vh 2.5vw;
+  }
+  
+  /* Tooltip 字体 */
+  [role="tooltip"],
+  [class*="tooltip"],
+  [class*="Tooltip"] {
+    font-size: 14px !important;
+    padding: 8px 12px !important;
+  }
+  
+  
+  /* ===== 9. 图片和媒体 ===== */
+  
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* 防止图片溢出 */
+  img {
+    display: block;
+  }
+  
+  
+  /* ===== 10. 实用类 ===== */
+  
+  /* 移动端隐藏 */
+  .mobile-hidden,
+  .md\\:block {
+    display: none !important;
+  }
+  
+  /* 移动端显示 */
+  .mobile-only {
+    display: block !important;
+  }
+  
+  /* 移动端文字居中 */
+  .mobile-text-center {
+    text-align: center !important;
+  }
+  
+  /* 移动端全宽 */
+  .mobile-full-width {
+    width: 100% !important;
+  }
+}
+
+
+/* 中等屏幕 (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  
+  /* 平板优化 */
+  .container, .max-w-7xl {
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+  
+  /* 卡片 2 列布局 */
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  /* 字体稍小于桌面端 */
+  h1 { font-size: 2rem !important; }
+  h2 { font-size: 1.75rem !important; }
+  h3 { font-size: 1.5rem !important; }
+}
+
+
+/* 小屏手机特殊处理 (< 375px) */
+@media (max-width: 374px) {
+  
+  /* 超小屏幕进一步调整 */
+  .container, .max-w-7xl {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  
+  /* 字体稍小 */
+  html {
+    font-size: 15px;
+  }
+  
+  /* 按钮字体 */
+  button {
+    font-size: 0.875rem !important;
+  }
+  
+  /* 卡片间距减小 */
+  .card,
+  [class*="card"] {
+    padding: 1rem !important;
+  }
+}
+
+
+/* 横屏模式优化 */
+@media (max-height: 500px) and (orientation: landscape) {
+  
+  /* 减少垂直间距 */
+  section,
+  [class*="section"] {
+    padding: 1rem 0 !important;
+  }
+  
+  /* 固定头部更紧凑 */
+  header {
+    height: auto;
+  }
+  
+  /* 图表高度调整 */
+  [class*="chart"],
+  [class*="Chart"] {
+    height: 200px !important;
+  }
+}
+
+
+/* ==========================================
+   🌙 移动端深色模式优化
+   ========================================== */
+
+@media (max-width: 767px) and (prefers-color-scheme: dark) {
+  
+  /* 深色模式下增加对比度 */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* 输入框在深色模式下边框 */
+  input, textarea, select {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+
+/* ==========================================
+   ♿ 辅助功能增强
+   ========================================== */
+
+@media (max-width: 767px) {
+  
+  /* 聚焦状态更明显 */
+  button:focus,
+  a:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+  }
+  
+  /* 跳过导航链接 */
+  .skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    z-index: 100;
+  }
+  
+  .skip-to-content:focus {
+    top: 0;
+  }
+}
+
+
+/* ==========================================
+   📱 iOS Safari 特殊修复
+   ========================================== */
+
+@supports (-webkit-touch-callout: none) {
+  
+  /* iOS 安全区域 */
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* 防止 iOS 自动缩放 */
+  input[type="text"],
+  input[type="search"],
+  select,
+  textarea {
+    font-size: 16px !important;  /* 16px 防止自动缩放 */
+  }
+  
+  /* iOS 滚动平滑 */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+
+/* ==========================================
+   🎯 性能优化
+   ========================================== */
+
+@media (max-width: 767px) {
+  
+  /* 硬件加速 */
+  .mobile-menu,
+  [class*="modal"],
+  [class*="Dialog"] {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+  
+  /* 减少重绘 */
+  img, video {
+    content-visibility: auto;
+  }
+}
+
+/* ========== 移动端优化结束 ========== */
+
