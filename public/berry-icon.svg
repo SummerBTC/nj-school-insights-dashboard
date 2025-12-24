@@ -1,0 +1,52 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Berry gradient -->
+    <radialGradient id="berryGrad" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#9333EA;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7C3AED;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5B21B6;stop-opacity:1" />
+    </radialGradient>
+
+    <!-- Leaf gradient -->
+    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ADE80;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22C55E;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Highlight -->
+    <radialGradient id="highlight" cx="30%" cy="30%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.6" />
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Berry body -->
+  <circle cx="256" cy="280" r="180" fill="url(#berryGrad)" />
+
+  <!-- Berry segments (texture) -->
+  <circle cx="200" cy="240" r="45" fill="#6D28D9" opacity="0.3" />
+  <circle cx="280" cy="220" r="40" fill="#6D28D9" opacity="0.3" />
+  <circle cx="320" cy="280" r="42" fill="#6D28D9" opacity="0.3" />
+  <circle cx="280" cy="340" r="38" fill="#6D28D9" opacity="0.3" />
+  <circle cx="210" cy="320" r="40" fill="#6D28D9" opacity="0.3" />
+
+  <!-- Highlight on berry -->
+  <ellipse cx="200" cy="220" rx="80" ry="70" fill="url(#highlight)" />
+
+  <!-- Leaves at top -->
+  <g transform="translate(256, 120)">
+    <!-- Left leaf -->
+    <path d="M -40 0 Q -60 -20, -50 -50 Q -40 -45, -30 -30 Q -35 -15, -40 0 Z"
+          fill="url(#leafGrad)" />
+    <!-- Center leaf -->
+    <path d="M -10 -10 Q -5 -40, 0 -60 Q 5 -40, 10 -10 Z"
+          fill="url(#leafGrad)" />
+    <!-- Right leaf -->
+    <path d="M 40 0 Q 60 -20, 50 -50 Q 40 -45, 30 -30 Q 35 -15, 40 0 Z"
+          fill="url(#leafGrad)" />
+  </g>
+
+  <!-- Small stem -->
+  <rect x="250" y="95" width="12" height="30" rx="6" fill="#15803D" />
+</svg>
