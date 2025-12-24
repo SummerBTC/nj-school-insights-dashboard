@@ -180,28 +180,28 @@ export function EnhancedSchoolRankingList({
                   <table className="w-full">
                     <thead style={{ backgroundColor: theme.backgroundHover }}>
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold" style={{ color: theme.text }}>
+                        <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold" style={{ color: theme.text }}>
                           {language === 'en' ? 'Rank' : '排名'}
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold" style={{ color: theme.text }}>
-                          {language === 'en' ? 'School Name' : '学校名称'}
+                        <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold" style={{ color: theme.text }}>
+                          {language === 'en' ? 'School' : '学校'}
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
-                          {language === 'en' ? 'Overall' : '总分'}
+                        <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-semibold" style={{ color: theme.text }}>
+                          {language === 'en' ? 'Score' : '总分'}
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
+                        <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-semibold hidden sm:table-cell" style={{ color: theme.text }}>
                           {language === 'en' ? 'Math' : '数学'}
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
+                        <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-semibold hidden sm:table-cell" style={{ color: theme.text }}>
                           {language === 'en' ? 'ELA' : '英语'}
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
+                        <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-semibold hidden lg:table-cell" style={{ color: theme.text }}>
                           {language === 'en' ? 'Gifted' : '资优'}
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold" style={{ color: theme.text }}>
-                          {language === 'en' ? 'S-T Ratio' : '师生比'}
+                        <th className="px-2 sm:px-4 py-3 text-center text-xs sm:text-sm font-semibold hidden lg:table-cell" style={{ color: theme.text }}>
+                          {language === 'en' ? 'S-T' : '师生'}
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold" style={{ color: theme.text }}>
+                        <th className="px-2 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold hidden md:table-cell" style={{ color: theme.text }}>
                           {language === 'en' ? 'District' : '学区'}
                         </th>
                       </tr>
@@ -231,9 +231,9 @@ export function EnhancedSchoolRankingList({
                             }}
                           >
                             {/* Rank */}
-                            <td className="px-4 py-3">
+                            <td className="px-2 sm:px-4 py-2 sm:py-3">
                               <div
-                                className="flex items-center justify-center w-10 h-10 rounded-full"
+                                className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full"
                                 style={
                                   rank === 1 ? { background: 'linear-gradient(to bottom right, #FBBF24, #F59E0B)', color: '#FFFFFF' } :
                                   rank === 2 ? { background: 'linear-gradient(to bottom right, #94A3B8, #64748B)', color: '#FFFFFF' } :
@@ -242,27 +242,27 @@ export function EnhancedSchoolRankingList({
                                 }
                               >
                                 {rank <= 3 ? (
-                                  <Trophy className="size-5" />
+                                  <Trophy className="size-4 sm:size-5" />
                                 ) : (
-                                  <span className="text-sm font-semibold">{rank}</span>
+                                  <span className="text-xs sm:text-sm font-semibold">{rank}</span>
                                 )}
                               </div>
                             </td>
 
                             {/* School Name */}
-                            <td className="px-4 py-3">
-                              <div className="font-medium" style={{ color: theme.text }}>{school.name}</div>
-                              <div className="text-xs" style={{ color: theme.textSecondary }}>{school.grades} • {school.county}</div>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3">
+                              <div className="font-medium text-sm sm:text-base" style={{ color: theme.text }}>{school.name}</div>
+                              <div className="text-xs hidden sm:block" style={{ color: theme.textSecondary }}>{school.grades} • {school.county}</div>
                             </td>
 
                             {/* Overall Score */}
-                            <td className="px-4 py-3 text-center">
-                              <div className="text-lg font-bold" style={{ color: theme.primary }}>{school.overallScore}</div>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
+                              <div className="text-base sm:text-lg font-bold" style={{ color: theme.primary }}>{school.overallScore}</div>
                             </td>
 
                             {/* Math */}
-                            <td className="px-4 py-3 text-center">
-                              <div className="font-semibold" style={{ color: theme.text }}>{school.mathProficiency}%</div>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center hidden sm:table-cell">
+                              <div className="font-semibold text-sm" style={{ color: theme.text }}>{school.mathProficiency}%</div>
                               {school.trends.mathChange !== 0 && (
                                 <div className="flex items-center justify-center gap-1 text-xs" style={{ color: school.trends.mathChange > 0 ? theme.success : theme.error }}>
                                   <TrendingUp className={`size-3 ${school.trends.mathChange < 0 ? 'rotate-180' : ''}`} />
@@ -272,12 +272,12 @@ export function EnhancedSchoolRankingList({
                             </td>
 
                             {/* ELA */}
-                            <td className="px-4 py-3 text-center font-semibold" style={{ color: theme.text }}>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold text-sm hidden sm:table-cell" style={{ color: theme.text }}>
                               {school.elaProficiency}%
                             </td>
 
                             {/* Gifted */}
-                            <td className="px-4 py-3 text-center">
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center hidden lg:table-cell">
                               {school.giftedProgram ? (
                                 <span style={{ color: theme.success }}>✓</span>
                               ) : (
@@ -286,12 +286,12 @@ export function EnhancedSchoolRankingList({
                             </td>
 
                             {/* Student-Teacher Ratio */}
-                            <td className="px-4 py-3 text-center text-sm" style={{ color: theme.text }}>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm hidden lg:table-cell" style={{ color: theme.text }}>
                               1:{school.studentTeacherRatio}
                             </td>
 
                             {/* District */}
-                            <td className="px-4 py-3 text-sm" style={{ color: theme.textSecondary }}>
+                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm hidden md:table-cell" style={{ color: theme.textSecondary }}>
                               {school.district}
                             </td>
                           </tr>

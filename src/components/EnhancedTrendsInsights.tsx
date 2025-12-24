@@ -182,44 +182,48 @@ export function EnhancedTrendsInsights({ school, language, onReset }: EnhancedTr
   return (
     <div className="space-y-6">
       {/* Multi-Line Trend Chart with Comparisons */}
-      <div className="rounded-xl p-6 border shadow-lg" style={{ backgroundColor: theme.backgroundElevated, borderColor: theme.border }}>
-        <h3 className="text-lg font-bold mb-4" style={{ color: theme.text }}>
+      <div className="rounded-xl p-4 md:p-6 border shadow-lg" style={{ backgroundColor: theme.backgroundElevated, borderColor: theme.border }}>
+        <h3 className="text-base md:text-lg font-bold mb-4" style={{ color: theme.text }}>
           {language === 'en' ? 'Academic Performance Trends' : '学业表现趋势'}
         </h3>
 
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={combinedTrendData}>
-            <CartesianGrid strokeDasharray="3 3" stroke={theme.border} />
-            <XAxis
-              dataKey="year"
-              tick={{ fill: theme.textSecondary }}
-              label={{
-                value: language === 'en' ? 'Year' : '年份',
-                position: 'insideBottom',
-                offset: -5,
-                fill: theme.textSecondary
-              }}
-            />
-            <YAxis
-              domain={[0, 100]}
-              tick={{ fill: theme.textSecondary }}
-              label={{
-                value: language === 'en' ? 'Proficiency %' : '优秀率 %',
-                angle: -90,
-                position: 'insideLeft',
-                fill: theme.textSecondary
-              }}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: theme.backgroundElevated,
-                border: `2px solid ${theme.border}`,
-                borderRadius: '12px',
-                color: theme.text,
-                padding: '12px'
-              }}
-            />
-            <Legend wrapperStyle={{ paddingTop: '20px' }} />
+        <div className="w-full h-[350px] sm:h-[400px] md:h-[450px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={combinedTrendData} margin={{ top: 5, right: 10, left: 0, bottom: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke={theme.border} />
+              <XAxis
+                dataKey="year"
+                tick={{ fill: theme.textSecondary, fontSize: 12 }}
+                label={{
+                  value: language === 'en' ? 'Year' : '年份',
+                  position: 'insideBottom',
+                  offset: -10,
+                  fill: theme.textSecondary,
+                  fontSize: 12
+                }}
+              />
+              <YAxis
+                domain={[0, 100]}
+                tick={{ fill: theme.textSecondary, fontSize: 11 }}
+                label={{
+                  value: language === 'en' ? 'Proficiency %' : '优秀率 %',
+                  angle: -90,
+                  position: 'insideLeft',
+                  fill: theme.textSecondary,
+                  fontSize: 11
+                }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: theme.backgroundElevated,
+                  border: `2px solid ${theme.border}`,
+                  borderRadius: '12px',
+                  color: theme.text,
+                  padding: '8px 12px',
+                  fontSize: '13px'
+                }}
+              />
+              <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} iconType="line" />
 
             {/* School Lines - Bold */}
             <Line
@@ -287,6 +291,7 @@ export function EnhancedTrendsInsights({ school, language, onReset }: EnhancedTr
             )}
           </LineChart>
         </ResponsiveContainer>
+        </div>
 
         {/* Milestones Timeline */}
         <div className="mt-6 pt-4 border-t" style={{ borderColor: theme.border }}>
