@@ -159,9 +159,9 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
       </div>
 
       {/* School Selectors */}
-      <div className="flex items-center justify-center gap-3 flex-wrap">
-        <div className="rounded-lg p-5 flex items-center gap-4 min-w-[320px]" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.info}` }}>
-          <label className="text-lg font-bold whitespace-nowrap" style={{ color: theme.info }}>
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-center gap-3">
+        <div className="rounded-lg p-4 md:p-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full md:flex-1 md:max-w-md" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.info}` }}>
+          <label className="text-base md:text-lg font-bold whitespace-nowrap" style={{ color: theme.info }}>
             {language === 'en' ? 'School 1' : '学校 1'}
           </label>
           <SchoolCombobox
@@ -172,12 +172,12 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
             placeholder={language === 'en' ? 'Select school...' : '选择学校...'}
             searchPlaceholder={language === 'en' ? 'Search school...' : '搜索学校...'}
             emptyText={language === 'en' ? 'No school found.' : '未找到学校。'}
-            className="text-base flex-1"
+            className="text-base flex-1 w-full"
           />
         </div>
 
-        <div className="rounded-lg p-5 flex items-center gap-4 min-w-[320px]" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.success}` }}>
-          <label className="text-lg font-bold whitespace-nowrap" style={{ color: theme.success }}>
+        <div className="rounded-lg p-4 md:p-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full md:flex-1 md:max-w-md" style={{ backgroundColor: theme.backgroundElevated, border: `2px solid ${theme.success}` }}>
+          <label className="text-base md:text-lg font-bold whitespace-nowrap" style={{ color: theme.success }}>
             {language === 'en' ? 'School 2' : '学校 2'}
           </label>
           <SchoolCombobox
@@ -188,7 +188,7 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
             placeholder={language === 'en' ? 'Select school...' : '选择学校...'}
             searchPlaceholder={language === 'en' ? 'Search school...' : '搜索学校...'}
             emptyText={language === 'en' ? 'No school found.' : '未找到学校。'}
-            className="text-base flex-1"
+            className="text-base flex-1 w-full"
           />
         </div>
       </div>
@@ -197,34 +197,46 @@ export function CompareSchools({ schools, defaultSchool, language }: CompareScho
       {school1 && school2 && (
         <>
           {/* Radar Chart Comparison */}
-          <div className="rounded-lg p-6" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
-            <h3 className="mb-4" style={{ color: theme.text }}>
+          <div className="rounded-lg p-4 md:p-6" style={{ backgroundColor: theme.backgroundElevated, border: `1px solid ${theme.border}` }}>
+            <h3 className="mb-4 text-base md:text-lg font-semibold" style={{ color: theme.text }}>
               {language === 'en' ? 'Performance Overlay' : '表现对比图'}
             </h3>
-            <ResponsiveContainer width="100%" height={400}>
-              <RechartsRadar data={radarData}>
-                <PolarGrid stroke={theme.border} />
-                <PolarAngleAxis dataKey="metric" tick={{ fill: theme.textSecondary, fontSize: 12 }} />
-                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: theme.textSecondary, fontSize: 10 }} />
-                <Radar
-                  name={school1.name}
-                  dataKey={school1.name}
-                  stroke={theme.info}
-                  fill={theme.info}
-                  fillOpacity={0.3}
-                  strokeWidth={2}
-                />
-                <Radar
-                  name={school2.name}
-                  dataKey={school2.name}
-                  stroke={theme.success}
-                  fill={theme.success}
-                  fillOpacity={0.3}
-                  strokeWidth={2}
-                />
-                <Legend />
-              </RechartsRadar>
-            </ResponsiveContainer>
+            <div className="w-full h-[350px] sm:h-[400px] md:h-[450px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <RechartsRadar data={radarData}>
+                  <PolarGrid stroke={theme.border} strokeWidth={1} />
+                  <PolarAngleAxis
+                    dataKey="metric"
+                    tick={{ fill: theme.textSecondary, fontSize: 12 }}
+                  />
+                  <PolarRadiusAxis
+                    angle={90}
+                    domain={[0, 100]}
+                    tick={{ fill: theme.textSecondary, fontSize: 10 }}
+                  />
+                  <Radar
+                    name={school1.name}
+                    dataKey={school1.name}
+                    stroke={theme.info}
+                    fill={theme.info}
+                    fillOpacity={0.5}
+                    strokeWidth={3}
+                  />
+                  <Radar
+                    name={school2.name}
+                    dataKey={school2.name}
+                    stroke={theme.success}
+                    fill={theme.success}
+                    fillOpacity={0.5}
+                    strokeWidth={3}
+                  />
+                  <Legend
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    iconType="circle"
+                  />
+                </RechartsRadar>
+              </ResponsiveContainer>
+            </div>
           </div>
 
       {/* Summary Insights */}
